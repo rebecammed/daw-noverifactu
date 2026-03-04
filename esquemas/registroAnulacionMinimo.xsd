@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://noverifactu.local/esquema/anulacionm"
+    xmlns="https://noverifactu.local/esquema/anulacionm"
+    elementFormDefault="qualified">
+
+  <!-- ============================================ -->
+  <!-- Elemento raíz -->
+  <!-- ============================================ -->
+  <xs:element name="Anulacion">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Cabecera" type="TipoCabeceraAnulacion"/>
+        <xs:element name="ReferenciaRegistroAnulado" type="TipoReferenciaRegistroAnulado"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!-- ============================================ -->
+  <!-- Cabecera -->
+  <!-- ============================================ -->
+    <xs:complexType name="TipoCabeceraAnulacion">
+      <xs:sequence>
+        <xs:element name="NIFEmisor" type="xs:string"/>
+        <xs:element name="FechaHoraAnulacion" type="xs:dateTime"/>
+      </xs:sequence>
+    </xs:complexType>
+
+  <!-- ============================================ -->
+  <!-- Referencia al registro anulado -->
+  <!-- ============================================ -->
+    <xs:complexType name="TipoReferenciaRegistroAnulado">
+      <xs:sequence>
+        <xs:element name="NumeroFacturaOriginal" type="xs:string"/>
+        <xs:element name="FechaHoraExpedicionOriginal" type="xs:dateTime"/>
+        <xs:element name="MotivoAnulacion" type="xs:string" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FacturaNoVerifactu xmlns="https://noverifactu.local/esquema">
+  <Cabecera>
+    <NIFEmisor>71902382N</NIFEmisor>
+    <NIFReceptor>71728851Q</NIFReceptor>
+    <VersionSIF>1.0.0</VersionSIF>
+  </Cabecera>
+  <DatosFactura>
+    <NumeroFacturaCompleto>5</NumeroFacturaCompleto>
+    <FechaHoraExpedicion>2026-03-03T11:37:00.000Z</FechaHoraExpedicion>
+    <TipoFactura>ORDINARIA</TipoFactura>
+    <ImporteTotalFactura>121</ImporteTotalFactura>
+  </DatosFactura>
+  <DesgloseFiscal>
+    <Impuestos>
+      <Impuesto>
+        <BaseImponible>100</BaseImponible>
+        <TipoImpositivo>21</TipoImpositivo>
+        <Cuota>21</Cuota>
+        <Tipo>IVA</Tipo>
+      </Impuesto>
+    </Impuestos>
+  </DesgloseFiscal>
+  <Trazabilidad>
+    <NumRegistroAnterior>14</NumRegistroAnterior>
+    <NumRegistroActual>15</NumRegistroActual>
+    <HashRegistroAnterior>ed4a0ab031ccca408cf5934e8d6218b7083f1ecd81b2f210873d96197d47f368</HashRegistroAnterior>
+    <HashRegistroPropio>46a7fc3dc7ecf5f3dcaffe645af18e8f2e16c9b7cc4c61e01bd683510e7b2011</HashRegistroPropio>
+    <IdentificacionSIF>
+      <IdSoftware>NOVERIFACTU-DEV-1.0.0</IdSoftware>
+      <NIFDesarrollador>71902382N</NIFDesarrollador>
+      <fechaDeclaracionResponsable>2026-01-22T11:33:32.000Z</fechaDeclaracionResponsable>
+    </IdentificacionSIF>
+  </Trazabilidad>
+</FacturaNoVerifactu>

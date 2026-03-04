@@ -1,0 +1,32 @@
+{
+  "name": "noverifactu-back",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "adm-zip": "^0.5.16",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "fast-xml-parser": "^5.3.3",
+    "jsonwebtoken": "^9.0.3",
+    "libxmljs2": "^0.37.0",
+    "lucide-react": "^0.575.0",
+    "multer": "^2.0.2",
+    "mysql2": "^3.16.1",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^5.4.530",
+    "pdfkit": "^0.17.2",
+    "qpdf": "^0.1.0-prealpha.1",
+    "qrcode": "^1.5.4",
+    "react-router-dom": "^7.12.0",
+    "speakeasy": "^2.0.0",
+    "xmlbuilder2": "^4.0.3",
+    "xmlparser": "^0.1.0"
+  }
+}

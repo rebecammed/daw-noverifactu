@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://noverifactu.local/esquema/rectificativa"
+    xmlns="https://noverifactu.local/esquema/rectificativa"
+    elementFormDefault="qualified">
+
+  <!-- ============================================ -->
+  <!-- Elemento raíz -->
+  <!-- ============================================ -->
+  <xs:element name="RegistroFacturaRectificativaNoVerifactu">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Cabecera" type="TipoCabeceraRectificativa"/>
+        <xs:element name="DatosFacturaRectificativa" type="TipoDatosFacturaRectificativa"/>
+        <xs:element name="ReferenciaFacturaOriginal" type="TipoReferenciaFacturaOriginal"/>
+        <xs:element name="DesgloseFiscal" type="TipoDesgloseFiscal"/>
+        <xs:element name="Trazabilidad" type="TipoTrazabilidadRectificativa"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ============================================ -->
+  <!-- Cabecera -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoCabeceraRectificativa">
+    <xs:sequence>
+      <xs:element name="TipoRegistro" type="TipoRegistroEnum"/>
+      <xs:element name="NIFEmisor" type="xs:string"/>
+      <xs:element name="NIFReceptor" type="xs:string"/>
+      <xs:element name="VersionSIF" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:simpleType name="TipoRegistroEnum">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="RECTIFICATIVA"/>
+  </xs:restriction>
+</xs:simpleType>
+  <!-- ============================================ -->
+  <!-- Datos de la factura rectificativa -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoDatosFacturaRectificativa">
+    <xs:sequence>
+      <xs:element name="NumeroFacturaRectificativa" type="xs:string"/>
+      <xs:element name="FechaHoraExpedicion" type="xs:dateTime"/>
+      <xs:element name="TipoRectificacion" type="TipoRectificacionEnum"/>
+      <xs:element name="ImporteTotalRectificativa">
+  <xs:simpleType>
+    <xs:restriction base="xs:decimal">
+      <xs:fractionDigits value="2"/>
+      <xs:totalDigits value="15"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:element>
+
+
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="TipoRectificacionEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUSTITUCION"/>
+      <xs:enumeration value="DIFERENCIAS"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- ============================================ -->
+  <!-- Referencia obligatoria a la factura original -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoReferenciaFacturaOriginal">
+    <xs:sequence>
+      <xs:element name="NumeroFacturaOriginal" type="xs:string"/>
+      <xs:element name="FechaHoraExpedicionOriginal" type="xs:dateTime"/>
+      <xs:element name="HashRegistroFacturaOriginal" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ============================================ -->
+  <!-- Desglose fiscal -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoDesgloseFiscal">
+    <xs:sequence>
+      <xs:element name="Impuestos" type="TipoImpuestos"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TipoImpuestos">
+    <xs:sequence>
+      <xs:element name="Impuesto" type="TipoImpuesto" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TipoImpuesto">
+    <xs:sequence>
+    <xs:element name="BaseImponible" type="xs:decimal"/>
+      <xs:element name="TipoImpositivo" type="xs:decimal"/>
+      <xs:element name="Cuota" type="xs:decimal"/>
+      <xs:element name="Tipo" type="TipoImpuestoEnum"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:simpleType name="TipoImpuestoEnum">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="IVA"/>
+    <xs:enumeration value="IGIC"/>
+    <xs:enumeration value="IPSI"/>
+    <xs:enumeration value="IRPF"/>
+  </xs:restriction>
+</xs:simpleType>
+  <!-- ============================================ -->
+  <!-- Trazabilidad -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoTrazabilidadRectificativa">
+    <xs:sequence>
+      <xs:element name="NumRegistroAnterior" type="xs:integer"/>
+      <xs:element name="NumRegistroActual" type="xs:integer"/>
+      <xs:element name="HashRegistroAnterior" type="xs:string"/>
+      <xs:element name="HashRegistroPropio" type="xs:string"/>
+      <xs:element name="IdentificacionSIF" type="TipoIdentificacionSIF"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TipoIdentificacionSIF">
+    <xs:sequence>
+      <xs:element name="IdSoftware" type="xs:string"/>
+      <xs:element name="NIFDesarrollador" type="xs:string"/>
+      <xs:element name="fechaDeclaracionResponsable" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

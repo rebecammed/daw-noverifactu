@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://noverifactu.local/esquema"
+    xmlns="https://noverifactu.local/esquema"
+    elementFormDefault="qualified">
+<xs:element name="FacturaNoVerifactu">
+  <xs:complexType>
+    <xs:sequence>
+
+      <xs:element name="Cabecera">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="NIFEmisor" type="xs:string"/>
+<!-- <xs:element name="NIFReceptor" type="xs:string"/> -->            
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="DatosFactura">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="NumeroFactura" type="xs:string"/>
+            <xs:element name="FechaExpedicion" type="xs:dateTime"/>
+            <xs:element name="TipoFactura" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+<xs:element name="DesgloseFiscal">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CuotaTotal" type="xs:decimal"/>
+            <xs:element name="ImporteTotal" type="xs:decimal"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+</xs:schema>

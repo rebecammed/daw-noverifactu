@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://noverifactu.local/esquema/rectificativam"
+    xmlns="https://noverifactu.local/esquema/rectificativam"
+    elementFormDefault="qualified">
+
+  <!-- ============================================ -->
+  <!-- Elemento raíz -->
+  <!-- ============================================ -->
+  <xs:element name="Rectificativa">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Cabecera" type="TipoCabeceraRectificativa"/>
+        <xs:element name="DatosFacturaRectificativa" type="TipoDatosFacturaRectificativa"/>
+        <xs:element name="ReferenciaFacturaOriginal" type="TipoReferenciaFacturaOriginal"/>
+        <xs:element name="DesgloseFiscal" type="TipoDesgloseFiscal"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ============================================ -->
+  <!-- Cabecera -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoCabeceraRectificativa">
+    <xs:sequence>
+      <xs:element name="NIFEmisor" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ============================================ -->
+  <!-- Datos de la factura rectificativa -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoDatosFacturaRectificativa">
+    <xs:sequence>
+      <xs:element name="NumeroFacturaRectificativa" type="xs:string"/>
+      <xs:element name="FechaHoraExpedicion" type="xs:dateTime"/>
+      <xs:element name="TipoRectificacion" type="TipoRectificacionEnum"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="TipoRectificacionEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUSTITUCION"/>
+      <xs:enumeration value="DIFERENCIAS"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- ============================================ -->
+  <!-- Referencia obligatoria a la factura original -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoReferenciaFacturaOriginal">
+    <xs:sequence>
+      <xs:element name="NumeroFacturaOriginal" type="xs:string"/>
+      <xs:element name="FechaHoraExpedicionOriginal" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ============================================ -->
+  <!-- Desglose fiscal -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoDesgloseFiscal">
+    <xs:sequence>
+      <xs:element name="CuotaTotal" type="xs:decimal"/>
+      <xs:element name="ImporteTotal" type="xs:decimal"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

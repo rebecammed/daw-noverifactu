@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Prueba Front-Back</title>
+  </head>
+  <body>
+    <button id="btn">Llamar al backend</button>
+
+    <script>
+      document.getElementById("btn").addEventListener("click", () => {
+        fetch("http://localhost:3000/api/ping")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            alert(data.message);
+          });
+      });
+    </script>
+  </body>
+</html>

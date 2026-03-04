@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FacturaNoVerifactu xmlns="https://noverifactu.local/esquema">
+  <Cabecera>
+    <NIFEmisor>71902382N</NIFEmisor>
+    <NIFReceptor>B12345678</NIFReceptor>
+  </Cabecera>
+  <DatosFactura>
+    <NumeroFactura>648945</NumeroFactura>
+    <FechaExpedicion>2026-01-15T15:09:00.000Z</FechaExpedicion>
+    <TipoFactura>ORDINARIA</TipoFactura>
+  </DatosFactura>
+</FacturaNoVerifactu>

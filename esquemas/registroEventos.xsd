@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://noverifactu.local/esquema/logeventos"
+    xmlns="https://noverifactu.local/esquema/logeventos"
+    elementFormDefault="qualified">
+
+  <!-- ============================================ -->
+  <!-- Elemento raíz -->
+  <!-- ============================================ -->
+  <xs:element name="RegistroEventoNoVerifactu">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="CabeceraEvento" type="TipoCabeceraEvento"/>
+        <xs:element name="DatosEvento" type="TipoDatosEvento"/>
+        <xs:element name="TrazabilidadEvento" type="TipoTrazabilidadEvento"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ============================================ -->
+  <!-- Cabecera del evento -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoCabeceraEvento">
+    <xs:sequence>
+      <xs:element name="IdentificadorEvento" type="xs:string"/>
+      <xs:element name="FechaHoraEvento" type="xs:dateTime"/>
+      <xs:element name="VersionSIF" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ============================================ -->
+  <!-- Datos del evento -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoDatosEvento">
+    <xs:sequence>
+      <xs:element name="TipoEvento" type="TipoEventoEnum"/>
+      <xs:element name="Usuario" type="xs:string" minOccurs="0"/>
+      <xs:element name="DescripcionEvento" type="xs:string"/>
+      <xs:element name="ReferenciaEntidad" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="TipoEventoEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="LOGIN"/>
+      <xs:enumeration value="LOGOUT"/>
+      <xs:enumeration value="EMISION_FACTURA"/>
+      <xs:enumeration value="FACTURA_RECTIFICATIVA"/>
+      <xs:enumeration value="ANULACION_FACTURA"/>
+      <xs:enumeration value="INTENTO_MODIFICACION"/>
+      <xs:enumeration value="ERROR_SISTEMA"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- ============================================ -->
+  <!-- Trazabilidad del evento -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoTrazabilidadEvento">
+    <xs:sequence>
+      <xs:element name="HashEventoAnterior" type="xs:string" minOccurs="0"/>
+      <xs:element name="HashEventoPropio" type="xs:string"/>
+      <xs:element name="IdentificacionSIF" type="TipoIdentificacionSIF"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ============================================ -->
+  <!-- Identificación del SIF -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoIdentificacionSIF">
+    <xs:sequence>
+      <xs:element name="IdSoftware" type="xs:string"/>
+      <xs:element name="NIFDesarrollador" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://noverifactu.local/esquema/anulacion"
+    xmlns="https://noverifactu.local/esquema/anulacion"
+    elementFormDefault="qualified">
+
+  <!-- ============================================ -->
+  <!-- Elemento raíz -->
+  <!-- ============================================ -->
+  <xs:element name="RegistroAnulacionNoVerifactu">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Cabecera" type="TipoCabeceraAnulacion"/>
+        <xs:element name="ReferenciaRegistroAnulado" type="TipoReferenciaRegistroAnulado"/>
+        <xs:element name="Trazabilidad" type="TipoTrazabilidadAnulacion"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ============================================ -->
+  <!-- Cabecera -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoCabeceraAnulacion">
+    <xs:sequence>
+      <xs:element name="TipoRegistro" type="TipoRegistroEnum"/>
+      <xs:element name="NIFEmisor" type="xs:string"/>
+      <xs:element name="VersionSIF" type="xs:string"/>
+      <xs:element name="FechaHoraAnulacion" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:simpleType name="TipoRegistroEnum">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="ANULACION"/>
+  </xs:restriction>
+</xs:simpleType>
+  <!-- ============================================ -->
+  <!-- Referencia al registro anulado -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoReferenciaRegistroAnulado">
+    <xs:sequence>
+      <xs:element name="NumeroFacturaOriginal" type="xs:string"/>
+      <xs:element name="FechaHoraExpedicionOriginal" type="xs:dateTime"/>
+      <xs:element name="HashRegistroAnulado" type="xs:string"/>
+      <xs:element name="MotivoAnulacion" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ============================================ -->
+  <!-- Trazabilidad -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoTrazabilidadAnulacion">
+    <xs:sequence>
+      <xs:element name="NumRegistroAnterior" type="xs:integer"/>
+      <xs:element name="NumRegistroActual" type="xs:integer"/>
+      <xs:element name="HashRegistroAnterior" type="xs:string"/>
+      <xs:element name="HashRegistroPropio" type="xs:string"/>
+      <xs:element name="IdentificacionSIF" type="TipoIdentificacionSIF"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- ============================================ -->
+  <!-- Identificación del SIF -->
+  <!-- ============================================ -->
+  <xs:complexType name="TipoIdentificacionSIF">
+    <xs:sequence>
+      <xs:element name="IdSoftware" type="xs:string"/>
+      <xs:element name="NIFDesarrollador" type="xs:string"/>
+      <xs:element name="fechaDeclaracionResponsable" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

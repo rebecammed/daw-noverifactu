@@ -1,0 +1,46 @@
+/* index.css optimizado */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* Dejamos que el navegador decida, pero sin forzar colores oscuros de base */
+  color-scheme: light;
+  color: #213547;
+  background-color: #ffffff;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  /* Quitamos el flex y el center para que el dashboard ocupe todo el espacio */
+}
+
+h1 {
+  font-size: 2.5em;
+  line-height: 1.1;
+  margin-bottom: 0.5em;
+}
+
+/* Estilo para que tus listas no se vean raras */
+ul {
+  text-align: left;
+  display: inline-block;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background-color: #e0e0e0;
+  border-color: #646cff;
+}

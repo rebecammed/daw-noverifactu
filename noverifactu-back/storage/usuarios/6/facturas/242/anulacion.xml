@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RegistroAnulacionNoVerifactu xmlns="https://noverifactu.local/esquema/anulacion">
+  <Cabecera>
+    <NIFEmisor>B13345678</NIFEmisor>
+    <VersionSIF>1.0.0</VersionSIF>
+    <FechaHoraAnulacion>2026-03-03T15:18:01.740Z</FechaHoraAnulacion>
+  </Cabecera>
+  <ReferenciaRegistroAnulado>
+    <NumeroFacturaOriginal>F-2026000242</NumeroFacturaOriginal>
+    <FechaHoraExpedicionOriginal>2026-02-04T23:00:00.000Z</FechaHoraExpedicionOriginal>
+    <HashRegistroAnulado>e875c014fcebf89a956655c186c7e8e4ee02bd5b2783e7543ac0dc32ff8f91a1</HashRegistroAnulado>
+    <MotivoAnulacion>QR no estampado en PDF</MotivoAnulacion>
+  </ReferenciaRegistroAnulado>
+  <Trazabilidad>
+    <NumRegistroAnterior>3</NumRegistroAnterior>
+    <NumRegistroActual>4</NumRegistroActual>
+    <HashRegistroAnterior>e875c014fcebf89a956655c186c7e8e4ee02bd5b2783e7543ac0dc32ff8f91a1</HashRegistroAnterior>
+    <HashRegistroPropio>038b564d9ce423c2ca97ce652b80d7fb30215a36984f9975047698bbff595b0a</HashRegistroPropio>
+    <IdentificacionSIF>
+      <IdSoftware>NOVERIFACTU-DEV-1.0.0</IdSoftware>
+      <NIFDesarrollador>71902382N</NIFDesarrollador>
+      <fechaDeclaracionResponsable>2026-01-22T11:33:32.000Z</fechaDeclaracionResponsable>
+    </IdentificacionSIF>
+  </Trazabilidad>
+</RegistroAnulacionNoVerifactu>
