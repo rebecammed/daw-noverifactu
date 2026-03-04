@@ -115,7 +115,7 @@ npm run dev
 
 ---
 
-## Rebeca
+## Autor
 
 Proyecto desarrollado por **Rebeca**
 Ciclo: Desarrollo de Aplicaciones Web (DAW)
