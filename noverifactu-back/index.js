@@ -59,7 +59,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(cors());
 
-const genAI = new GoogleGenerativeAI("AIzaSyCFzEJCIoi5jekcMlt6fg_WzXqeQXbGiHQ");
+const genAI = new GoogleGenerativeAI("YOUR-API-KEY");
 
 const upload = multer({ dest: "uploads/" });
 const storageLogos = multer.diskStorage({
