@@ -31,7 +31,7 @@ function TopNav() {
         indicatorColor="primary"
       >
         <Tab label="Crear factura" value="facturacion" />
-        <Tab label="Verificador" value="verificador" />
+        <Tab label="Verificadores" value="verificadores/qr" />
         <Tab label="Registro" value="registro" />
         <Tab label="Maestros" value="maestros" />
       </Tabs>

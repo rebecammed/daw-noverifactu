@@ -2,6 +2,7 @@ import { useState } from "react";
 import { authFetch } from "./utils/authFetch";
 import { useSystem } from "./context/SystemContext";
 import { Typography, Box, Button, Paper, Stack } from "@mui/material";
+
 // Importamos un icono para que el drag & drop sea más intuitivo
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 
@@ -54,7 +55,7 @@ function VerificadorFactura() {
         archivosVerificacion.map((file) => file.text()),
       );
 
-      const res = await authFetch("/api/verificar-documento", {
+      const res = await fetch("/api/verificar-documento", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ documentos: textos }),
@@ -72,141 +73,151 @@ function VerificadorFactura() {
       setVerificando(false);
     }
   }
-
   return (
-    <Box sx={{ p: 2 }}>
-      <Paper
-        elevation={0}
-        sx={{
-          p: 4,
-          mb: 4,
-          borderRadius: 4,
-          border: "1px solid #eee",
-          textAlign: "center",
-        }}
-      >
-        <Typography
-          variant="h4"
-          sx={{ mb: 3, fontWeight: 600, color: "#374151" }}
+    <Paper
+      elevation={0}
+      sx={{
+        p: { xs: 2, md: 5 },
+        borderRadius: 4,
+        border: "1px solid #eee",
+      }}
+    >
+      <Box sx={{ p: 2 }}>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 4,
+            mb: 4,
+            borderRadius: 4,
+            border: "1px solid #eee",
+            textAlign: "center",
+          }}
         >
-          Verificación de registros XML/JSON
-        </Typography>
-
-        <form onSubmit={verificarDocumento}>
-          <Stack spacing={3} alignItems="center">
-            {/* ÁREA DRAG & DROP */}
-            <Box
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-              sx={{
-                width: "100%",
-                minHeight: "150px",
-                border: "2px dashed",
-                borderColor: dragActive ? "#1a237e" : "#ccc",
-                borderRadius: 4,
-                bgcolor: dragActive ? "#f0f2ff" : "#fafafa",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 0.2s ease",
-                cursor: "pointer",
-                position: "relative",
-                p: 3,
-              }}
-              component="label"
-            >
-              <input
-                type="file"
-                hidden
-                accept=".xml,.json"
-                multiple
-                onChange={(e) => manejarArchivos(Array.from(e.target.files))}
-                disabled={mantenimiento}
-              />
-              <UploadFileIcon sx={{ fontSize: 40, color: "#9ca3af", mb: 1 }} />
-              <Typography
-                variant="body1"
-                sx={{ fontWeight: 500, color: "#4b5563" }}
-              >
-                {archivosVerificacion.length > 0
-                  ? `${archivosVerificacion.length} archivos seleccionados`
-                  : "Arrastra tus archivos aquí o haz clic para seleccionar"}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Máximo 20 archivos (XML o JSON)
-              </Typography>
-            </Box>
-
-            {/* BOTÓN VERIFICAR (Más pequeño y discreto) */}
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={
-                verificando ||
-                mantenimiento ||
-                archivosVerificacion.length === 0
-              }
-              sx={{
-                bgcolor: "#1a237e",
-                borderRadius: 2.5,
-                px: 6, // Un poco más estrecho
-                py: 1,
-                textTransform: "none",
-                fontWeight: "bold",
-                fontSize: "0.9rem",
-                "&:hover": { bgcolor: "#0d47a1" },
-              }}
-            >
-              {verificando ? "Verificando..." : "Verificar documentos"}
-            </Button>
-          </Stack>
-        </form>
-      </Paper>
-
-      {/* RESULTADOS (Manteniendo tu lógica pero con el estilo de texto mejorado) */}
-      {resultadosVerificacion.length > 0 && (
-        <Box>
-          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, ml: 1 }}>
-            Resultados de la verificación
+          <Typography
+            variant="h4"
+            sx={{ mb: 3, fontWeight: 600, color: "#374151" }}
+          >
+            Verificación de registros XML/JSON
           </Typography>
 
-          <Stack spacing={2}>
-            {resultadosVerificacion.map((r, i) => (
-              <Paper
-                key={i}
-                elevation={0}
+          <form onSubmit={verificarDocumento}>
+            <Stack spacing={3} alignItems="center">
+              {/* ÁREA DRAG & DROP */}
+              <Box
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
                 sx={{
-                  p: 2,
-                  borderRadius: 3,
-                  border: "1px solid",
-                  borderColor: r.integridad ? "success.main" : "error.main",
-                  backgroundColor: r.integridad ? "#f0fdf4" : "#fef2f2",
+                  width: "100%",
+                  minHeight: "150px",
+                  border: "2px dashed",
+                  borderColor: dragActive ? "#1a237e" : "#ccc",
+                  borderRadius: 4,
+                  bgcolor: dragActive ? "#f0f2ff" : "#fafafa",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s ease",
+                  cursor: "pointer",
+                  position: "relative",
+                  p: 3,
+                }}
+                component="label"
+              >
+                <input
+                  type="file"
+                  hidden
+                  accept=".xml,.json"
+                  multiple
+                  onChange={(e) => manejarArchivos(Array.from(e.target.files))}
+                  disabled={mantenimiento}
+                />
+                <UploadFileIcon
+                  sx={{ fontSize: 40, color: "#9ca3af", mb: 1 }}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{ fontWeight: 500, color: "#4b5563" }}
+                >
+                  {archivosVerificacion.length > 0
+                    ? `${archivosVerificacion.length} archivos seleccionados`
+                    : "Arrastra tus archivos aquí o haz clic para seleccionar"}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Máximo 20 archivos (XML o JSON)
+                </Typography>
+              </Box>
+
+              {/* BOTÓN VERIFICAR (Más pequeño y discreto) */}
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={
+                  verificando ||
+                  mantenimiento ||
+                  archivosVerificacion.length === 0
+                }
+                sx={{
+                  bgcolor: "#1a237e",
+                  borderRadius: 2.5,
+                  px: 6, // Un poco más estrecho
+                  py: 1,
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  fontSize: "0.9rem",
+                  "&:hover": { bgcolor: "#0d47a1" },
                 }}
               >
-                <Typography variant="body2" sx={{ fontWeight: 700, mb: 0.5 }}>
-                  Documento: {r.documento || "Desconocido"}
-                </Typography>
-                <Typography
-                  variant="body2"
+                {verificando ? "Verificando..." : "Verificar documentos"}
+              </Button>
+            </Stack>
+          </form>
+        </Paper>
+
+        {/* RESULTADOS (Manteniendo tu lógica pero con el estilo de texto mejorado) */}
+        {resultadosVerificacion.length > 0 && (
+          <Box>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, ml: 1 }}>
+              Resultados de la verificación
+            </Typography>
+
+            <Stack spacing={2}>
+              {resultadosVerificacion.map((r, i) => (
+                <Paper
+                  key={i}
+                  elevation={0}
                   sx={{
-                    color: r.integridad ? "success.dark" : "error.dark",
-                    fontWeight: 600,
+                    p: 2,
+                    borderRadius: 3,
+                    border: "1px solid",
+                    borderColor: r.integridad ? "success.main" : "error.main",
+                    backgroundColor: r.integridad ? "#f0fdf4" : "#fef2f2",
                   }}
                 >
-                  Integridad: {r.integridad ? "Válida ✅" : "No válida ❌"}
-                </Typography>
-                <Typography variant="body2" sx={{ mt: 1 }}>
-                  {r.mensajeIntegridad}
-                </Typography>
-              </Paper>
-            ))}
-          </Stack>
-        </Box>
-      )}
-    </Box>
+                  <Typography variant="body2" sx={{ fontWeight: 700, mb: 0.5 }}>
+                    Documento: {r.documento || "Desconocido"}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: r.integridad ? "success.dark" : "error.dark",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Integridad: {r.integridad ? "Válida ✅" : "No válida ❌"}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    {r.mensajeIntegridad}
+                  </Typography>
+                </Paper>
+              ))}
+            </Stack>
+          </Box>
+        )}
+      </Box>
+    </Paper>
   );
 }
 

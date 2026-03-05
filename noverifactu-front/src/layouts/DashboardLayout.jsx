@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import TopNav from "../components/TopNav";
 import SidebarPerfil from "../components/SidebarPerfil";
-
+import SidebarVerificador from "../components/SidebarVerificador";
 import SidebarRegistro from "../components/SidebarRegistro";
 import SidebarAdmin from "../components/SidebarAdmin";
 import SidebarMaestros from "../components/SidebarMaestros";
@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { authFetch } from "../utils/authFetch";
 import { useSearchParams } from "react-router-dom";
 
-function DashboardLayout({ usuario }) {
+function DashboardLayout({ usuario, children }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const fechaInicio = searchParams.get("fechaInicio") || "";
   const fechaFin = searchParams.get("fechaFin") || "";
@@ -58,7 +58,7 @@ function DashboardLayout({ usuario }) {
     if (path.startsWith("/admin")) return <SidebarAdmin />;
 
     if (path.startsWith("/perfil")) return <SidebarPerfil />;
-
+    if (path.startsWith("/verificadores")) return <SidebarVerificador />;
     if (path.startsWith("/maestros")) return <SidebarMaestros />;
 
     if (path.startsWith("/registro")) {
@@ -104,16 +104,20 @@ function DashboardLayout({ usuario }) {
 
         {/* Contenido */}
         <Box sx={{ flex: 1, p: 4 }}>
-          <Outlet
-            context={{
-              fechaInicio,
-              fechaFin,
-              busqueda,
-              orden,
-              clienteSeleccionado,
-              clientes,
-            }}
-          />
+          {children ? (
+            children
+          ) : (
+            <Outlet
+              context={{
+                fechaInicio,
+                fechaFin,
+                busqueda,
+                orden,
+                clienteSeleccionado,
+                clientes,
+              }}
+            />
+          )}
         </Box>
       </Box>
 

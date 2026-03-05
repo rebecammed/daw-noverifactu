@@ -229,6 +229,193 @@ async function procesarPDF({
   return rutaSellado;
 }
 
+app.get("/api/verificar-factura", async (req, res) => {
+  try {
+    const { nif, num, fecha, importe, hashPropio } = req.query;
+
+    const [rows] = await pool.query(
+      `
+      SELECT 
+  f.numero_factura,
+  f.fecha_expedicion,
+  f.importe_total,
+  df.nif,
+  rf.hash_registro_actual
+FROM facturas f
+JOIN datos_fiscales df 
+  ON f.usuario_id = df.id
+JOIN registros_facturacion rf
+  ON rf.id = f.registro_id
+WHERE f.numero_factura = ?
+      `,
+      [num],
+    );
+
+    if (!rows.length) {
+      return res.json({
+        existe: false,
+      });
+    }
+
+    const factura = rows[0];
+
+    const datosCoinciden =
+      factura.nif === nif &&
+      factura.numero_factura === num &&
+      factura.fecha_expedicion === fecha &&
+      Number(factura.importe_total).toFixed(2) === Number(importe).toFixed(2);
+
+    const hashValido = factura.hash === hashPropio;
+
+    res.json({
+      existe: true,
+      datosCoinciden,
+      hashValido,
+      factura: {
+        nif: factura.nif,
+        numero: factura.numero_factura,
+        fecha: factura.fecha_expedicion,
+        importe: factura.importe_total,
+      },
+    });
+  } catch (error) {
+    console.error("Error verificación:", error);
+    res.status(500).json({ mensaje: "Error verificando factura" });
+  }
+});
+
+app.post("/api/verificar-documento", async (req, res) => {
+  try {
+    const { documentos } = req.body;
+
+    if (!Array.isArray(documentos) || documentos.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Debes enviar un array de documentos" });
+    }
+
+    if (documentos.length > 20) {
+      return res
+        .status(400)
+        .json({ error: "Máximo 20 documentos por verificación" });
+    }
+
+    function detectarFormato(texto) {
+      if (typeof texto !== "string") throw new Error("Documento inválido");
+      const t = texto.trim();
+      if (t.startsWith("<")) return "XML";
+      if (t.startsWith("{")) return "JSON";
+      throw new Error("Formato no soportado");
+    }
+
+    const resultados = [];
+
+    for (const doc of documentos) {
+      try {
+        let datos;
+        const formato = detectarFormato(doc);
+
+        if (formato === "XML") {
+          datos = extraerDatosDesdeXML(doc);
+        } else {
+          const json = JSON.parse(doc);
+          datos = extraerCamposDesdeJSON(json);
+        }
+
+        // 🔹 Normalizaciones defensivas
+        const hashDocumento = String(datos.hashDocumento || "")
+          .trim()
+          .toLowerCase();
+
+        const hashAnterior = String(datos.hashAnterior || "")
+          .trim()
+          .toLowerCase();
+
+        const importeTotal = Number(datos.importeTotal).toFixed(2);
+
+        const numRegAnt = Number(datos.numRegAnt);
+        const numRegAct = Number(datos.numRegAct);
+
+        // ==============================
+        // 1️⃣ VERIFICACIÓN OFFLINE
+        // ==============================
+        const hashRecalculado = generarHashRegistro({
+          sifId: datos.sifId,
+          nifEmisor: datos.nifEmisor,
+          numeroFacturaCompleto: datos.numeroFacturaCompleto,
+          fechaHoraEmision: datos.fechaHoraExpedicion,
+          importeTotal: importeTotal,
+          numRegistroAnterior: numRegAnt,
+          numRegistroActual: numRegAct,
+          hashAnterior: hashAnterior,
+        });
+
+        const integridadValida =
+          hashRecalculado.toLowerCase() === hashDocumento;
+
+        // Si no es íntegro, no seguimos con BD
+        if (!integridadValida) {
+          resultados.push({
+            documento: datos.numeroFacturaCompleto,
+            integridad: false,
+            perteneceAlSistema: false,
+            mensajeIntegridad:
+              "El documento ha sido alterado o no sigue el algoritmo esperado",
+            mensajePertenencia: "No evaluado por falta de integridad",
+          });
+          continue;
+        }
+
+        // ==============================
+        // 2️⃣ COMPROBAR PERTENENCIA
+        // ==============================
+        let pertenece = false;
+
+        if (req.usuario?.id) {
+          const [rows] = await pool.query(
+            `
+    SELECT id
+    FROM registros_facturacion
+    WHERE hash_registro_actual = ?
+    AND usuario_id = ?
+    `,
+            [hashDocumento, req.usuario.id],
+          );
+
+          pertenece = rows.length > 0;
+        }
+
+        resultados.push({
+          documento: datos.numeroFacturaCompleto,
+          integridad: true,
+          perteneceAlSistema: pertenece,
+          mensajeIntegridad: "Documento íntegro",
+          mensajePertenencia: req.usuario
+            ? pertenece
+              ? "El documento pertenece a este sistema"
+              : "El documento no pertenece a este sistema"
+            : "No evaluado (usuario no autenticado)",
+        });
+      } catch (e) {
+        console.error("ERROR PROCESANDO DOCUMENTO:", e);
+
+        resultados.push({
+          documento: null,
+          integridad: false,
+          perteneceAlSistema: false,
+          mensajeIntegridad: "Error procesando documento",
+          mensajePertenencia: e.message,
+        });
+      }
+    }
+
+    return res.json({ resultados });
+  } catch (e) {
+    console.error("Error verificando documentos:", e);
+    return res.status(500).json({ error: "Error verificando documentos" });
+  }
+});
+
 app.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -1458,19 +1645,27 @@ app.post(
         `UPDATE facturas SET xml_generado_path = ? WHERE id = ?`,
         [rutaXML, facturaId],
       );
+      let logoPath = null;
 
+      if (emisor.logo_path) {
+        const posibleRuta = path.resolve(process.cwd(), emisor.logo_path);
+
+        if (fs.existsSync(posibleRuta)) {
+          logoPath = posibleRuta;
+        }
+      }
       let rutaOriginal = null;
 
-      const baseUrl =
-        "https://www2.agenciatributaria.gob.es/wlpl/AVAC-HACI/VerificaFactura";
+      const baseUrl = "http://localhost:5173/verificadores/qr";
       const qrData =
         `${baseUrl}` +
         `?nif=${nifEmisor}` +
         `&num=${datosNormalizados.numeroFactura}` +
         `&fecha=${fechaEmision}` +
-        `&cuotaIVA=${cuotaIVA.toFixed(2)}` +
         `&importe=${importeTotal.toFixed(2)}` +
-        `&hashPropio=${hashActual}`;
+        `&cuotaIVA=${cuotaIVA.toFixed(2)}` +
+        `&hash=${hashActual}` +
+        `&ver=1`;
 
       await procesarPDF({
         pdf,
@@ -2483,16 +2678,16 @@ app.post(
       );
 
       // 🔹 Generar QR
-      const baseUrl =
-        "https://www2.agenciatributaria.gob.es/wlpl/AVAC-HACI/VerificaFactura";
+      const baseUrl = "http://localhost:5173/verificadores/qr";
       const qrData =
         `${baseUrl}` +
         `?nif=${emisor.nif}` +
         `&num=${numeroRectificativa}` +
         `&fecha=${fechaNormalizada}` +
-        `&cuotaIVA=${cuotaIVA.toFixed(2)}` +
         `&importe=${importeTotal.toFixed(2)}` +
-        `&hashPropio=${hashActual}`;
+        `&cuotaIVA=${cuotaIVA.toFixed(2)}` +
+        `&hash=${hashActual}` +
+        `&ver=1`;
 
       // 🔹 Obtener logo y datos completos emisor
       const [[datosEmisorCompletos]] = await connection.query(
@@ -4023,130 +4218,6 @@ app.post("/api/sif/:id/activar", auth, checkMantenimiento, async (req, res) => {
   }
 });
 
-app.post("/api/verificar-documento", auth, async (req, res) => {
-  try {
-    const { documentos } = req.body;
-
-    if (!Array.isArray(documentos) || documentos.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "Debes enviar un array de documentos" });
-    }
-
-    if (documentos.length > 20) {
-      return res
-        .status(400)
-        .json({ error: "Máximo 20 documentos por verificación" });
-    }
-
-    function detectarFormato(texto) {
-      if (typeof texto !== "string") throw new Error("Documento inválido");
-      const t = texto.trim();
-      if (t.startsWith("<")) return "XML";
-      if (t.startsWith("{")) return "JSON";
-      throw new Error("Formato no soportado");
-    }
-
-    const resultados = [];
-
-    for (const doc of documentos) {
-      try {
-        let datos;
-        const formato = detectarFormato(doc);
-
-        if (formato === "XML") {
-          datos = extraerDatosDesdeXML(doc);
-        } else {
-          const json = JSON.parse(doc);
-          datos = extraerCamposDesdeJSON(json);
-        }
-
-        // 🔹 Normalizaciones defensivas
-        const hashDocumento = String(datos.hashDocumento || "")
-          .trim()
-          .toLowerCase();
-
-        const hashAnterior = String(datos.hashAnterior || "")
-          .trim()
-          .toLowerCase();
-
-        const importeTotal = Number(datos.importeTotal).toFixed(2);
-
-        const numRegAnt = Number(datos.numRegAnt);
-        const numRegAct = Number(datos.numRegAct);
-
-        // ==============================
-        // 1️⃣ VERIFICACIÓN OFFLINE
-        // ==============================
-        const hashRecalculado = generarHashRegistro({
-          sifId: datos.sifId,
-          nifEmisor: datos.nifEmisor,
-          numeroFacturaCompleto: datos.numeroFacturaCompleto,
-          fechaHoraEmision: datos.fechaHoraExpedicion,
-          importeTotal: importeTotal,
-          numRegistroAnterior: numRegAnt,
-          numRegistroActual: numRegAct,
-          hashAnterior: hashAnterior,
-        });
-
-        const integridadValida =
-          hashRecalculado.toLowerCase() === hashDocumento;
-
-        // Si no es íntegro, no seguimos con BD
-        if (!integridadValida) {
-          resultados.push({
-            documento: datos.numeroFacturaCompleto,
-            integridad: false,
-            perteneceAlSistema: false,
-            mensajeIntegridad:
-              "El documento ha sido alterado o no sigue el algoritmo esperado",
-            mensajePertenencia: "No evaluado por falta de integridad",
-          });
-          continue;
-        }
-
-        // ==============================
-        // 2️⃣ COMPROBAR PERTENENCIA
-        // ==============================
-        const [rows] = await pool.query(
-          `
-          SELECT id
-          FROM registros_facturacion
-          WHERE hash_registro_actual = ?
-          AND usuario_id = ?
-          `,
-          [hashDocumento, req.usuario.id],
-        );
-
-        const pertenece = rows.length > 0;
-
-        resultados.push({
-          documento: datos.numeroFacturaCompleto,
-          integridad: true,
-          perteneceAlSistema: pertenece,
-          mensajeIntegridad: "Documento íntegro",
-          mensajePertenencia: pertenece
-            ? "El documento pertenece a este sistema"
-            : "El documento no pertenece a este sistema",
-        });
-      } catch (e) {
-        resultados.push({
-          documento: null,
-          integridad: false,
-          perteneceAlSistema: false,
-          mensajeIntegridad: "Error procesando documento",
-          mensajePertenencia: e.message,
-        });
-      }
-    }
-
-    return res.json({ resultados });
-  } catch (e) {
-    console.error("Error verificando documentos:", e);
-    return res.status(500).json({ error: "Error verificando documentos" });
-  }
-});
-
 app.get("/api/integridad", auth, async (req, res) => {
   const usuarioId = req.usuario.id;
   const [rows] = await pool.query(
@@ -4327,46 +4398,30 @@ app.get(
     }
   },
 );
-
 app.get(
   "/api/admin/integridad-eventos",
   auth,
   requireAdmin,
   async (req, res) => {
     try {
-      const [usuarios] = await pool.query(`
-      SELECT DISTINCT usuario_id 
-      FROM log_eventos
-    `);
-
+      const [usuarios] = await pool.query(
+        `SELECT DISTINCT usuario_id FROM log_eventos`,
+      );
       const resultadoGlobal = [];
-
       for (const u of usuarios) {
         const [rows] = await pool.query(
-          `
-        SELECT *
-        FROM log_eventos
-        WHERE usuario_id = ?
-        ORDER BY num_evento ASC
-        `,
+          `SELECT * FROM log_eventos WHERE usuario_id = ? ORDER BY num_evento ASC `,
           [u.usuario_id],
         );
-
         const errores = await comprobarIntegridadEventos(rows);
-
         resultadoGlobal.push({
           usuario_id: u.usuario_id,
           ok: errores.length === 0,
           errores,
         });
       }
-
       const todoOk = resultadoGlobal.every((u) => u.ok);
-
-      return res.json({
-        ok: todoOk,
-        detalle: resultadoGlobal,
-      });
+      return res.json({ ok: todoOk, detalle: resultadoGlobal });
     } catch (error) {
       console.error("ERROR INTEGRIDAD EVENTOS ADMIN:", error);
       return res.status(500).json({
@@ -5049,6 +5104,70 @@ app.post("/api/admin/sif/versionar", auth, requireAdmin, async (req, res) => {
     res.status(500).json({ mensaje: "Error al crear nueva versión" });
   } finally {
     connection.release();
+  }
+});
+
+app.get("/api/admin/stats", auth, requireAdmin, async (req, res) => {
+  try {
+    const [[usuarios]] = await pool.query(`
+      SELECT COUNT(*) as total
+      FROM usuarios
+      WHERE activo = 1
+    `);
+
+    const [[facturas]] = await pool.query(`
+      SELECT COUNT(*) as total,
+             COALESCE(SUM(importe_total),0) as totalFacturado
+      FROM facturas
+    `);
+
+    res.json({
+      usuarios: usuarios.total,
+      facturas: facturas.total,
+      totalFacturado: facturas.totalFacturado,
+    });
+  } catch (error) {
+    console.error("Error stats admin:", error);
+    res.status(500).json({ mensaje: "Error obteniendo estadísticas" });
+  }
+});
+
+app.get(
+  "/api/admin/facturacion-mensual",
+  auth,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const [rows] = await pool.query(`
+      SELECT 
+        DATE_FORMAT(fecha_expedicion,'%b') as mes,
+        SUM(importe_total) as total
+      FROM facturas
+      GROUP BY MONTH(fecha_expedicion)
+      ORDER BY MONTH(fecha_expedicion)
+    `);
+
+      res.json(rows);
+    } catch (error) {
+      console.error("Error facturación mensual:", error);
+      res.status(500).json({ mensaje: "Error obteniendo gráfico" });
+    }
+  },
+);
+
+app.get("/api/admin/logs-recientes", auth, requireAdmin, async (req, res) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT tipo_evento, descripcion, fecha_evento
+      FROM log_eventos
+      ORDER BY fecha_evento DESC
+      LIMIT 10
+    `);
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Error logs admin:", error);
+    res.status(500).json({ mensaje: "Error obteniendo logs" });
   }
 });
 

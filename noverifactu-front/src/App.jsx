@@ -36,11 +36,14 @@ import CambiarPassword from "./seguridad/CambiarPassword";
 import VerificadorFactura from "./VerificadorFactura";
 import PoliticaPrivacidad from "./seguridad/PoliticaPrivacidad";
 import VerificarEmail from "./seguridad/VerificarEmail";
+import VerificarQR from "./VerificarQR";
 import AdminLogs from "./admin/AdminLogs";
 import Dashboard from "./perfil/Dashboard";
 import AdminLogsUsuario from "./admin/AdminLogsUsuario";
 import Productos from "./perfil/Productos";
+import VerificadorQRPublico from "./verificadores/VerificadorQRPublico";
 
+import OptionalDashboardLayout from "./layouts/OptionalDashboardLayout";
 function App() {
   const navigate = useNavigate();
   const [mantenimiento, setMantenimiento] = useState(false);
@@ -98,6 +101,23 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/verificar-qr" element={<VerificadorQRPublico />} />
+          <Route
+            path="/verificadores/qr"
+            element={
+              <OptionalDashboardLayout>
+                <VerificarQR />
+              </OptionalDashboardLayout>
+            }
+          />
+          <Route
+            path="/verificadores/xml"
+            element={
+              <OptionalDashboardLayout>
+                <VerificadorFactura />
+              </OptionalDashboardLayout>
+            }
+          />
           <Route path="/login" element={<Login setUsuario={setUsuario} />} />
           <Route path="/register" element={<Register />} />
 
@@ -126,7 +146,7 @@ function App() {
                 <Route path="sif" element={<GestionSIF />} />
               </Route>
               <Route path="/facturacion" element={<SubidaFactura />} />
-              <Route path="/verificador" element={<VerificadorFactura />} />
+
               <Route path="/maestros">
                 <Route path="clientes" element={<Clientes />} />
                 <Route path="productos" element={<Productos />} />

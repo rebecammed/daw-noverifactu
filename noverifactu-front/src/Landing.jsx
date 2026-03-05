@@ -24,7 +24,47 @@ function Landing() {
   }, [navigate]);
 
   return (
-    <Container maxWidth="sm">
+    <Box textAlign="center">
+      <Typography variant="h3" mb={2}>
+        INALTERA
+      </Typography>
+
+      <Typography mb={4}>Tu solución NO-VERI*FACTU</Typography>
+
+      {/* LOGIN */}
+      <Stack direction="row" spacing={2} justifyContent="center" mb={4}>
+        <Button variant="contained" onClick={() => navigate("/login")}>
+          Iniciar sesión
+        </Button>
+
+        <Button variant="outlined" onClick={() => navigate("/register")}>
+          Registrarse
+        </Button>
+      </Stack>
+
+      {/* HERRAMIENTAS PUBLICAS */}
+      <Typography variant="h6" mb={2}>
+        Verificación pública de documentos
+      </Typography>
+
+      <Stack direction="row" spacing={2} justifyContent="center">
+        <Button variant="outlined" onClick={() => navigate("/verificar-qr")}>
+          Verificar factura por QR
+        </Button>
+
+        <Button
+          variant="outlined"
+          onClick={() => navigate("/verificadores/xml")}
+        >
+          Verificar XML / JSON
+        </Button>
+      </Stack>
+    </Box>
+  );
+}
+export default Landing;
+/*
+<Container maxWidth="sm">
       <Box
         sx={{
           minHeight: "100vh",
@@ -43,12 +83,12 @@ function Landing() {
             borderRadius: 3,
           }}
         >
-          {/* Logo */}
+          {/* Logo */ /*}
           <Box sx={{ mb: 3 }}>
             <img src={logo} alt="Logo INALTERA" style={{ width: "120px" }} />
           </Box>
 
-          {/* Nombre */}
+          {/* Nombre */ /*}
           <Typography
             variant="h3"
             fontWeight="bold"
@@ -58,12 +98,12 @@ function Landing() {
             INALTERA
           </Typography>
 
-          {/* Eslogan */}
+          {/* Eslogan */ /*}
           <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 4 }}>
             Tu solución NO-VERI*FACTU
           </Typography>
 
-          {/* Botones */}
+          {/* Botones */ /*}
           <Stack direction="row" spacing={2} justifyContent="center">
             <Button
               variant="contained"
@@ -101,11 +141,4 @@ function Landing() {
           </Typography>
         </Box>
       </Box>
-    </Container>
-  );
-}
-export default Landing;
-
-/*<Link to="/aviso-legal">Aviso Legal</Link> ·{" "}
-            <Link to="/privacidad">Privacidad</Link> ·{" "}
-            <Link to="/cookies">Cookies</Link>*/
+    </Container>*/
