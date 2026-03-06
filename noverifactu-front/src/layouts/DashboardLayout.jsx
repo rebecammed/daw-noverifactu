@@ -95,7 +95,8 @@ function DashboardLayout({ usuario, children }) {
               width: 220,
               borderRight: "1px solid #eee",
               bgcolor: "#fafafa",
-              p: 2,
+              py: 2,
+              px: 0,
             }}
           >
             {sidebar}

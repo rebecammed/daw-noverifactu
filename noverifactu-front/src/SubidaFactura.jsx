@@ -474,13 +474,18 @@ function SubidaFactura() {
     formData.conceptos.forEach((c) => {
       if (!c.descripcion?.trim()) return;
 
-      const existe = productos.find(
-        (p) =>
-          p.nombre.toLowerCase().trim() === c.descripcion.toLowerCase().trim(),
+      const nombreNormalizado = c.descripcion.toLowerCase().trim();
+
+      // comprobar si ya existe en catálogo
+      const existeEnCatalogo = productos.some(
+        (p) => p.nombre.toLowerCase().trim() === nombreNormalizado,
       );
 
-      if (!existe) {
-        productosNuevos.set(c.descripcion.toLowerCase(), {
+      // comprobar si ya lo vamos a crear en esta factura
+      const yaEnLista = productosNuevos.has(nombreNormalizado);
+
+      if (!existeEnCatalogo && !yaEnLista) {
+        productosNuevos.set(nombreNormalizado, {
           nombre: c.descripcion.trim(),
           precio: c.precioUnitario,
           tipo_iva: c.tipoImpositivo,
@@ -703,7 +708,7 @@ function SubidaFactura() {
   }
   return (
     <Paper
-      elevation={0}
+      elevation={3}
       sx={{ p: { xs: 2, md: 5 }, borderRadius: 4, border: "1px solid #eee" }}
     >
       <Typography variant="h4" sx={{ fontWeight: 600, mb: 4 }}>

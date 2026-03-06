@@ -122,7 +122,26 @@ function ForgotPassword() {
                 fullWidth
               />
 
-              <Button type="submit" variant="contained" size="large" fullWidth>
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  fontSize: "1rem",
+                  bgcolor: "#1a73e8",
+                  fontWeight: 600,
+                  textTransform: "none",
+                  transition: "all 0.2s ease",
+
+                  "&:hover": {
+                    bgcolor: "#155ec0",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  },
+                }}
+                fullWidth
+              >
                 Enviar instrucciones
               </Button>
             </Stack>

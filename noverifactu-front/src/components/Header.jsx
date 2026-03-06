@@ -30,18 +30,21 @@ function Header({ usuario }) {
           {/* BOTÓN ADMIN SOLO SI ES ADMIN */}
           {usuario?.rol === "ADMIN" && (
             <Button
-              variant="contained"
               component={Link}
               to="/admin"
               sx={{
-                bgcolor: "#1a237e", // Azul oscuro profesional (Indigo 900 de MUI)
+                bgcolor: "#0f4fb3",
                 color: "white",
-                fontWeight: "bold",
+                fontWeight: 600,
+                textTransform: "none",
                 px: 3,
-                borderRadius: 1,
-                textTransform: "none", // Evita que salga todo en mayúsculas si prefieres un look más moderno
+                boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                transition: "all .2s ease",
+
                 "&:hover": {
-                  bgcolor: "#0d47a1", // Un azul ligeramente distinto al pasar el ratón
+                  bgcolor: "#0b3d8c",
+                  transform: "translateY(-1px)",
+                  boxShadow: "0 6px 14px rgba(0,0,0,0.2)",
                 },
               }}
             >
@@ -51,7 +54,22 @@ function Header({ usuario }) {
 
           <Typography variant="body2">{usuario?.email}</Typography>
 
-          <Button variant="outlined" color="inherit" onClick={cerrarSesion}>
+          <Button
+            sx={{
+              color: "white",
+              border: "1px solid rgba(255,255,255,0.4)",
+              textTransform: "none",
+              fontWeight: 600,
+              transition: "all .2s ease",
+
+              "&:hover": {
+                bgcolor: "rgba(255,255,255,0.15)",
+                borderColor: "white",
+                transform: "translateY(-1px)",
+              },
+            }}
+            onClick={cerrarSesion}
+          >
             Cerrar sesión
           </Button>
         </Box>

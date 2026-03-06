@@ -188,7 +188,7 @@ function DetalleFactura() {
 
   return (
     <Paper
-      elevation={0}
+      elevation={3}
       sx={{
         p: { xs: 2, md: 3 },
         borderRadius: 4,

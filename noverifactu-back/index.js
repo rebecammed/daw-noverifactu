@@ -1656,7 +1656,7 @@ app.post(
       }
       let rutaOriginal = null;
 
-      const baseUrl = "http://localhost:5173/verificadores/qr";
+      const baseUrl = "http://localhost:5173/verificar-qr";
       const qrData =
         `${baseUrl}` +
         `?nif=${nifEmisor}` +
@@ -2678,7 +2678,7 @@ app.post(
       );
 
       // 🔹 Generar QR
-      const baseUrl = "http://localhost:5173/verificadores/qr";
+      const baseUrl = "http://localhost:5173/verificar-qr";
       const qrData =
         `${baseUrl}` +
         `?nif=${emisor.nif}` +
@@ -3509,6 +3509,47 @@ app.put("/api/clientes/:id", auth, checkMantenimiento, async (req, res) => {
 
   res.json({ ok: true });
 });
+app.patch(
+  "/api/clientes/:id/desactivar",
+  auth,
+  checkMantenimiento,
+  async (req, res) => {
+    const usuarioId = req.usuario.id;
+    const clienteId = req.params.id;
+
+    await pool.query(
+      `
+      UPDATE clientes
+      SET activo = 0
+      WHERE id = ? AND usuario_id = ?
+      `,
+      [clienteId, usuarioId],
+    );
+
+    res.json({ ok: true });
+  },
+);
+
+app.patch(
+  "/api/clientes/:id/reactivar",
+  auth,
+  checkMantenimiento,
+  async (req, res) => {
+    const usuarioId = req.usuario.id;
+    const clienteId = req.params.id;
+
+    await pool.query(
+      `
+      UPDATE clientes
+      SET activo = 1
+      WHERE id = ? AND usuario_id = ?
+      `,
+      [clienteId, usuarioId],
+    );
+
+    res.json({ ok: true });
+  },
+);
 
 app.get("/api/clientes/buscar", auth, async (req, res) => {
   try {
@@ -3544,7 +3585,7 @@ app.get("/api/clientes", auth, async (req, res) => {
 
   const [rows] = await pool.query(
     `
-    SELECT id, nif, nombre, direccion, codigo_postal, ciudad, pais, email, telefono
+    SELECT id, nif, nombre, direccion, codigo_postal, ciudad, pais, email, telefono, activo
     FROM clientes
     WHERE usuario_id = ?
     ORDER BY nombre ASC
@@ -3730,7 +3771,7 @@ app.get("/api/productos", auth, async (req, res) => {
 
   const [rows] = await pool.query(
     `
-    SELECT id, nombre, descripcion, precio, tipo_iva
+    SELECT id, nombre, descripcion, precio, tipo_iva, activo
     FROM productos
     WHERE usuario_id = ?
     ORDER BY nombre ASC
@@ -3777,7 +3818,47 @@ app.put("/api/productos/:id", auth, checkMantenimiento, async (req, res) => {
 
   res.json({ ok: true });
 });
+app.patch(
+  "/api/productos/:id/desactivar",
+  auth,
+  checkMantenimiento,
+  async (req, res) => {
+    const usuarioId = req.usuario.id;
+    const productoId = req.params.id;
 
+    await pool.query(
+      `
+      UPDATE productos
+      SET activo = 0
+      WHERE id = ? AND usuario_id = ?
+      `,
+      [productoId, usuarioId],
+    );
+
+    res.json({ ok: true });
+  },
+);
+
+app.patch(
+  "/api/productos/:id/reactivar",
+  auth,
+  checkMantenimiento,
+  async (req, res) => {
+    const usuarioId = req.usuario.id;
+    const productoId = req.params.id;
+
+    await pool.query(
+      `
+      UPDATE productos
+      SET activo = 1
+      WHERE id = ? AND usuario_id = ?
+      `,
+      [productoId, usuarioId],
+    );
+
+    res.json({ ok: true });
+  },
+);
 app.get("/api/productos/buscar", auth, async (req, res) => {
   try {
     const usuarioId = req.usuario.id;
@@ -3790,6 +3871,7 @@ app.get("/api/productos/buscar", auth, async (req, res) => {
       SELECT id, nombre, precio, tipo_iva, unidad
       FROM productos
       WHERE usuario_id = ?
+      AND activo = 1
       AND nombre LIKE ?
       ORDER BY nombre
       LIMIT 20

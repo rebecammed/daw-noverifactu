@@ -140,13 +140,21 @@ function CambiarPassword() {
         <Button
           type="submit"
           variant="contained"
-          color="primary"
           sx={{
-            borderRadius: 3,
             px: 4,
             py: 1.2,
             mt: 1,
             width: { xs: "100%", sm: "auto" },
+            fontSize: "1rem",
+            bgcolor: "#1a73e8",
+            fontWeight: 600,
+            textTransform: "none",
+            transition: "all 0.2s ease",
+
+            "&:hover": {
+              bgcolor: "#155ec0",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            },
           }}
         >
           Actualizar contraseña

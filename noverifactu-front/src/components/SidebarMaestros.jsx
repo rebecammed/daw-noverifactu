@@ -6,27 +6,55 @@ function SidebarMaestros() {
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
-
+  const items = [
+    { label: "Clientes", path: "/maestros/clientes" },
+    { label: "Productos", path: "/maestros/productos" },
+  ];
   return (
     <>
-      <Typography variant="subtitle2" sx={{ mb: 2 }}>
+      <Typography
+        variant="overline"
+        sx={{ px: 3, mb: 1, color: "#6b7280", fontWeight: 600 }}
+      >
         Maestros
       </Typography>
 
-      <List>
-        <ListItemButton
-          selected={isActive("/maestros/clientes")}
-          onClick={() => navigate("/maestros/clientes")}
-        >
-          <ListItemText primary="Clientes" />
-        </ListItemButton>
+      <List sx={{ p: 0 }}>
+        {items.map((item) => (
+          <ListItemButton
+            key={item.path}
+            selected={isActive(item.path)}
+            onClick={() => navigate(item.path)}
+            sx={{
+              width: "100%",
+              borderRadius: 0,
+              pl: 3,
+              pr: 2,
+              py: 1.2,
 
-        <ListItemButton
-          selected={isActive("/maestros/productos")}
-          onClick={() => navigate("/maestros/productos")}
-        >
-          <ListItemText primary="Productos" />
-        </ListItemButton>
+              "&:hover": {
+                bgcolor: "#f1f5f9",
+              },
+
+              "& .MuiListItemText-root": {
+                margin: 0,
+              },
+
+              "&.Mui-selected": {
+                bgcolor: "#e8f0fe",
+                color: "#1a73e8",
+                fontWeight: 600,
+                borderLeft: "3px solid #1a73e8",
+              },
+
+              "&.Mui-selected:hover": {
+                bgcolor: "#e8f0fe",
+              },
+            }}
+          >
+            <ListItemText primary={item.label} />
+          </ListItemButton>
+        ))}
       </List>
     </>
   );

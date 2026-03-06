@@ -91,8 +91,20 @@ function Activar2FA() {
         <Button
           type="submit"
           variant="contained"
-          color="primary"
-          sx={{ mt: 2 }}
+          sx={{
+            px: 4,
+            py: 1.5,
+            fontSize: "1rem",
+            bgcolor: "#1a73e8",
+            fontWeight: 600,
+            textTransform: "none",
+            transition: "all 0.2s ease",
+
+            "&:hover": {
+              bgcolor: "#155ec0",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            },
+          }}
           onClick={generarQR}
         >
           Activar 2FA
@@ -123,8 +135,20 @@ function Activar2FA() {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
+              sx={{
+                px: 4,
+                py: 1.5,
+                fontSize: "1rem",
+                bgcolor: "#1a73e8",
+                fontWeight: 600,
+                textTransform: "none",
+                transition: "all 0.2s ease",
+
+                "&:hover": {
+                  bgcolor: "#155ec0",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                },
+              }}
             >
               Verificar código
             </Button>

@@ -56,6 +56,45 @@ function Productos() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  async function desactivarProducto(id) {
+    const confirmar = window.confirm(
+      "¿Seguro que deseas desactivar este producto?",
+    );
+
+    if (!confirmar) return;
+
+    try {
+      const res = await authFetch(`/api/productos/${id}/desactivar`, {
+        method: "PATCH",
+      });
+
+      if (!res.ok) {
+        alert("Error desactivando producto");
+        return;
+      }
+
+      await cargarProductos();
+    } catch {
+      alert("Error desactivando producto");
+    }
+  }
+
+  async function reactivarProducto(id) {
+    try {
+      const res = await authFetch(`/api/productos/${id}/reactivar`, {
+        method: "PATCH",
+      });
+
+      if (!res.ok) {
+        alert("Error reactivando producto");
+        return;
+      }
+      await cargarProductos();
+    } catch {
+      alert("Error reactivando producto");
+    }
+  }
+
   return (
     <Paper
       elevation={0}
@@ -65,69 +104,92 @@ function Productos() {
         <Typography variant="h4">Productos</Typography>
       </Box>
 
-      <TableContainer component={Paper} sx={{ mt: 2 }}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          mt: 2,
+          borderRadius: 4,
+          boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+        }}
+      >
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Descripción</TableCell>
-              <TableCell>Precio</TableCell>
-              <TableCell>IVA</TableCell>
-              <TableCell>Acciones</TableCell>
+            <TableRow sx={{ bgcolor: "grey.100" }}>
+              <TableCell>
+                <Typography
+                  sx={{ fontSize: "1rem", fontWeight: 550, color: "#374151" }}
+                >
+                  Descripción
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography
+                  sx={{ fontSize: "1rem", fontWeight: 550, color: "#374151" }}
+                >
+                  Precio
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography
+                  sx={{ fontSize: "1rem", fontWeight: 550, color: "#374151" }}
+                >
+                  IVA
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography
+                  sx={{ fontSize: "1rem", fontWeight: 550, color: "#374151" }}
+                >
+                  Acciones
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {productos.map((p) => (
-              <TableRow key={p.id}>
+              <TableRow key={p.id} sx={{ opacity: p.activo ? 1 : 0.5 }}>
+                {/* Descripción */}
                 <TableCell>
                   {productoEditando === p.id ? (
                     <TextField
-                      name="nombre"
+                      size="small"
+                      name="descripcion"
                       value={form.nombre || ""}
                       onChange={handleChange}
-                      size="small"
                     />
                   ) : (
                     p.nombre
                   )}
                 </TableCell>
 
+                {/* Precio */}
                 <TableCell>
                   {productoEditando === p.id ? (
                     <TextField
-                      name="descripcion"
-                      value={form.descripcion || ""}
-                      onChange={handleChange}
                       size="small"
-                    />
-                  ) : (
-                    p.descripcion
-                  )}
-                </TableCell>
-
-                <TableCell>
-                  {productoEditando === p.id ? (
-                    <TextField
                       name="precio"
                       type="number"
                       value={form.precio || ""}
                       onChange={handleChange}
-                      size="small"
                     />
                   ) : (
                     p.precio + " €"
                   )}
                 </TableCell>
 
+                {/* IVA */}
                 <TableCell>
                   {productoEditando === p.id ? (
                     <TextField
+                      size="small"
                       name="tipo_iva"
                       type="number"
                       value={form.tipo_iva || ""}
                       onChange={handleChange}
-                      size="small"
                     />
                   ) : (
                     p.tipo_iva + "%"
@@ -141,16 +203,126 @@ function Productos() {
                         size="small"
                         variant="contained"
                         onClick={guardar}
+                        sx={{
+                          height: 30,
+                          px: 2,
+                          fontSize: "0.8rem",
+                          minWidth: 70,
+                          bgcolor: "#1a73e8",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          borderRadius: 2,
+                          transition: "all 0.2s ease",
+
+                          "&:hover": {
+                            bgcolor: "#155ec0",
+                            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                          },
+                        }}
                       >
                         Guardar
                       </Button>
-                      <Button size="small" onClick={cancelar}>
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={cancelar}
+                        sx={{
+                          height: 30,
+                          px: 2,
+                          fontSize: "0.8rem",
+                          minWidth: 70,
+                          color: "#dc2626",
+                          borderColor: "#dc2626",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          borderRadius: 2,
+                          transition: "all 0.2s ease",
+
+                          "&:hover": {
+                            bgcolor: "rgba(220,38,38,0.08)",
+                            borderColor: "#b91c1c",
+                          },
+                        }}
+                      >
                         Cancelar
                       </Button>
                     </Stack>
+                  ) : p.activo ? (
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => editar(p)}
+                        sx={{
+                          height: 30,
+                          px: 2,
+                          fontSize: "0.8rem",
+                          minWidth: 70,
+                          color: "#1a73e8",
+                          borderColor: "#1a73e8",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          borderRadius: 2,
+                          transition: "all 0.2s ease",
+
+                          "&:hover": {
+                            bgcolor: "rgba(26,115,232,0.08)",
+                            borderColor: "#155ec0",
+                          },
+                        }}
+                      >
+                        Editar
+                      </Button>
+
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() => desactivarProducto(p.id)}
+                        sx={{
+                          height: 30,
+                          px: 2,
+                          fontSize: "0.8rem",
+                          minWidth: 70,
+                          color: "#dc2626",
+                          borderColor: "#dc2626",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          borderRadius: 2,
+                          transition: "all 0.2s ease",
+
+                          "&:hover": {
+                            bgcolor: "rgba(220,38,38,0.08)",
+                            borderColor: "#b91c1c",
+                          },
+                        }}
+                      >
+                        Desactivar
+                      </Button>
+                    </Stack>
                   ) : (
-                    <Button size="small" onClick={() => editar(p)}>
-                      Editar
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => reactivarProducto(p.id)}
+                      sx={{
+                        height: 30,
+                        px: 2,
+                        fontSize: "0.8rem",
+                        minWidth: 70,
+                        color: "#16a34a",
+                        borderColor: "#16a34a",
+                        fontWeight: 600,
+                        textTransform: "none",
+                        borderRadius: 2,
+                        transition: "all 0.2s ease",
+
+                        "&:hover": {
+                          bgcolor: "rgba(22,163,74,0.08)",
+                          borderColor: "#15803d",
+                        },
+                      }}
+                    >
+                      Reactivar
                     </Button>
                   )}
                 </TableCell>

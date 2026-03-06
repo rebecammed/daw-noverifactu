@@ -13,7 +13,7 @@ import {
   TableBody,
   TableContainer,
   Paper,
-  Alert,
+  TextField,
 } from "@mui/material";
 
 function Clientes() {
@@ -21,6 +21,7 @@ function Clientes() {
   const [clienteEditando, setClienteEditando] = useState(null);
   const [form, setForm] = useState({});
   const [error, setError] = useState(null);
+  const [erroresValidacion, setErroresValidacion] = useState({});
 
   useEffect(() => {
     cargarClientes();
@@ -68,6 +69,45 @@ function Clientes() {
     if (Object.keys(nuevosErrores).length > 0) {
       setErroresValidacion(nuevosErrores);
       return;
+    }
+
+    async function desactivarCliente(id) {
+      const confirmar = window.confirm(
+        "¿Seguro que deseas desactivar este cliente?",
+      );
+
+      if (!confirmar) return;
+
+      try {
+        const res = await authFetch(`/api/clientes/${id}/desactivar`, {
+          method: "PATCH",
+        });
+
+        if (!res.ok) {
+          alert("Error desactivando cliente");
+          return;
+        }
+
+        await cargarClientes();
+      } catch {
+        alert("Error desactivando cliente");
+      }
+    }
+    async function reactivarCliente(id) {
+      try {
+        const res = await authFetch(`/api/clientes/${id}/reactivar`, {
+          method: "PATCH",
+        });
+
+        if (!res.ok) {
+          alert("Error reactivando cliente");
+          return;
+        }
+
+        await cargarClientes();
+      } catch {
+        alert("Error reactivando cliente");
+      }
     }
 
     setErroresValidacion({});
@@ -214,7 +254,7 @@ function Clientes() {
           </TableHead>
           <TableBody>
             {clientes.map((c) => (
-              <TableRow key={c.id}>
+              <TableRow key={c.id} sx={{ opacity: c.activo ? 1 : 0.5 }}>
                 {/* NIF */}
                 <TableCell>
                   {clienteEditando === c.id ? (
@@ -338,33 +378,127 @@ function Clientes() {
                 {/* Acciones */}
                 <TableCell>
                   {clienteEditando === c.id ? (
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} alignItems="center">
                       <Button
                         variant="contained"
-                        color="primary"
                         size="small"
                         onClick={guardar}
+                        sx={{
+                          height: 30,
+                          px: 2,
+                          fontSize: "0.8rem",
+                          minWidth: 70,
+                          bgcolor: "#1a73e8",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          borderRadius: 2,
+
+                          "&:hover": {
+                            bgcolor: "#155ec0",
+                            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                          },
+                        }}
                       >
                         Guardar
                       </Button>
 
                       <Button
                         variant="outlined"
-                        color="secondary"
                         size="small"
                         onClick={cancelar}
+                        sx={{
+                          height: 30,
+                          px: 2,
+                          fontSize: "0.8rem",
+                          minWidth: 70,
+                          color: "#dc2626",
+                          borderColor: "#dc2626",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          borderRadius: 2,
+
+                          "&:hover": {
+                            bgcolor: "rgba(220,38,38,0.08)",
+                            borderColor: "#b91c1c",
+                          },
+                        }}
                       >
                         Cancelar
                       </Button>
                     </Stack>
+                  ) : c.activo ? (
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => editar(c)}
+                        sx={{
+                          height: 30,
+                          px: 2,
+                          fontSize: "0.8rem",
+                          minWidth: 70,
+                          color: "#1a73e8",
+                          borderColor: "#1a73e8",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          borderRadius: 2,
+
+                          "&:hover": {
+                            bgcolor: "rgba(26,115,232,0.08)",
+                            borderColor: "#155ec0",
+                          },
+                        }}
+                      >
+                        Editar
+                      </Button>
+
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() => desactivarCliente(c.id)}
+                        sx={{
+                          height: 30,
+                          px: 2,
+                          fontSize: "0.8rem",
+                          minWidth: 70,
+                          color: "#dc2626",
+                          borderColor: "#dc2626",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          borderRadius: 2,
+
+                          "&:hover": {
+                            bgcolor: "rgba(220,38,38,0.08)",
+                            borderColor: "#b91c1c",
+                          },
+                        }}
+                      >
+                        Desactivar
+                      </Button>
+                    </Stack>
                   ) : (
                     <Button
-                      variant="outlined"
-                      color="primary"
                       size="small"
-                      onClick={() => editar(c)}
+                      variant="outlined"
+                      onClick={() => reactivarCliente(c.id)}
+                      sx={{
+                        height: 30,
+                        px: 2,
+                        fontSize: "0.8rem",
+                        minWidth: 70,
+                        color: "#16a34a",
+                        borderColor: "#16a34a",
+                        fontWeight: 600,
+                        textTransform: "none",
+                        borderRadius: 2,
+
+                        "&:hover": {
+                          bgcolor: "rgba(22,163,74,0.08)",
+                          borderColor: "#15803d",
+                        },
+                      }}
                     >
-                      Editar
+                      Reactivar
                     </Button>
                   )}
                 </TableCell>

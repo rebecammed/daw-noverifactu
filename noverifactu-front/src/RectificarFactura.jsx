@@ -397,7 +397,7 @@ function RectificarFactura() {
 
   return (
     <Paper
-      elevation={0}
+      elevation={3}
       sx={{
         p: { xs: 2, md: 4 },
         borderRadius: 4,

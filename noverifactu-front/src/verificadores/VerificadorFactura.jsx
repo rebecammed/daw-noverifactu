@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { authFetch } from "./utils/authFetch";
-import { useSystem } from "./context/SystemContext";
+import { useSystem } from "../context/SystemContext";
 import { Typography, Box, Button, Paper, Stack } from "@mui/material";
+import OptionalDashboardLayout from "../layouts/OptionalDashboardLayout";
 
 // Importamos un icono para que el drag & drop sea más intuitivo
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -75,11 +75,13 @@ function VerificadorFactura() {
   }
   return (
     <Paper
-      elevation={0}
+      elevation={3}
       sx={{
         p: { xs: 2, md: 5 },
         borderRadius: 4,
         border: "1px solid #eee",
+        maxWidth: 900,
+        mx: "auto",
       }}
     >
       <Box sx={{ p: 2 }}>
@@ -159,15 +161,20 @@ function VerificadorFactura() {
                   mantenimiento ||
                   archivosVerificacion.length === 0
                 }
+                size="large"
                 sx={{
-                  bgcolor: "#1a237e",
-                  borderRadius: 2.5,
-                  px: 6, // Un poco más estrecho
-                  py: 1,
+                  px: 4,
+                  py: 1.5,
+                  fontSize: "1rem",
+                  bgcolor: "#1a73e8",
+                  fontWeight: 600,
                   textTransform: "none",
-                  fontWeight: "bold",
-                  fontSize: "0.9rem",
-                  "&:hover": { bgcolor: "#0d47a1" },
+                  transition: "all 0.2s ease",
+
+                  "&:hover": {
+                    bgcolor: "#155ec0",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  },
                 }}
               >
                 {verificando ? "Verificando..." : "Verificar documentos"}
@@ -222,143 +229,3 @@ function VerificadorFactura() {
 }
 
 export default VerificadorFactura;
-
-/*import { useState } from "react";
-import { authFetch } from "./utils/authFetch";
-import { useSystem } from "./context/SystemContext";
-
-import { Typography, Box, Button, Alert, Paper, Stack } from "@mui/material";
-
-function VerificadorFactura() {
-  const { mantenimiento } = useSystem();
-
-  const [archivosVerificacion, setArchivosVerificacion] = useState([]);
-  const [resultadosVerificacion, setResultadosVerificacion] = useState([]);
-  const [verificando, setVerificando] = useState(false);
-
-  function manejarArchivos(e) {
-    const files = Array.from(e.target.files);
-
-    if (files.length > 20) {
-      alert("Máximo 20 documentos por verificación");
-      return;
-    }
-
-    setArchivosVerificacion(files);
-  }
-
-  async function verificarDocumento(e) {
-    e.preventDefault();
-
-    if (!archivosVerificacion.length) {
-      alert("Debes subir al menos un archivo XML o JSON");
-      return;
-    }
-
-    try {
-      setVerificando(true);
-      setResultadosVerificacion([]);
-
-      const textos = await Promise.all(
-        archivosVerificacion.map((file) => file.text()),
-      );
-
-      const res = await authFetch("/api/verificar-documento", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ documentos: textos }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.error || "Error verificando documentos");
-        return;
-      }
-
-      setResultadosVerificacion(data.resultados);
-    } catch (err) {
-      alert("Error verificando documentos");
-    } finally {
-      setVerificando(false);
-    }
-  }
-
-  return (
-    <Box>
-      <Paper sx={{ p: 3, mb: 3 }}>
-        <Typography variant="h5" gutterBottom>
-          Verificación de registros XML/JSON
-        </Typography>
-        <form onSubmit={verificarDocumento}>
-          <Stack spacing={2}>
-            <Button
-              variant="outlined"
-              component="label"
-              disabled={mantenimiento}
-            >
-              Seleccionar XML / JSON
-              <input
-                type="file"
-                hidden
-                accept=".xml,.json"
-                multiple
-                onChange={manejarArchivos}
-              />
-            </Button>
-
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={verificando || mantenimiento}
-            >
-              {verificando ? "Verificando..." : "Verificar documentos"}
-            </Button>
-          </Stack>
-        </form>
-      </Paper>
-
-      {resultadosVerificacion.length > 0 && (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Resultados
-          </Typography>
-
-          <Stack spacing={2}>
-            {resultadosVerificacion.map((r, i) => (
-              <Paper
-                key={i}
-                sx={{
-                  p: 2,
-                  backgroundColor: r.integridad
-                    ? "success.light"
-                    : "error.light",
-                }}
-              >
-                <Typography>
-                  <strong>Documento:</strong> {r.documento || "Desconocido"}
-                </Typography>
-
-                <Typography>
-                  <strong>Integridad:</strong>{" "}
-                  {r.integridad ? "Válida" : "No válida"}
-                </Typography>
-
-                <Typography>
-                  <strong>Pertenece al sistema:</strong>{" "}
-                  {r.perteneceAlSistema ? "Sí" : "No"}
-                </Typography>
-
-                <Typography>{r.mensajeIntegridad}</Typography>
-                <Typography>{r.mensajePertenencia}</Typography>
-              </Paper>
-            ))}
-          </Stack>
-        </Box>
-      )}
-    </Box>
-  );
-}
-
-export default VerificadorFactura;
-*/

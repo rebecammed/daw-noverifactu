@@ -44,9 +44,9 @@ function VerificarQR() {
   }
   return (
     <Paper
-      elevation={0}
+      elevation={3}
       sx={{
-        p: { xs: 2, md: 5 },
+        p: { xs: 2, mt: 3, mb: 3 },
         borderRadius: 4,
         border: "1px solid #eee",
       }}

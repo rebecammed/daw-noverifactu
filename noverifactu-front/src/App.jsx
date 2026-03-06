@@ -33,10 +33,10 @@ import Clientes from "./perfil/Clientes";
 import GestionSIF from "./perfil/GestionSIF";
 import Activar2FA from "./seguridad/Activar2FA";
 import CambiarPassword from "./seguridad/CambiarPassword";
-import VerificadorFactura from "./VerificadorFactura";
+import VerificadorFactura from "./verificadores/VerificadorFactura";
 import PoliticaPrivacidad from "./seguridad/PoliticaPrivacidad";
 import VerificarEmail from "./seguridad/VerificarEmail";
-import VerificarQR from "./VerificarQR";
+import VerificarQR from "./verificadores/VerificarQR";
 import AdminLogs from "./admin/AdminLogs";
 import Dashboard from "./perfil/Dashboard";
 import AdminLogsUsuario from "./admin/AdminLogsUsuario";
@@ -101,9 +101,16 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/verificar-qr" element={<VerificadorQRPublico />} />
           <Route
             path="/verificadores/qr"
+            element={
+              <OptionalDashboardLayout>
+                <VerificadorQRPublico />
+              </OptionalDashboardLayout>
+            }
+          />
+          <Route
+            path="/verificar-qr"
             element={
               <OptionalDashboardLayout>
                 <VerificarQR />

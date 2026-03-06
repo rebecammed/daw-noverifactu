@@ -153,9 +153,9 @@ function VerificadorQRPublico() {
   }
 
   return (
-    <Box sx={{ maxWidth: 700, mx: "auto", mt: 5 }}>
+    <Box sx={{ maxWidth: 700, mx: "auto" }}>
       <Paper
-        elevation={0}
+        elevation={3}
         sx={{
           p: 5,
           borderRadius: 4,
@@ -267,7 +267,24 @@ function VerificadorQRPublico() {
               onChange={(e) => setUrlManual(e.target.value)}
             />
 
-            <Button variant="contained" onClick={verificarURLManual}>
+            <Button
+              variant="contained"
+              sx={{
+                px: 4,
+                py: 1.5,
+                fontSize: "1rem",
+                bgcolor: "#1a73e8",
+                fontWeight: 600,
+                textTransform: "none",
+                transition: "all 0.2s ease",
+
+                "&:hover": {
+                  bgcolor: "#155ec0",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                },
+              }}
+              onClick={verificarURLManual}
+            >
               Verificar
             </Button>
           </Stack>

@@ -249,7 +249,7 @@ function ListadoFacturas() {
 
   return (
     <Paper
-      elevation={0}
+      elevation={3}
       sx={{ p: { xs: 2, md: 5 }, borderRadius: 4, border: "1px solid #eee" }}
     >
       <Typography variant="h4" sx={{ fontWeight: 600, mb: 4 }}>
@@ -258,12 +258,20 @@ function ListadoFacturas() {
       <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
         <Button
           variant="contained"
-          color="primary"
           onClick={comprobarIntegridad}
           sx={{
-            textTransform: "none",
+            px: 4,
+            py: 1.5,
+            fontSize: "1rem",
+            bgcolor: "#1a73e8",
             fontWeight: 600,
-            borderRadius: 2,
+            textTransform: "none",
+            transition: "all 0.2s ease",
+
+            "&:hover": {
+              bgcolor: "#155ec0",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            },
           }}
         >
           Comprobar integridad facturas
@@ -271,12 +279,21 @@ function ListadoFacturas() {
 
         <Button
           variant="outlined"
-          color="primary"
           onClick={comprobarIntegridadEventos}
           sx={{
-            textTransform: "none",
+            px: 4,
+            py: 1.5,
+            fontSize: "1rem",
+            borderColor: "#1a73e8",
+            color: "#1a73e8",
             fontWeight: 600,
-            borderRadius: 2,
+            textTransform: "none",
+            transition: "all 0.2s ease",
+
+            "&:hover": {
+              bgcolor: "rgba(26,115,232,0.08)",
+              borderColor: "#155ec0",
+            },
           }}
         >
           Comprobar integridad eventos
@@ -411,8 +428,19 @@ function ListadoFacturas() {
                   <TableCell>
                     <Button
                       variant="outlined"
-                      color="primary"
                       size="small"
+                      sx={{
+                        textTransform: "none",
+                        fontWeight: 600,
+                        borderColor: "#1a73e8",
+                        color: "#1a73e8",
+                        transition: "all 0.2s ease",
+
+                        "&:hover": {
+                          bgcolor: "rgba(26,115,232,0.08)",
+                          borderColor: "#155ec0",
+                        },
+                      }}
                       onClick={() => {
                         descargarPDF(f.id);
                       }}
@@ -422,8 +450,19 @@ function ListadoFacturas() {
 
                     <Button
                       variant="outlined"
-                      color="primary"
                       size="small"
+                      sx={{
+                        textTransform: "none",
+                        fontWeight: 600,
+                        borderColor: "#1a73e8",
+                        color: "#1a73e8",
+                        transition: "all 0.2s ease",
+
+                        "&:hover": {
+                          bgcolor: "rgba(26,115,232,0.08)",
+                          borderColor: "#155ec0",
+                        },
+                      }}
                       onClick={() => {
                         descargarXML(f.id);
                       }}
@@ -434,9 +473,21 @@ function ListadoFacturas() {
                   <TableCell>
                     <Button
                       variant="contained"
-                      color="primary"
                       size="small"
                       onClick={() => navigate(`/registro/${f.id}`)}
+                      sx={{
+                        px: 3,
+                        py: 0.7,
+                        bgcolor: "#1a73e8",
+                        fontWeight: 600,
+                        textTransform: "none",
+                        transition: "all 0.2s ease",
+
+                        "&:hover": {
+                          bgcolor: "#155ec0",
+                          boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+                        },
+                      }}
                     >
                       Ver detalle
                     </Button>
@@ -451,6 +502,16 @@ function ListadoFacturas() {
         <Stack direction="row" spacing={2} alignItems="center" sx={{ mt: 2 }}>
           <Button
             variant="outlined"
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              borderColor: "#d1d5db",
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                bgcolor: "#f1f5f9",
+              },
+            }}
             onClick={irPrimera}
             disabled={paginaActual === 1}
           >
@@ -459,6 +520,16 @@ function ListadoFacturas() {
 
           <Button
             variant="outlined"
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              borderColor: "#d1d5db",
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                bgcolor: "#f1f5f9",
+              },
+            }}
             onClick={irAnterior}
             disabled={paginaActual === 1}
           >
@@ -471,6 +542,16 @@ function ListadoFacturas() {
 
           <Button
             variant="outlined"
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              borderColor: "#d1d5db",
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                bgcolor: "#f1f5f9",
+              },
+            }}
             onClick={irSiguiente}
             disabled={paginaActual === totalPaginas}
           >
@@ -479,6 +560,16 @@ function ListadoFacturas() {
 
           <Button
             variant="outlined"
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              borderColor: "#d1d5db",
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                bgcolor: "#f1f5f9",
+              },
+            }}
             onClick={irUltima}
             disabled={paginaActual === totalPaginas}
           >

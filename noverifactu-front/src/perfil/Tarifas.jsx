@@ -269,7 +269,20 @@ function Tarifas() {
                     ) : (
                       <Button
                         variant="contained"
-                        color="primary"
+                        sx={{
+                          px: 4,
+                          py: 1.5,
+                          fontSize: "1rem",
+                          bgcolor: "#1a73e8",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          transition: "all 0.2s ease",
+
+                          "&:hover": {
+                            bgcolor: "#155ec0",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                          },
+                        }}
                         size="small"
                         onClick={() => cambiarPlan("GRATUITO")}
                       >
@@ -289,7 +302,20 @@ function Tarifas() {
                     ) : (
                       <Button
                         variant="contained"
-                        color="primary"
+                        sx={{
+                          px: 4,
+                          py: 1.5,
+                          fontSize: "1rem",
+                          bgcolor: "#1a73e8",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          transition: "all 0.2s ease",
+
+                          "&:hover": {
+                            bgcolor: "#155ec0",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                          },
+                        }}
                         size="small"
                         onClick={() => cambiarPlan("BASICO")}
                       >
@@ -309,7 +335,20 @@ function Tarifas() {
                     ) : (
                       <Button
                         variant="contained"
-                        color="primary"
+                        sx={{
+                          px: 4,
+                          py: 1.5,
+                          fontSize: "1rem",
+                          bgcolor: "#1a73e8",
+                          fontWeight: 600,
+                          textTransform: "none",
+                          transition: "all 0.2s ease",
+
+                          "&:hover": {
+                            bgcolor: "#155ec0",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                          },
+                        }}
                         size="small"
                         onClick={() => cambiarPlan("PRO")}
                       >

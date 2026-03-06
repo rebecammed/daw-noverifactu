@@ -6,47 +6,59 @@ function SidebarPerfil() {
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
+  const items = [
+    { label: "Dashboard", path: "/perfil" },
+    { label: "Empresa", path: "/perfil/empresa" },
+    { label: "Tarifas", path: "/perfil/tarifas" },
+    { label: "Seguridad", path: "/perfil/seguridad" },
+    { label: "SIF", path: "/perfil/sif" },
+  ];
 
   return (
     <>
-      <Typography variant="subtitle2" sx={{ mb: 2 }}>
+      <Typography
+        variant="overline"
+        sx={{ px: 3, mb: 1, color: "#6b7280", fontWeight: 600 }}
+      >
         Configuración
       </Typography>
 
-      <List>
-        <ListItemButton
-          selected={isActive("/perfil/dashboard")}
-          onClick={() => navigate("/perfil/dashboard")}
-        >
-          <ListItemText primary="Dashboard" />
-        </ListItemButton>
-        <ListItemButton
-          selected={isActive("/perfil/empresa")}
-          onClick={() => navigate("/perfil/empresa")}
-        >
-          <ListItemText primary="Empresa" />
-        </ListItemButton>
+      <List sx={{ p: 0 }}>
+        {items.map((item) => (
+          <ListItemButton
+            key={item.path}
+            selected={isActive(item.path)}
+            onClick={() => navigate(item.path)}
+            sx={{
+              width: "100%",
+              borderRadius: 0,
+              pl: 3,
+              pr: 2,
+              py: 1.2,
 
-        <ListItemButton
-          selected={isActive("/perfil/tarifas")}
-          onClick={() => navigate("/perfil/tarifas")}
-        >
-          <ListItemText primary="Tarifas" />
-        </ListItemButton>
+              "&:hover": {
+                bgcolor: "#f1f5f9",
+              },
 
-        <ListItemButton
-          selected={isActive("/perfil/seguridad")}
-          onClick={() => navigate("/perfil/seguridad")}
-        >
-          <ListItemText primary="Seguridad" />
-        </ListItemButton>
+              "& .MuiListItemText-root": {
+                margin: 0,
+              },
 
-        <ListItemButton
-          selected={isActive("/perfil/sif")}
-          onClick={() => navigate("/perfil/sif")}
-        >
-          <ListItemText primary="SIF" />
-        </ListItemButton>
+              "&.Mui-selected": {
+                bgcolor: "#e8f0fe",
+                color: "#1a73e8",
+                fontWeight: 600,
+                borderLeft: "3px solid #1a73e8",
+              },
+
+              "&.Mui-selected:hover": {
+                bgcolor: "#e8f0fe",
+              },
+            }}
+          >
+            <ListItemText primary={item.label} />
+          </ListItemButton>
+        ))}
       </List>
     </>
   );

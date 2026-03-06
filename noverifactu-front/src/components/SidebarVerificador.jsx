@@ -6,27 +6,56 @@ function SidebarVerificador() {
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
+  const items = [
+    { label: "Verificador QR", path: "/verificadores/qr" },
+    { label: "Verificador XML / JSON", path: "/verificadores/xml" },
+  ];
 
   return (
     <>
-      <Typography variant="subtitle2" sx={{ mb: 2 }}>
+      <Typography
+        variant="overline"
+        sx={{ px: 3, mb: 1, color: "#6b7280", fontWeight: 600 }}
+      >
         Verificadores
       </Typography>
 
-      <List>
-        <ListItemButton
-          selected={isActive("/verificadores/qr")}
-          onClick={() => navigate("/verificadores/qr")}
-        >
-          <ListItemText primary="Verificador QR" />
-        </ListItemButton>
+      <List sx={{ p: 0 }}>
+        {items.map((item) => (
+          <ListItemButton
+            key={item.path}
+            selected={isActive(item.path)}
+            onClick={() => navigate(item.path)}
+            sx={{
+              width: "100%",
+              borderRadius: 0,
+              pl: 3,
+              pr: 2,
+              py: 1.2,
 
-        <ListItemButton
-          selected={isActive("/verificadores/xml")}
-          onClick={() => navigate("/verificadores/xml")}
-        >
-          <ListItemText primary="Verificador XML / JSON" />
-        </ListItemButton>
+              "&:hover": {
+                bgcolor: "#f1f5f9",
+              },
+
+              "& .MuiListItemText-root": {
+                margin: 0,
+              },
+
+              "&.Mui-selected": {
+                bgcolor: "#e8f0fe",
+                color: "#1a73e8",
+                fontWeight: 600,
+                borderLeft: "3px solid #1a73e8",
+              },
+
+              "&.Mui-selected:hover": {
+                bgcolor: "#e8f0fe",
+              },
+            }}
+          >
+            <ListItemText primary={item.label} />
+          </ListItemButton>
+        ))}
       </List>
     </>
   );

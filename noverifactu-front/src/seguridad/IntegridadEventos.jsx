@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { authFetch } from "../utils/authFetch";
+import { Paper, Typography, Button, Stack, Alert } from "@mui/material";
 
 function IntegridadEventos() {
   const [estado, setEstado] = useState(null);
@@ -12,7 +13,6 @@ function IntegridadEventos() {
       try {
         const res = await authFetch("/api/integridad-eventos");
         const data = await res.json();
-
         setEstado(data);
       } catch {
         setError("Error comprobando la integridad de la cadena de eventos");
@@ -50,48 +50,61 @@ function IntegridadEventos() {
     }
   }
 
-  if (cargando) return <p>Comprobando integridad…</p>;
+  if (cargando) return <Typography>Comprobando integridad…</Typography>;
 
   return (
-    <div
-      style={{
-        marginTop: "2rem",
-        borderTop: "1px solid #ccc",
-        paddingTop: "1rem",
+    <Paper
+      elevation={3}
+      sx={{
+        mt: 4,
+        p: 4,
+        borderRadius: 4,
+        border: "1px solid #eee",
       }}
     >
-      <h3>Integridad y auditoría</h3>
+      <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
+        Integridad y auditoría
+      </Typography>
 
-      {estado?.ok && (
-        <p style={{ color: "green" }}>✅ Cadena de eventos íntegra.</p>
-      )}
+      <Stack spacing={2}>
+        {estado?.ok && (
+          <Alert severity="success">Cadena de eventos íntegra</Alert>
+        )}
 
-      {estado && estado.ok === false && (
-        <p style={{ color: "#dc2626" }}>
-          ❌ La cadena presenta inconsistencias.
-        </p>
-      )}
+        {estado && estado.ok === false && (
+          <Alert severity="error">La cadena presenta inconsistencias</Alert>
+        )}
 
-      {/* 🔴 BOTÓN SIEMPRE VISIBLE */}
-      <button
-        onClick={iniciarCadena}
-        style={{
-          backgroundColor: "#dc2626",
-          color: "white",
-          marginTop: "0.5rem",
-        }}
-      >
-        Iniciar nueva cadena de auditoría
-      </button>
+        <Button
+          onClick={iniciarCadena}
+          sx={{
+            alignSelf: "flex-start",
+            px: 4,
+            py: 1.5,
+            fontSize: "0.95rem",
+            bgcolor: "#dc2626",
+            fontWeight: 600,
+            textTransform: "none",
+            transition: "all 0.2s ease",
 
-      <p style={{ fontSize: "0.9em", color: "#666" }}>
-        Esta acción se utiliza únicamente ante cambios técnicos o correcciones
-        del sistema.
-      </p>
+            "&:hover": {
+              bgcolor: "#b91c1c",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            },
+          }}
+        >
+          Iniciar nueva cadena de auditoría
+        </Button>
 
-      {mensaje && <p style={{ color: "green" }}>{mensaje}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-    </div>
+        <Typography variant="body2" color="text.secondary">
+          Esta acción se utiliza únicamente ante cambios técnicos o correcciones
+          del sistema.
+        </Typography>
+
+        {mensaje && <Alert severity="success">{mensaje}</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
+      </Stack>
+    </Paper>
   );
 }
 
