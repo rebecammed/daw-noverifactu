@@ -1,6 +1,8 @@
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 export async function authFetch(url, options = {}) {
   const token = localStorage.getItem("token");
-  const res = await fetch(url, {
+  const res = await fetch(`${API_URL}${url}`, {
     ...options,
     headers: {
       ...(options.headers || {}),
