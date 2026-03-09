@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { authFetch } from "../utils/authFetch";
 import {
   Box,
+  Chip,
   Paper,
   MenuItem,
   Typography,
@@ -28,6 +29,7 @@ function AdminFacturas() {
   const [limit, setLimit] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
   const [searchParams, setSearchParams] = useState([]);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     cargarUsuarios();
@@ -74,6 +76,7 @@ function AdminFacturas() {
 
     setFacturas(data.facturas || []);
     setTotalPages(data.totalPages || 1);
+    setTotal(data.total || 0);
   }
 
   return (
@@ -141,6 +144,7 @@ function AdminFacturas() {
               setPage(1);
             }}
             size="small"
+            sx={{ minWidth: 180 }}
           >
             <MenuItem value="">Todos</MenuItem>
             <MenuItem value="ACTIVA">ACTIVA</MenuItem>
@@ -191,6 +195,13 @@ function AdminFacturas() {
       {/* ========================== */}
       {/* TABLA */}
       {/* ========================== */}
+
+      {facturas.length > 0 && (
+        <Typography sx={{ mb: 2 }}>
+          Mostrando {(page - 1) * limit + 1}–
+          {(page - 1) * limit + facturas.length} de {total} facturas
+        </Typography>
+      )}
 
       <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
         <Table>
@@ -259,12 +270,20 @@ function AdminFacturas() {
         <Button
           variant="outlined"
           disabled={page <= 1}
-          onClick={() => setPage(page - 1)}
+          onClick={() => setPage(1)}
         >
-          Anterior
+          ⏮ Primera
         </Button>
 
-        <Typography>
+        <Button
+          variant="outlined"
+          disabled={page <= 1}
+          onClick={() => setPage(page - 1)}
+        >
+          ◀ Anterior
+        </Button>
+
+        <Typography sx={{ fontWeight: 500 }}>
           Página {page} de {totalPages}
         </Typography>
 
@@ -273,7 +292,15 @@ function AdminFacturas() {
           disabled={page >= totalPages}
           onClick={() => setPage(page + 1)}
         >
-          Siguiente
+          Siguiente ▶
+        </Button>
+
+        <Button
+          variant="outlined"
+          disabled={page >= totalPages}
+          onClick={() => setPage(totalPages)}
+        >
+          Última ⏭
         </Button>
       </Stack>
 

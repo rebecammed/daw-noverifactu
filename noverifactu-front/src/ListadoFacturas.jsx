@@ -29,14 +29,6 @@ function ListadoFacturas() {
   const [facturas, setFacturas] = useState([]);
   const [totalFacturas, setTotalFacturas] = useState(0);
 
-  const totalPaginas = Math.max(
-    1,
-    Math.ceil(totalFacturas / facturasPorPagina),
-  );
-
-  const inicio = (paginaActual - 1) * facturasPorPagina + 1;
-  const fin = inicio + facturas.length - 1;
-
   const { fechaInicio, fechaFin, busqueda, orden, clienteSeleccionado } =
     useOutletContext();
   const [busquedaDebounced, setBusquedaDebounced] = useState(busqueda);
@@ -246,6 +238,14 @@ function ListadoFacturas() {
     });
   };
   if (error) return <p>{error}</p>;
+
+  const totalPaginas = Math.max(
+    1,
+    Math.ceil(totalFacturas / facturasPorPagina),
+  );
+
+  const inicio = (paginaActual - 1) * facturasPorPagina + 1;
+  const fin = inicio + facturas.length - 1;
 
   return (
     <Paper

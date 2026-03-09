@@ -40,7 +40,7 @@ function Dashboard({ usuario }) {
 
   async function cargarDatos() {
     try {
-      const userRes = await authFetch("/api/usuarios/me");
+      const userRes = await authFetch("/api/user/me");
 
       const userData = await userRes.json();
       setUsuarioData(userData);

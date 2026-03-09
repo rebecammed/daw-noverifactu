@@ -335,22 +335,25 @@ function Tarifas() {
                     ) : (
                       <Button
                         variant="contained"
+                        size="small"
+                        onClick={() => cambiarPlan("PRO")}
                         sx={{
-                          px: 4,
-                          py: 1.5,
-                          fontSize: "1rem",
-                          bgcolor: "#1a73e8",
+                          px: 2.5,
+                          py: 0.7,
+                          minWidth: 90,
+                          fontSize: "0.85rem",
                           fontWeight: 600,
                           textTransform: "none",
+                          borderRadius: "8px",
+                          bgcolor: "#1a73e8",
+                          boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
                           transition: "all 0.2s ease",
 
                           "&:hover": {
                             bgcolor: "#155ec0",
-                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
                           },
                         }}
-                        size="small"
-                        onClick={() => cambiarPlan("PRO")}
                       >
                         Cambiar
                       </Button>
