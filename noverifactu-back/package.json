@@ -9,7 +9,7 @@
     "@google/generative-ai": "^0.24.1",
     "adm-zip": "^0.5.16",
     "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "fast-xml-parser": "^5.3.3",

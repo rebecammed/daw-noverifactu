@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import dotenv from "dotenv";
 import pool from "./db/db.js";
 
 // routers
@@ -18,6 +18,8 @@ import adminRoutes from "./routes/admin.routes.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+dotenv.config();
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());
@@ -35,6 +37,6 @@ app.use("/api", facturasReadRoutes);
 app.use("/api", facturasDownloadRoutes);
 app.use("/api", adminRoutes);
 
-app.listen(3000, () => {
-  console.log("Backend escuchando en puerto 3000");
+app.listen(PORT, () => {
+  console.log(`Backend escuchando en puerto ${PORT}`);
 });
