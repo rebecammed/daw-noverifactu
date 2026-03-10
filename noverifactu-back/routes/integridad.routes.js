@@ -4,8 +4,8 @@ import auth from "../middleware/auth.js";
 import { comprobarIntegridad } from "../src/core/comprobarIntegridad.js";
 import { comprobarIntegridadEventos } from "../src/core/integridadEventos.js";
 import { generarHashRegistro } from "../src/core/hashEngine.js";
-import { extraerDatosDesdeXML } from "../utils/xmlParser.js";
-import { extraerCamposDesdeJSON } from "../utils/jsonParser.js";
+import { extraerDatosDesdeXML } from "../src/core/extraerDatosDesdeXML.js";
+import { extraerCamposDesdeJSON } from "../src/core/extraerCamposDesdeJSON.js";
 
 const router = express.Router();
 
