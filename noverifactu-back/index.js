@@ -14,6 +14,8 @@ import facturasCreateRoutes from "./routes/facturas/facturas.crear.routes.js";
 import facturasReadRoutes from "./routes/facturas/facturas.ver.routes.js";
 import facturasDownloadRoutes from "./routes/facturas/facturas.descargar.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import sistemaRoutes from "./routes/sistema.routes.js";
+import integridadRoutes from "./routes/integridad.routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,6 +38,8 @@ app.use("/api", facturasCreateRoutes);
 app.use("/api", facturasReadRoutes);
 app.use("/api", facturasDownloadRoutes);
 app.use("/api", adminRoutes);
+app.use("/api", sistemaRoutes);
+app.use("/api", integridadRoutes);
 
 app.listen(PORT, () => {
   console.log(`Backend escuchando en puerto ${PORT}`);
