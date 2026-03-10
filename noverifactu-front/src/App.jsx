@@ -44,7 +44,6 @@ import Productos from "./perfil/Productos";
 import VerificadorQRPublico from "./verificadores/VerificadorQRPublico";
 
 import OptionalDashboardLayout from "./layouts/OptionalDashboardLayout";
-
 const API_URL = process.env.VITE_API_URL;
 function App() {
   const navigate = useNavigate();
@@ -68,6 +67,7 @@ function App() {
         const res = await fetch(`${API_URL}/api/status`);
         const data = await res.json();
         setMantenimiento(data.mantenimiento);
+        console.log(import.meta.env.VITE_API_URL);
       } catch {
         setMantenimiento(false);
       }
