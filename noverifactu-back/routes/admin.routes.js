@@ -17,6 +17,37 @@ import { comprobarIntegridadEventos } from "../src/core/integridadEventos.js";
 import AdmZip from "adm-zip";
 
 const router = express.Router();
+router.get("/admin/usuarios", auth, requireAdmin, async (req, res) => {
+  try {
+    const [rows] = await pool.query(`
+        SELECT 
+          u.id,
+          u.nombre,
+          u.email,
+          u.activo,
+          u.twofa_enabled,
+          COUNT(DISTINCT f.id) AS total_facturas,
+          MAX(CASE 
+             WHEN l.tipo_evento IN ('LOGIN_OK','LOGIN_2FA_OK') 
+             THEN l.fecha_evento 
+          END) AS ultimo_login
+        FROM usuarios u
+        LEFT JOIN facturas f 
+          ON f.usuario_id = u.id
+        LEFT JOIN log_eventos l
+          ON l.usuario_id = u.id
+        GROUP BY u.id
+        ORDER BY u.id ASC
+      `);
+
+    return res.json({ usuarios: rows });
+  } catch (error) {
+    console.error("Error listando usuarios:", error);
+    return res.status(500).json({
+      mensaje: "Error obteniendo usuarios",
+    });
+  }
+});
 
 router.patch(
   "/admin/usuarios/:id/estado",
@@ -163,39 +194,46 @@ router.patch(
     }
   },
 );
+router.post(
+  "/admin/usuarios/:usuarioId/reset-cadena-eventos",
+  auth,
+  requireAdmin,
+  async (req, res) => {
+    const adminId = req.usuario.id;
+    const { usuarioId } = req.params;
 
-router.get("/admin/usuarios", auth, requireAdmin, async (req, res) => {
-  try {
-    const [rows] = await pool.query(`
-        SELECT 
-          u.id,
-          u.nombre,
-          u.email,
-          u.activo,
-          u.twofa_enabled,
-          COUNT(DISTINCT f.id) AS total_facturas,
-          MAX(CASE 
-             WHEN l.tipo_evento IN ('LOGIN_OK','LOGIN_2FA_OK') 
-             THEN l.fecha_evento 
-          END) AS ultimo_login
-        FROM usuarios u
-        LEFT JOIN facturas f 
-          ON f.usuario_id = u.id
-        LEFT JOIN log_eventos l
-          ON l.usuario_id = u.id
-        GROUP BY u.id
-        ORDER BY u.id ASC
-      `);
+    try {
+      // 1️⃣ Comprobamos que el usuario existe
+      const [rows] = await pool.query("SELECT id FROM usuarios WHERE id = ?", [
+        usuarioId,
+      ]);
 
-    return res.json({ usuarios: rows });
-  } catch (error) {
-    console.error("Error listando usuarios:", error);
-    return res.status(500).json({
-      mensaje: "Error obteniendo usuarios",
-    });
-  }
-});
+      if (rows.length === 0) {
+        return res.status(404).json({ error: "Usuario no encontrado" });
+      }
 
+      // 2️⃣ Iniciamos nueva cadena para ESE usuario
+      await iniciarNuevaCadenaEventos(usuarioId);
+
+      // 3️⃣ Registramos evento en la cadena del ADMIN
+      await registrarEvento(
+        adminId,
+        "ADMIN_RESET_CADENA_EVENTOS",
+        `El admin ${adminId} reinició la cadena de eventos del usuario ${usuarioId}`,
+      );
+
+      return res.json({
+        ok: true,
+        mensaje: "Cadena de eventos reiniciada correctamente",
+      });
+    } catch (error) {
+      console.error("Error reseteando cadena:", error);
+      return res.status(500).json({
+        error: "Error reiniciando cadena de eventos",
+      });
+    }
+  },
+);
 router.get("/admin/integridad", auth, requireAdmin, async (req, res) => {
   try {
     const adminId = req.usuario.id;
@@ -257,7 +295,38 @@ router.get("/admin/integridad", auth, requireAdmin, async (req, res) => {
     });
   }
 });
-
+router.get(
+  "/admin/integridad-eventos",
+  auth,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const [usuarios] = await pool.query(
+        `SELECT DISTINCT usuario_id FROM log_eventos`,
+      );
+      const resultadoGlobal = [];
+      for (const u of usuarios) {
+        const [rows] = await pool.query(
+          `SELECT * FROM log_eventos WHERE usuario_id = ? ORDER BY num_evento ASC `,
+          [u.usuario_id],
+        );
+        const errores = await comprobarIntegridadEventos(rows);
+        resultadoGlobal.push({
+          usuario_id: u.usuario_id,
+          ok: errores.length === 0,
+          errores,
+        });
+      }
+      const todoOk = resultadoGlobal.every((u) => u.ok);
+      return res.json({ ok: todoOk, detalle: resultadoGlobal });
+    } catch (error) {
+      console.error("ERROR INTEGRIDAD EVENTOS ADMIN:", error);
+      return res.status(500).json({
+        mensaje: "Error comprobando integridad global del log de eventos",
+      });
+    }
+  },
+);
 router.get(
   "/admin/integridad/:usuarioId",
   auth,
@@ -325,38 +394,7 @@ router.get(
     }
   },
 );
-router.get(
-  "/admin/integridad-eventos",
-  auth,
-  requireAdmin,
-  async (req, res) => {
-    try {
-      const [usuarios] = await pool.query(
-        `SELECT DISTINCT usuario_id FROM log_eventos`,
-      );
-      const resultadoGlobal = [];
-      for (const u of usuarios) {
-        const [rows] = await pool.query(
-          `SELECT * FROM log_eventos WHERE usuario_id = ? ORDER BY num_evento ASC `,
-          [u.usuario_id],
-        );
-        const errores = await comprobarIntegridadEventos(rows);
-        resultadoGlobal.push({
-          usuario_id: u.usuario_id,
-          ok: errores.length === 0,
-          errores,
-        });
-      }
-      const todoOk = resultadoGlobal.every((u) => u.ok);
-      return res.json({ ok: todoOk, detalle: resultadoGlobal });
-    } catch (error) {
-      console.error("ERROR INTEGRIDAD EVENTOS ADMIN:", error);
-      return res.status(500).json({
-        mensaje: "Error comprobando integridad global del log de eventos",
-      });
-    }
-  },
-);
+
 router.get("/admin/logs-resumen", auth, requireAdmin, async (req, res) => {
   try {
     const [usuarios] = await pool.query(`
@@ -420,47 +458,6 @@ router.get("/admin/logs/:usuarioId", auth, requireAdmin, async (req, res) => {
     res.status(500).json({ error: "Error obteniendo logs" });
   }
 });
-
-router.post(
-  "/admin/usuarios/:usuarioId/reset-cadena-eventos",
-  auth,
-  requireAdmin,
-  async (req, res) => {
-    const adminId = req.usuario.id;
-    const { usuarioId } = req.params;
-
-    try {
-      // 1️⃣ Comprobamos que el usuario existe
-      const [rows] = await pool.query("SELECT id FROM usuarios WHERE id = ?", [
-        usuarioId,
-      ]);
-
-      if (rows.length === 0) {
-        return res.status(404).json({ error: "Usuario no encontrado" });
-      }
-
-      // 2️⃣ Iniciamos nueva cadena para ESE usuario
-      await iniciarNuevaCadenaEventos(usuarioId);
-
-      // 3️⃣ Registramos evento en la cadena del ADMIN
-      await registrarEvento(
-        adminId,
-        "ADMIN_RESET_CADENA_EVENTOS",
-        `El admin ${adminId} reinició la cadena de eventos del usuario ${usuarioId}`,
-      );
-
-      return res.json({
-        ok: true,
-        mensaje: "Cadena de eventos reiniciada correctamente",
-      });
-    } catch (error) {
-      console.error("Error reseteando cadena:", error);
-      return res.status(500).json({
-        error: "Error reiniciando cadena de eventos",
-      });
-    }
-  },
-);
 
 router.get(
   "/admin/backups",

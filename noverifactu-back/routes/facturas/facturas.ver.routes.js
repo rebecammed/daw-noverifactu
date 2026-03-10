@@ -6,7 +6,115 @@ import auth from "../../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/:id/rectificativas", auth, async (req, res) => {
+router.get("/facturas", auth, async (req, res) => {
+  try {
+    const usuarioId = req.usuario.id;
+
+    const {
+      fechaInicio,
+      fechaFin,
+      q,
+      orden,
+      cliente,
+      page = 1,
+      limit = 10,
+    } = req.query;
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const offset = (pageNum - 1) * limitNum;
+
+    const params = [usuarioId];
+
+    let sql = `
+  SELECT
+    f.id,
+    f.numero_factura,
+    f.fecha_expedicion,
+    f.tipo_factura,
+    f.importe_total,
+    f.estado,
+    c.nif AS cliente_nif,
+    c.nombre AS cliente_nombre
+  FROM facturas f
+  JOIN registros_facturacion rf
+    ON rf.id = f.registro_id
+   AND rf.invalido = 0
+  LEFT JOIN clientes c ON c.id = f.cliente_id
+  WHERE f.usuario_id = ?
+`;
+
+    if (fechaInicio && fechaFin) {
+      sql += ` AND f.fecha_expedicion BETWEEN ? AND ?`;
+      params.push(fechaInicio, fechaFin);
+    } else if (fechaInicio) {
+      sql += ` AND f.fecha_expedicion >= ?`;
+      params.push(fechaInicio);
+    } else if (fechaFin) {
+      sql += ` AND f.fecha_expedicion <= ?`;
+      params.push(fechaFin);
+    }
+
+    if (cliente) {
+      sql += ` AND f.cliente_id = ?`;
+      params.push(cliente);
+    }
+
+    if (q) {
+      sql += `
+        AND (
+          f.numero_factura LIKE ?
+          OR c.nif LIKE ?
+          OR c.nombre LIKE ?
+          OR f.tipo_factura LIKE ?
+          OR CAST(f.importe_total AS CHAR) LIKE ?
+          OR f.estado LIKE ?
+          OR EXISTS (
+            SELECT 1
+            FROM factura_conceptos fc
+            WHERE fc.factura_id = f.id
+            AND fc.descripcion LIKE ?
+          )
+        )
+      `;
+      const like = `%${q}%`;
+      params.push(like, like, like, like, like, like, like);
+    }
+
+    const ordenSQL = orden === "asc" ? "ASC" : "DESC";
+
+    sql += ` ORDER BY f.fecha_expedicion ${ordenSQL}`;
+    sql += ` LIMIT ? OFFSET ?`;
+
+    params.push(limitNum, offset);
+
+    const [rows] = await pool.query(sql, params);
+
+    // contar total para la paginación
+    const [[{ total }]] = await pool.query(
+      `SELECT COUNT(*) as total FROM facturas f JOIN registros_facturacion rf
+  ON rf.id = f.registro_id
+ AND rf.invalido = 0
+LEFT JOIN clientes c ON c.id = f.cliente_id
+WHERE f.usuario_id = ?`,
+      [usuarioId],
+    );
+
+    res.json({
+      facturas: rows,
+      total,
+      page: pageNum,
+      limit: limitNum,
+    });
+  } catch (error) {
+    console.error("Error listando facturas:", error);
+    res.status(500).json({
+      mensaje: "Error obteniendo facturas",
+    });
+  }
+});
+
+router.get("/facturas/:id/rectificativas", auth, async (req, res) => {
   const facturaOrigenId = req.params.id;
   const usuarioId = req.usuario.id;
 
@@ -60,7 +168,7 @@ router.get("/:id/rectificativas", auth, async (req, res) => {
   }
 });
 
-router.get("/:id", auth, async (req, res) => {
+router.get("/facturas/:id", auth, async (req, res) => {
   try {
     const facturaId = req.params.id;
     const usuarioId = req.usuario.id;
@@ -180,114 +288,6 @@ router.get("/:id", auth, async (req, res) => {
     console.error("ERROR GET FACTURA:", error);
     return res.status(500).json({
       mensaje: "Error interno del servidor",
-    });
-  }
-});
-
-router.get("/facturas", auth, async (req, res) => {
-  try {
-    const usuarioId = req.usuario.id;
-
-    const {
-      fechaInicio,
-      fechaFin,
-      q,
-      orden,
-      cliente,
-      page = 1,
-      limit = 10,
-    } = req.query;
-
-    const pageNum = parseInt(page);
-    const limitNum = parseInt(limit);
-    const offset = (pageNum - 1) * limitNum;
-
-    const params = [usuarioId];
-
-    let sql = `
-  SELECT
-    f.id,
-    f.numero_factura,
-    f.fecha_expedicion,
-    f.tipo_factura,
-    f.importe_total,
-    f.estado,
-    c.nif AS cliente_nif,
-    c.nombre AS cliente_nombre
-  FROM facturas f
-  JOIN registros_facturacion rf
-    ON rf.id = f.registro_id
-   AND rf.invalido = 0
-  LEFT JOIN clientes c ON c.id = f.cliente_id
-  WHERE f.usuario_id = ?
-`;
-
-    if (fechaInicio && fechaFin) {
-      sql += ` AND f.fecha_expedicion BETWEEN ? AND ?`;
-      params.push(fechaInicio, fechaFin);
-    } else if (fechaInicio) {
-      sql += ` AND f.fecha_expedicion >= ?`;
-      params.push(fechaInicio);
-    } else if (fechaFin) {
-      sql += ` AND f.fecha_expedicion <= ?`;
-      params.push(fechaFin);
-    }
-
-    if (cliente) {
-      sql += ` AND f.cliente_id = ?`;
-      params.push(cliente);
-    }
-
-    if (q) {
-      sql += `
-        AND (
-          f.numero_factura LIKE ?
-          OR c.nif LIKE ?
-          OR c.nombre LIKE ?
-          OR f.tipo_factura LIKE ?
-          OR CAST(f.importe_total AS CHAR) LIKE ?
-          OR f.estado LIKE ?
-          OR EXISTS (
-            SELECT 1
-            FROM factura_conceptos fc
-            WHERE fc.factura_id = f.id
-            AND fc.descripcion LIKE ?
-          )
-        )
-      `;
-      const like = `%${q}%`;
-      params.push(like, like, like, like, like, like, like);
-    }
-
-    const ordenSQL = orden === "asc" ? "ASC" : "DESC";
-
-    sql += ` ORDER BY f.fecha_expedicion ${ordenSQL}`;
-    sql += ` LIMIT ? OFFSET ?`;
-
-    params.push(limitNum, offset);
-
-    const [rows] = await pool.query(sql, params);
-
-    // contar total para la paginación
-    const [[{ total }]] = await pool.query(
-      `SELECT COUNT(*) as total FROM facturas f JOIN registros_facturacion rf
-  ON rf.id = f.registro_id
- AND rf.invalido = 0
-LEFT JOIN clientes c ON c.id = f.cliente_id
-WHERE f.usuario_id = ?`,
-      [usuarioId],
-    );
-
-    res.json({
-      facturas: rows,
-      total,
-      page: pageNum,
-      limit: limitNum,
-    });
-  } catch (error) {
-    console.error("Error listando facturas:", error);
-    res.status(500).json({
-      mensaje: "Error obteniendo facturas",
     });
   }
 });
