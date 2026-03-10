@@ -1,10 +1,8 @@
 import express from "express";
 import pool from "../db/db.js";
 import auth from "../middleware/auth.js";
-import {
-  comprobarIntegridad,
-  comprobarIntegridadEventos,
-} from "../utils/integridad.js";
+import { comprobarIntegridad } from "../src/core/comprobarIntegridad.js";
+import { comprobarIntegridadEventos } from "../src/core/integridadEventos.js";
 import { generarHashRegistro } from "../src/core/hashEngine.js";
 import { extraerDatosDesdeXML } from "../utils/xmlParser.js";
 import { extraerCamposDesdeJSON } from "../utils/jsonParser.js";
