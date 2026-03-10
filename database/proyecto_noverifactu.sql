@@ -3,10 +3,10 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-03-2026 a las 16:26:19
+-- Tiempo de generación: 10-03-2026 a las 09:39:29
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
-
+USE railway;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -38,23 +38,25 @@ CREATE TABLE `clientes` (
   `pais` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `telefono` varchar(30) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `activo` tinyint(4) NOT NULL DEFAULT 1,
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `clientes`
 --
 
-INSERT INTO `clientes` (`id`, `usuario_id`, `nif`, `nombre`, `direccion`, `codigo_postal`, `ciudad`, `pais`, `email`, `telefono`, `created_at`) VALUES
-(1, 2, '71728851Q', 'José Antonio Marqués de Luis', 'C/ Marqués de Pidal 13 2ºD', '33004', 'Oviedo', 'España', 'joseantonio@noverifactu.local', '666222888', '2026-02-03 07:42:59'),
-(2, 2, '11398800T', 'Ángeles Medina Toro', 'C/Cuba 3 3ºC', '33400', 'Avilés', 'España', 'angelesmedina@noverifactu.local', '600000001', '2026-02-03 07:57:00'),
-(3, 4, '71902382N', 'Rebeca', 'C/Marqués de Pidal 13', '33004', 'Oviedo', 'España', 'rebeca@test.local', '622222222', '2026-02-06 15:39:30'),
-(4, 2, '76875187X', 'Inventado', 'Calle Test 2', '12345', 'Cuenca', 'España', 'inventado@noveri.local', '611111111', '2026-02-19 07:56:53'),
-(5, 4, '87163521F', 'Inventado', 'Calle Marqués de Teverga 1', '33005', 'Oviedo', 'España', 'inventado@teverga.com', '666666661', '2026-02-25 15:24:22'),
-(7, 4, 'G33085333', 'CDB OVIEDO RUGBY CLUB', 'JOAQUIN COSTA 48, SÓTANO HOTEL DE ASOCIACIONES \"SANTULLANO\"', '33011', 'OVIEDO', 'ASTURIAS', '', '', '2026-02-26 12:51:31'),
-(8, 6, '71902382N', 'Rebeca', 'Calle Marqués de Pidal 13', '33004', 'Oviedo', 'España', 'rebeca@verifactu.es', '622222297', '2026-03-03 10:06:49'),
-(9, 6, 'G33085333', 'CDB OVIEDO RUGBY CLUB', 'JOAQUIN COSTA 48, SÓTANO HOTEL DE ASOCIACIONES \"SANTULLANO\"', '33011', 'OVIEDO', 'España', 'cdb@oviedorugby.com', '666666622', '2026-03-03 15:11:56'),
-(10, 1, 'G33085333', 'CDB OVIEDO RUGBY CLUB', 'JOAQUIN COSTA 48, SÓTANO HOTEL DE ASOCIACIONES \"SANTULLANO\"', '33011', 'OVIEDO', 'España', 'orc@rugby.es', '666666623', '2026-03-03 15:26:05');
+INSERT INTO `clientes` (`id`, `usuario_id`, `nif`, `nombre`, `direccion`, `codigo_postal`, `ciudad`, `pais`, `email`, `telefono`, `created_at`, `activo`, `deleted_at`) VALUES
+(1, 2, '71728851Q', 'José Antonio Marqués de Luis', 'C/ Marqués de Pidal 13 2ºD', '33004', 'Oviedo', 'España', 'joseantonio@noverifactu.local', '666222888', '2026-02-03 07:42:59', 1, NULL),
+(2, 2, '11398800T', 'Ángeles Medina Toro', 'C/Cuba 3 3ºC', '33400', 'Avilés', 'España', 'angelesmedina@noverifactu.local', '600000001', '2026-02-03 07:57:00', 1, NULL),
+(3, 4, '71902382N', 'Rebeca', 'C/Marqués de Pidal 13', '33004', 'Oviedo', 'España', 'rebeca@test.local', '622222222', '2026-02-06 15:39:30', 1, NULL),
+(4, 2, '76875187X', 'Inventado', 'Calle Test 2', '12345', 'Cuenca', 'España', 'inventado@noveri.local', '611111111', '2026-02-19 07:56:53', 1, NULL),
+(5, 4, '87163521F', 'Inventado', 'Calle Marqués de Teverga 1', '33005', 'Oviedo', 'España', 'inventado@teverga.com', '666666661', '2026-02-25 15:24:22', 1, NULL),
+(7, 4, 'G33085333', 'CDB OVIEDO RUGBY CLUB', 'JOAQUIN COSTA 48, SÓTANO HOTEL DE ASOCIACIONES \"SANTULLANO\"', '33011', 'OVIEDO', 'ASTURIAS', '', '', '2026-02-26 12:51:31', 1, NULL),
+(8, 6, '71902382N', 'Rebeca', 'Calle Marqués de Pidal 13', '33004', 'Oviedo', 'España', 'rebeca@verifactu.es', '622222297', '2026-03-03 10:06:49', 1, NULL),
+(9, 6, 'G33085333', 'CDB OVIEDO RUGBY CLUB', 'JOAQUIN COSTA 48, SÓTANO HOTEL DE ASOCIACIONES \"SANTULLANO\"', '33011', 'OVIEDO', 'España', 'cdb@oviedorugby.com', '666666622', '2026-03-03 15:11:56', 1, NULL),
+(10, 1, 'G33085333', 'CDB OVIEDO RUGBY CLUB', 'JOAQUIN COSTA 48, SÓTANO HOTEL DE ASOCIACIONES \"SANTULLANO\"', '33011', 'OVIEDO', 'España', 'orc@rugby.es', '666666623', '2026-03-03 15:26:05', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -147,7 +149,8 @@ INSERT INTO `facturas` (`id`, `usuario_id`, `registro_id`, `nif_receptor`, `nume
 (238, 2, 279, '', '5', '2026-03-03T11:37:00.000Z', 'ORDINARIA', 121.00, NULL, NULL, 'ANULADA', NULL, 1, 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\2\\facturas\\238\\sellado.pdf', 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\2\\facturas\\238\\factura.xml'),
 (241, 6, 282, '', '1-R1', '2026-03-03T13:55:00.000Z', 'RECTIFICATIVA', -36.30, 237, 'DIFERENCIAS', 'ACTIVA', 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\6\\facturas\\241\\original.pdf', 8, 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\6\\facturas\\241\\sellado.pdf', 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\6\\facturas\\241\\factura_rectificativa.xml'),
 (242, 6, 284, '', 'F-2026000242', '2026-02-04T23:00:00.000Z', 'ORDINARIA', 145.93, NULL, NULL, 'ANULADA', 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\6\\facturas\\242\\original.pdf', 9, 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\6\\facturas\\242\\sellado.pdf', 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\6\\facturas\\242\\factura.xml'),
-(243, 1, 286, '', 'F-2026000242', '2026-02-04T23:00:00.000Z', 'ORDINARIA', 145.93, NULL, NULL, 'ANULADA', 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\1\\facturas\\243\\original.pdf', 10, 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\1\\facturas\\243\\sellado.pdf', 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\1\\facturas\\243\\factura.xml');
+(243, 1, 286, '', 'F-2026000242', '2026-02-04T23:00:00.000Z', 'ORDINARIA', 145.93, NULL, NULL, 'ANULADA', 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\1\\facturas\\243\\original.pdf', 10, 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\1\\facturas\\243\\sellado.pdf', 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\1\\facturas\\243\\factura.xml'),
+(246, 2, 290, '', '6', '2026-03-05T12:09:00.000Z', 'ORDINARIA', 181.50, NULL, NULL, 'ACTIVA', NULL, 4, 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\2\\facturas\\246\\sellado.pdf', 'C:\\xampp\\htdocs\\proyectoNoVeri\\noverifactu-back\\storage\\usuarios\\2\\facturas\\246\\factura.xml');
 
 --
 -- Disparadores `facturas`
@@ -259,7 +262,8 @@ INSERT INTO `factura_conceptos` (`id`, `factura_id`, `descripcion`, `cantidad`, 
 (91, 242, 'SANITINA ELASTICA ADHESIVA 10 CM X 4,5 M', 4.00, 0.00, 10.00, 'IVA', 0.00, 0.00),
 (92, 243, 'SANITINA ELASTICA ADHESIVA 10 CM X 4,5 M', 31.00, 4.18, 10.00, 'IVA', 129.58, 12.96),
 (93, 243, 'GUANTES DE NITRILO TALLA \"M\" 100 UND', 1.00, 2.80, 21.00, 'IVA', 2.80, 0.59),
-(94, 243, 'SANITINA ELASTICA ADHESIVA 10 CM X 4,5 M', 4.00, 0.00, 10.00, 'IVA', 0.00, 0.00);
+(94, 243, 'SANITINA ELASTICA ADHESIVA 10 CM X 4,5 M', 4.00, 0.00, 10.00, 'IVA', 0.00, 0.00),
+(97, 246, 'Consulta', 3.00, 50.00, 21.00, 'IVA', 150.00, 31.50);
 
 -- --------------------------------------------------------
 
@@ -316,7 +320,8 @@ INSERT INTO `factura_impuestos` (`id`, `factura_id`, `base_imponible`, `tipo_imp
 (244, 242, 129.58, 10.00, 12.96, 'IVA'),
 (245, 242, 2.80, 21.00, 0.59, 'IVA'),
 (246, 243, 129.58, 10.00, 12.96, 'IVA'),
-(247, 243, 2.80, 21.00, 0.59, 'IVA');
+(247, 243, 2.80, 21.00, 0.59, 'IVA'),
+(250, 246, 150.00, 21.00, 31.50, 'IVA');
 
 -- --------------------------------------------------------
 
@@ -889,7 +894,34 @@ INSERT INTO `log_eventos` (`id`, `usuario_id`, `tipo_evento`, `descripcion`, `fe
 (642, 2, 'LOGIN_2FA_REQUERIDO', 'Credenciales correctas, se requiere 2FA', '2026-03-04T08:36:01.537Z', '6f5467ecdeb7b5d3b15ba80b511d501685469caea0097e03f1b2db5fb8131b0a', '4cd8888ec70330b8957b0cbe45606a1cbf5744f070a7850646b849573e656b8c', 428),
 (643, 2, 'LOGIN_2FA_OK', 'Login con 2FA correcto', '2026-03-04T08:36:13.260Z', '1ddf0f6ebf08147bfe5d16a4805fc313634f3814a5cb1d33668b97dd0a9150ed', '6f5467ecdeb7b5d3b15ba80b511d501685469caea0097e03f1b2db5fb8131b0a', 429),
 (644, 2, 'BACKUP_DESCARGADO', 'Backup 2026-03-03-11-03 descargado', '2026-03-04T08:45:15.008Z', '86d994b77b159ee14e2d4a16e7256c98be4644ed2c2507ede122343f7085c916', '1ddf0f6ebf08147bfe5d16a4805fc313634f3814a5cb1d33668b97dd0a9150ed', 430),
-(645, 2, 'BACKUP_ELIMINADO', 'Backup 2026-02-23-10-26 eliminado', '2026-03-04T08:45:25.039Z', '05ed22d42b6bfb8c245bb54e59797d0f229a9d50bfc8e7e8ccf6e93643145dc3', '86d994b77b159ee14e2d4a16e7256c98be4644ed2c2507ede122343f7085c916', 431);
+(645, 2, 'BACKUP_ELIMINADO', 'Backup 2026-02-23-10-26 eliminado', '2026-03-04T08:45:25.039Z', '05ed22d42b6bfb8c245bb54e59797d0f229a9d50bfc8e7e8ccf6e93643145dc3', '86d994b77b159ee14e2d4a16e7256c98be4644ed2c2507ede122343f7085c916', 431),
+(646, 2, 'LOGIN_FALLIDO', 'Intento de inicio de sesión fallido para rebecamm2495@gmail.com', '2026-03-05T08:18:33.323Z', '74f818590d10e1c6f25bff308f8b6fa9bb568b412b9b09362a867b11647df69b', '05ed22d42b6bfb8c245bb54e59797d0f229a9d50bfc8e7e8ccf6e93643145dc3', 432),
+(647, 2, 'LOGIN_2FA_REQUERIDO', 'Credenciales correctas, se requiere 2FA', '2026-03-05T08:18:48.520Z', 'f168d84c8e72aaed24edc8dd6b1341cad8e4f2d092b88eb59266be56436c5741', '74f818590d10e1c6f25bff308f8b6fa9bb568b412b9b09362a867b11647df69b', 433),
+(648, 2, 'LOGIN_2FA_OK', 'Login con 2FA correcto', '2026-03-05T08:19:12.764Z', 'f88635aac2e0b9be3b5863b53870123ca1dd0acaa6e570700d6f7fd01a63f8af', 'f168d84c8e72aaed24edc8dd6b1341cad8e4f2d092b88eb59266be56436c5741', 434),
+(649, 2, 'LOGIN_2FA_OK', 'Login con 2FA correcto', '2026-03-05T08:19:21.868Z', '92b2e5022459d35a3f634c4c5213c4d8a07dd0ed7c4fe93d21ce173382b5f112', 'f88635aac2e0b9be3b5863b53870123ca1dd0acaa6e570700d6f7fd01a63f8af', 435),
+(650, 2, 'LOGIN_2FA_OK', 'Login con 2FA correcto', '2026-03-05T08:19:35.472Z', 'a83eaae05e8137975eb878a45b670e6280f26a6403691f79e5d9925aba5cbd75', '92b2e5022459d35a3f634c4c5213c4d8a07dd0ed7c4fe93d21ce173382b5f112', 436),
+(651, 2, 'LOGIN_2FA_OK', 'Login con 2FA correcto', '2026-03-05T08:27:27.305Z', '0937a81540a80994e5c78884d03e10abaf397eeec8093f3e7a74feaaa86979f0', 'a83eaae05e8137975eb878a45b670e6280f26a6403691f79e5d9925aba5cbd75', 437),
+(652, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-05T08:57:49.916Z', '2afd540121b8a6af36eed2c9e79e429f7b0e3dca20dde7034ebab5d80b76e0db', '0937a81540a80994e5c78884d03e10abaf397eeec8093f3e7a74feaaa86979f0', 438),
+(653, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-05T08:58:13.323Z', 'bc47d1779ba495d729ee51a0b52787189198e4a9417abbbf6b05d06c5919ced1', '2afd540121b8a6af36eed2c9e79e429f7b0e3dca20dde7034ebab5d80b76e0db', 439),
+(654, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-05T09:03:58.375Z', 'd68902a3651f71068a08a814bf518181d4ae0e328b0fc1db77a2d47d5e1f6024', 'bc47d1779ba495d729ee51a0b52787189198e4a9417abbbf6b05d06c5919ced1', 440),
+(655, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-05T09:10:24.016Z', '75e11d6964869d10d5f3e333608e0f11e7e86f7d4d416a0fe247f4ceb2c642f9', 'd68902a3651f71068a08a814bf518181d4ae0e328b0fc1db77a2d47d5e1f6024', 441),
+(656, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-05T09:11:42.866Z', '6f6e7324a286eda764110a9a2465a9195f454acc6639f529fedba9c0dc9f589d', '75e11d6964869d10d5f3e333608e0f11e7e86f7d4d416a0fe247f4ceb2c642f9', 442),
+(657, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-05T09:15:35.653Z', 'fc8451a30462de298f3a4f85d33250e7dd10c8c1f15f8b3b83fa4b02314603a7', '6f6e7324a286eda764110a9a2465a9195f454acc6639f529fedba9c0dc9f589d', 443),
+(658, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-05T09:15:47.642Z', 'c97d33ed641daec7cb9959e7b65ec36142a1a56e3f969315b6b45bfe398e60d2', 'fc8451a30462de298f3a4f85d33250e7dd10c8c1f15f8b3b83fa4b02314603a7', 444),
+(659, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-05T09:23:43.480Z', 'd54a3d6e06c06852401ca4e77563447771051807306526aef92969f874936ce7', 'c97d33ed641daec7cb9959e7b65ec36142a1a56e3f969315b6b45bfe398e60d2', 445),
+(660, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-05T09:23:53.859Z', '1208b5a7edca406c485ec86e9cd17b90262db66d8193c3055e09c66264171b40', 'd54a3d6e06c06852401ca4e77563447771051807306526aef92969f874936ce7', 446),
+(661, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-05T09:36:23.054Z', 'f836dcd386f89c755a13ac261dd8787044cafeebca6413016f256572b7d2574d', '1208b5a7edca406c485ec86e9cd17b90262db66d8193c3055e09c66264171b40', 447),
+(662, 2, 'FACTURA_REGISTRADA', 'Factura 6 registrada', '2026-03-05T12:14:52.163Z', 'd60e462692a6237c97d53daa4c4150b9d4b3593ea3713b49f273baff98b355e8', 'f836dcd386f89c755a13ac261dd8787044cafeebca6413016f256572b7d2574d', 448),
+(663, 2, 'DESCARGA_PDF', 'Descarga de PDF sellado de la factura 6', '2026-03-05T12:14:52.178Z', '5eb6859c8875d6bc971923326bcf7e035696ffcb8fc104114987a8a34e3336cd', 'd60e462692a6237c97d53daa4c4150b9d4b3593ea3713b49f273baff98b355e8', 449),
+(664, 2, 'DESCARGA_XML', 'Descarga XML (ORDINARIA) factura 6', '2026-03-05T12:29:18.149Z', 'da4cade53a8b2931e121e3d92728bd76391ae7aaf9826b024040dc6548abecac', '5eb6859c8875d6bc971923326bcf7e035696ffcb8fc104114987a8a34e3336cd', 450),
+(665, 2, 'LOGIN_2FA_REQUERIDO', 'Credenciales correctas, se requiere 2FA', '2026-03-06T11:21:03.908Z', 'fc020622323fcef687dd25b8f8b9534dfba818db5675406b70c505ffa0449588', 'da4cade53a8b2931e121e3d92728bd76391ae7aaf9826b024040dc6548abecac', 451),
+(666, 2, 'LOGIN_2FA_OK', 'Login con 2FA correcto', '2026-03-06T11:21:31.970Z', '0c7bafb1600913c4238fb17d7725d5c67d7bfa54491df1259e01036e969711be', 'fc020622323fcef687dd25b8f8b9534dfba818db5675406b70c505ffa0449588', 452),
+(667, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-06T12:39:10.780Z', '56c6336541ea25e3c820593d811554a9766460c6172ffa5087cf20e2f4d2e6d7', '0c7bafb1600913c4238fb17d7725d5c67d7bfa54491df1259e01036e969711be', 453),
+(668, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-06T12:39:16.399Z', '9acee316f9064069c6aef1ea4986bdb96ba44f49e25eff8d57d884f2761c0e63', '56c6336541ea25e3c820593d811554a9766460c6172ffa5087cf20e2f4d2e6d7', 454),
+(669, 2, 'LOGIN_2FA_REQUERIDO', 'Credenciales correctas, se requiere 2FA', '2026-03-09T08:10:30.453Z', '2bd0795bc612db094f7d7f9995e43c7b0e65b1f16d3fd5492875eb6c189129cd', '9acee316f9064069c6aef1ea4986bdb96ba44f49e25eff8d57d884f2761c0e63', 455),
+(670, 2, 'LOGIN_2FA_OK', 'Login con 2FA correcto', '2026-03-09T08:10:44.691Z', 'cd65bcf481b73e1f60581b3449482696916ea36fe98e1cd5f08cda9d22c9a418', '2bd0795bc612db094f7d7f9995e43c7b0e65b1f16d3fd5492875eb6c189129cd', 456),
+(671, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-09T08:41:29.560Z', '4b8529560c93f9b3d87fa99ca71a926ffe9ae2804e6b8651596bc75236b20fe3', 'cd65bcf481b73e1f60581b3449482696916ea36fe98e1cd5f08cda9d22c9a418', 457),
+(672, 2, 'ADMIN_VERIFICACION_GLOBAL', 'Verificación global de integridad ejecutada', '2026-03-09T08:42:04.156Z', 'c6f5f11973d612c5e40f53a4a9ffe38263148623d1ee1c278a927a0a74331fc9', '4b8529560c93f9b3d87fa99ca71a926ffe9ae2804e6b8651596bc75236b20fe3', 458);
 
 --
 -- Disparadores `log_eventos`
@@ -919,8 +951,19 @@ CREATE TABLE `productos` (
   `precio` decimal(10,2) NOT NULL,
   `tipo_iva` decimal(5,2) DEFAULT 21.00,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `unidad` varchar(20) NOT NULL
+  `unidad` varchar(20) NOT NULL,
+  `activo` tinyint(4) NOT NULL DEFAULT 1,
+  `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `productos`
+--
+
+INSERT INTO `productos` (`id`, `usuario_id`, `nombre`, `descripcion`, `precio`, `tipo_iva`, `created_at`, `unidad`, `activo`, `deleted_at`) VALUES
+(1, 2, 'Consulta', NULL, 50.00, 21.00, '2026-03-05 12:09:43', '', 1, NULL),
+(2, 2, 'Consulta', NULL, 50.00, 21.00, '2026-03-05 12:13:59', '', 0, NULL),
+(3, 2, 'Consulta', NULL, 50.00, 21.00, '2026-03-05 12:14:52', '', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -991,7 +1034,8 @@ INSERT INTO `registros_facturacion` (`id`, `usuario_id`, `fecha_hora_generacion`
 (284, 6, '2026-03-03T15:11:56.560Z', '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<FacturaNoVerifactu xmlns=\"https://noverifactu.local/esquema\">\n  <Cabecera>\n    <NIFEmisor>B13345678</NIFEmisor>\n    <NIFReceptor>G33085333</NIFReceptor>\n    <VersionSIF>1.0.0</VersionSIF>\n  </Cabecera>\n  <DatosFactura>\n    <NumeroFacturaCompleto>F-2026000242</NumeroFacturaCompleto>\n    <FechaHoraExpedicion>2026-02-04T23:00:00.000Z</FechaHoraExpedicion>\n    <TipoFactura>ORDINARIA</TipoFactura>\n    <ImporteTotalFactura>145.93</ImporteTotalFactura>\n  </DatosFactura>\n  <DesgloseFiscal>\n    <Impuestos>\n      <Impuesto>\n        <BaseImponible>129.58</BaseImponible>\n        <TipoImpositivo>10</TipoImpositivo>\n        <Cuota>12.96</Cuota>\n        <Tipo>IVA</Tipo>\n      </Impuesto>\n      <Impuesto>\n        <BaseImponible>2.8</BaseImponible>\n        <TipoImpositivo>21</TipoImpositivo>\n        <Cuota>0.59</Cuota>\n        <Tipo>IVA</Tipo>\n      </Impuesto>\n    </Impuestos>\n  </DesgloseFiscal>\n  <Trazabilidad>\n    <NumRegistroAnterior>2</NumRegistroAnterior>\n    <NumRegistroActual>3</NumRegistroActual>\n    <HashRegistroAnterior>0826e44821bc80f415679acbcb1cbe460dd425afef6d1d9d894ee8617c215524</HashRegistroAnterior>\n    <HashRegistroPropio>e875c014fcebf89a956655c186c7e8e4ee02bd5b2783e7543ac0dc32ff8f91a1</HashRegistroPropio>\n    <IdentificacionSIF>\n      <IdSoftware>NOVERIFACTU-DEV-1.0.0</IdSoftware>\n      <NIFDesarrollador>71902382N</NIFDesarrollador>\n      <fechaDeclaracionResponsable>2026-01-22T11:33:32.000Z</fechaDeclaracionResponsable>\n    </IdentificacionSIF>\n  </Trazabilidad>\n</FacturaNoVerifactu>', 'e875c014fcebf89a956655c186c7e8e4ee02bd5b2783e7543ac0dc32ff8f91a1', '0826e44821bc80f415679acbcb1cbe460dd425afef6d1d9d894ee8617c215524', NULL, 'ALTA', 3, 1, 0),
 (285, 6, '2026-03-03T15:18:01.740Z', '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<RegistroAnulacionNoVerifactu xmlns=\"https://noverifactu.local/esquema/anulacion\">\n  <Cabecera>\n    <NIFEmisor>B13345678</NIFEmisor>\n    <VersionSIF>1.0.0</VersionSIF>\n    <FechaHoraAnulacion>2026-03-03T15:18:01.740Z</FechaHoraAnulacion>\n  </Cabecera>\n  <ReferenciaRegistroAnulado>\n    <NumeroFacturaOriginal>F-2026000242</NumeroFacturaOriginal>\n    <FechaHoraExpedicionOriginal>2026-02-04T23:00:00.000Z</FechaHoraExpedicionOriginal>\n    <HashRegistroAnulado>e875c014fcebf89a956655c186c7e8e4ee02bd5b2783e7543ac0dc32ff8f91a1</HashRegistroAnulado>\n    <MotivoAnulacion>QR no estampado en PDF</MotivoAnulacion>\n  </ReferenciaRegistroAnulado>\n  <Trazabilidad>\n    <NumRegistroAnterior>3</NumRegistroAnterior>\n    <NumRegistroActual>4</NumRegistroActual>\n    <HashRegistroAnterior>e875c014fcebf89a956655c186c7e8e4ee02bd5b2783e7543ac0dc32ff8f91a1</HashRegistroAnterior>\n    <HashRegistroPropio>038b564d9ce423c2ca97ce652b80d7fb30215a36984f9975047698bbff595b0a</HashRegistroPropio>\n    <IdentificacionSIF>\n      <IdSoftware>NOVERIFACTU-DEV-1.0.0</IdSoftware>\n      <NIFDesarrollador>71902382N</NIFDesarrollador>\n      <fechaDeclaracionResponsable>2026-01-22T11:33:32.000Z</fechaDeclaracionResponsable>\n    </IdentificacionSIF>\n  </Trazabilidad>\n</RegistroAnulacionNoVerifactu>', '038b564d9ce423c2ca97ce652b80d7fb30215a36984f9975047698bbff595b0a', 'e875c014fcebf89a956655c186c7e8e4ee02bd5b2783e7543ac0dc32ff8f91a1', NULL, 'ANULACION', 4, 1, 0),
 (286, 1, '2026-03-03T15:26:05.088Z', '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<FacturaNoVerifactu xmlns=\"https://noverifactu.local/esquema\">\n  <Cabecera>\n    <NIFEmisor>71895310R</NIFEmisor>\n    <NIFReceptor>G33085333</NIFReceptor>\n    <VersionSIF>1.0.0</VersionSIF>\n  </Cabecera>\n  <DatosFactura>\n    <NumeroFacturaCompleto>F-2026000242</NumeroFacturaCompleto>\n    <FechaHoraExpedicion>2026-02-04T23:00:00.000Z</FechaHoraExpedicion>\n    <TipoFactura>ORDINARIA</TipoFactura>\n    <ImporteTotalFactura>145.93</ImporteTotalFactura>\n  </DatosFactura>\n  <DesgloseFiscal>\n    <Impuestos>\n      <Impuesto>\n        <BaseImponible>129.58</BaseImponible>\n        <TipoImpositivo>10</TipoImpositivo>\n        <Cuota>12.96</Cuota>\n        <Tipo>IVA</Tipo>\n      </Impuesto>\n      <Impuesto>\n        <BaseImponible>2.8</BaseImponible>\n        <TipoImpositivo>21</TipoImpositivo>\n        <Cuota>0.59</Cuota>\n        <Tipo>IVA</Tipo>\n      </Impuesto>\n    </Impuestos>\n  </DesgloseFiscal>\n  <Trazabilidad>\n    <NumRegistroAnterior>0</NumRegistroAnterior>\n    <NumRegistroActual>1</NumRegistroActual>\n    <HashRegistroAnterior>0000000000000000000000000000000000000000000000000000000000000000</HashRegistroAnterior>\n    <HashRegistroPropio>f7e1a8ec3a12aa0cfde843e220e54cf4dc8a496e219cd43c95bb81e1434b25cb</HashRegistroPropio>\n    <IdentificacionSIF>\n      <IdSoftware>NOVERIFACTU-DEV-1.0.0</IdSoftware>\n      <NIFDesarrollador>71902382N</NIFDesarrollador>\n      <fechaDeclaracionResponsable>2026-01-22T11:33:32.000Z</fechaDeclaracionResponsable>\n    </IdentificacionSIF>\n  </Trazabilidad>\n</FacturaNoVerifactu>', 'f7e1a8ec3a12aa0cfde843e220e54cf4dc8a496e219cd43c95bb81e1434b25cb', '0000000000000000000000000000000000000000000000000000000000000000', NULL, 'ALTA', 1, 1, 0),
-(287, 1, '2026-03-03T15:26:23.198Z', '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<RegistroAnulacionNoVerifactu xmlns=\"https://noverifactu.local/esquema/anulacion\">\n  <Cabecera>\n    <NIFEmisor>71895310R</NIFEmisor>\n    <VersionSIF>1.0.0</VersionSIF>\n    <FechaHoraAnulacion>2026-03-03T15:26:23.198Z</FechaHoraAnulacion>\n  </Cabecera>\n  <ReferenciaRegistroAnulado>\n    <NumeroFacturaOriginal>F-2026000242</NumeroFacturaOriginal>\n    <FechaHoraExpedicionOriginal>2026-02-04T23:00:00.000Z</FechaHoraExpedicionOriginal>\n    <HashRegistroAnulado>f7e1a8ec3a12aa0cfde843e220e54cf4dc8a496e219cd43c95bb81e1434b25cb</HashRegistroAnulado>\n    <MotivoAnulacion>Solo QR en el PDF sellado</MotivoAnulacion>\n  </ReferenciaRegistroAnulado>\n  <Trazabilidad>\n    <NumRegistroAnterior>1</NumRegistroAnterior>\n    <NumRegistroActual>2</NumRegistroActual>\n    <HashRegistroAnterior>f7e1a8ec3a12aa0cfde843e220e54cf4dc8a496e219cd43c95bb81e1434b25cb</HashRegistroAnterior>\n    <HashRegistroPropio>55de4c1ee7d1c3194bfed5ed23e72affdd7dc3f884a3fff2dee040c10611c335</HashRegistroPropio>\n    <IdentificacionSIF>\n      <IdSoftware>NOVERIFACTU-DEV-1.0.0</IdSoftware>\n      <NIFDesarrollador>71902382N</NIFDesarrollador>\n      <fechaDeclaracionResponsable>2026-01-22T11:33:32.000Z</fechaDeclaracionResponsable>\n    </IdentificacionSIF>\n  </Trazabilidad>\n</RegistroAnulacionNoVerifactu>', '55de4c1ee7d1c3194bfed5ed23e72affdd7dc3f884a3fff2dee040c10611c335', 'f7e1a8ec3a12aa0cfde843e220e54cf4dc8a496e219cd43c95bb81e1434b25cb', NULL, 'ANULACION', 2, 1, 0);
+(287, 1, '2026-03-03T15:26:23.198Z', '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<RegistroAnulacionNoVerifactu xmlns=\"https://noverifactu.local/esquema/anulacion\">\n  <Cabecera>\n    <NIFEmisor>71895310R</NIFEmisor>\n    <VersionSIF>1.0.0</VersionSIF>\n    <FechaHoraAnulacion>2026-03-03T15:26:23.198Z</FechaHoraAnulacion>\n  </Cabecera>\n  <ReferenciaRegistroAnulado>\n    <NumeroFacturaOriginal>F-2026000242</NumeroFacturaOriginal>\n    <FechaHoraExpedicionOriginal>2026-02-04T23:00:00.000Z</FechaHoraExpedicionOriginal>\n    <HashRegistroAnulado>f7e1a8ec3a12aa0cfde843e220e54cf4dc8a496e219cd43c95bb81e1434b25cb</HashRegistroAnulado>\n    <MotivoAnulacion>Solo QR en el PDF sellado</MotivoAnulacion>\n  </ReferenciaRegistroAnulado>\n  <Trazabilidad>\n    <NumRegistroAnterior>1</NumRegistroAnterior>\n    <NumRegistroActual>2</NumRegistroActual>\n    <HashRegistroAnterior>f7e1a8ec3a12aa0cfde843e220e54cf4dc8a496e219cd43c95bb81e1434b25cb</HashRegistroAnterior>\n    <HashRegistroPropio>55de4c1ee7d1c3194bfed5ed23e72affdd7dc3f884a3fff2dee040c10611c335</HashRegistroPropio>\n    <IdentificacionSIF>\n      <IdSoftware>NOVERIFACTU-DEV-1.0.0</IdSoftware>\n      <NIFDesarrollador>71902382N</NIFDesarrollador>\n      <fechaDeclaracionResponsable>2026-01-22T11:33:32.000Z</fechaDeclaracionResponsable>\n    </IdentificacionSIF>\n  </Trazabilidad>\n</RegistroAnulacionNoVerifactu>', '55de4c1ee7d1c3194bfed5ed23e72affdd7dc3f884a3fff2dee040c10611c335', 'f7e1a8ec3a12aa0cfde843e220e54cf4dc8a496e219cd43c95bb81e1434b25cb', NULL, 'ANULACION', 2, 1, 0),
+(290, 2, '2026-03-05T12:14:52.076Z', '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<FacturaNoVerifactu xmlns=\"https://noverifactu.local/esquema\">\n  <Cabecera>\n    <NIFEmisor>71902382N</NIFEmisor>\n    <NIFReceptor>76875187X</NIFReceptor>\n    <VersionSIF>1.0.0</VersionSIF>\n  </Cabecera>\n  <DatosFactura>\n    <NumeroFacturaCompleto>6</NumeroFacturaCompleto>\n    <FechaHoraExpedicion>2026-03-05T12:09:00.000Z</FechaHoraExpedicion>\n    <TipoFactura>ORDINARIA</TipoFactura>\n    <ImporteTotalFactura>181.5</ImporteTotalFactura>\n  </DatosFactura>\n  <DesgloseFiscal>\n    <Impuestos>\n      <Impuesto>\n        <BaseImponible>150</BaseImponible>\n        <TipoImpositivo>21</TipoImpositivo>\n        <Cuota>31.5</Cuota>\n        <Tipo>IVA</Tipo>\n      </Impuesto>\n    </Impuestos>\n  </DesgloseFiscal>\n  <Trazabilidad>\n    <NumRegistroAnterior>16</NumRegistroAnterior>\n    <NumRegistroActual>17</NumRegistroActual>\n    <HashRegistroAnterior>f470378777936955f20d81ce26f83b743f589dfb55b46e5b31e8a55bc17ff747</HashRegistroAnterior>\n    <HashRegistroPropio>4ddd708de505c5c319969e8108a28b0dc7e4d0cec1e3e634978c1f83aaca98ef</HashRegistroPropio>\n    <IdentificacionSIF>\n      <IdSoftware>NOVERIFACTU-DEV-1.0.0</IdSoftware>\n      <NIFDesarrollador>71902382N</NIFDesarrollador>\n      <fechaDeclaracionResponsable>2026-01-22T11:33:32.000Z</fechaDeclaracionResponsable>\n    </IdentificacionSIF>\n  </Trazabilidad>\n</FacturaNoVerifactu>', '4ddd708de505c5c319969e8108a28b0dc7e4d0cec1e3e634978c1f83aaca98ef', 'f470378777936955f20d81ce26f83b743f589dfb55b46e5b31e8a55bc17ff747', NULL, 'ALTA', 17, 1, 0);
 
 --
 -- Disparadores `registros_facturacion`
@@ -1188,37 +1232,37 @@ ALTER TABLE `datos_fiscales`
 -- AUTO_INCREMENT de la tabla `facturas`
 --
 ALTER TABLE `facturas`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=244;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=247;
 
 --
 -- AUTO_INCREMENT de la tabla `factura_conceptos`
 --
 ALTER TABLE `factura_conceptos`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT de la tabla `factura_impuestos`
 --
 ALTER TABLE `factura_impuestos`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=248;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
 
 --
 -- AUTO_INCREMENT de la tabla `log_eventos`
 --
 ALTER TABLE `log_eventos`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=646;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=673;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `registros_facturacion`
 --
 ALTER TABLE `registros_facturacion`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=288;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=291;
 
 --
 -- AUTO_INCREMENT de la tabla `sif_configuracion`

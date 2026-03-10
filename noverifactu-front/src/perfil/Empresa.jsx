@@ -13,7 +13,7 @@ import {
   Container,
   Box,
 } from "@mui/material";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function Empresa() {
   const [datosFiscales, setDatosFiscales] = useState({
     razon_social: "",
@@ -170,7 +170,7 @@ function Empresa() {
             {datosFiscales.logo_path && (
               <Box
                 component="img"
-                src={`http://localhost:3000${datosFiscales.logo_path}`}
+                src={`${API_URL}${datosFiscales.logo_path}`}
                 alt="Logo empresa"
                 sx={{
                   maxWidth: 280,
