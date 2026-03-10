@@ -1,11 +1,9 @@
 import express from "express";
 import pool from "../db/db.js";
 import auth from "../middleware/auth.js";
-import {
-  checkMantenimiento,
-  estaEnMantenimiento,
-} from "../middleware/checkMantenimiento.js";
+import checkMantenimiento from "../middleware/checkMantenimiento.js";
 import { registrarEvento } from "../utils/eventos.js";
+import { estaEnMantenimiento } from "../src/core/systemState.js";
 
 const router = express.Router();
 
