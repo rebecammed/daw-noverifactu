@@ -6,7 +6,6 @@ import {
   estaEnMantenimiento,
 } from "../middleware/checkMantenimiento.js";
 import { registrarEvento } from "../utils/eventos.js";
-import { estaEnMantenimiento } from "../src/core/systemState";
 
 const router = express.Router();
 
