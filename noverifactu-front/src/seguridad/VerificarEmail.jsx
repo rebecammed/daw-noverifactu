@@ -26,9 +26,7 @@ function VerificarEmail() {
 
     async function verificar() {
       try {
-        const res = await fetch(
-          `http://localhost:3000/api/auth/verificar-email?token=${token}`,
-        );
+        const res = await fetch(`/api/auth/verificar-email?token=${token}`);
 
         const data = await res.json();
 

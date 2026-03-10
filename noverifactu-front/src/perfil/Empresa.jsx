@@ -32,9 +32,7 @@ function Empresa() {
   useEffect(() => {
     async function cargarDatos() {
       try {
-        const res = await authFetch(
-          "http://localhost:3000/api/user/datos-fiscales",
-        );
+        const res = await authFetch("/api/user/datos-fiscales");
         const data = await res.json();
 
         setDatosFiscales(data.datos); // puede ser null

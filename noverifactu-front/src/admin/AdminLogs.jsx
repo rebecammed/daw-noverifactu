@@ -44,9 +44,7 @@ function AdminLogs() {
 
   async function cargarResumen() {
     try {
-      const res = await authFetch(
-        "http://localhost:3000/api/admin/logs-resumen",
-      );
+      const res = await authFetch("/api/admin/logs-resumen");
 
       if (!res.ok) {
         console.error("Error cargando logs resumen");

@@ -22,7 +22,7 @@ function Tarifas() {
     async function cargarSuscripcion() {
       try {
         const res = await authFetch(
-          "http://localhost:3000/api/user/subscription/status",
+          "/api/user/subscription/status",
         );
         const data = await res.json();
         setEstadoSuscripcion(data);
@@ -36,7 +36,7 @@ function Tarifas() {
   async function cambiarEstado(estado) {
     try {
       const res = await authFetch(
-        "http://localhost:3000/api/user/subscription/state",
+        "/api/user/subscription/state",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -63,7 +63,7 @@ function Tarifas() {
   async function cambiarPlan(plan) {
     try {
       const res = await authFetch(
-        "http://localhost:3000/api/user/subscription/change",
+        "/api/user/subscription/change",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

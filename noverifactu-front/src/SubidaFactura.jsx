@@ -114,9 +114,7 @@ function SubidaFactura() {
   useEffect(() => {
     async function cargarDatosFiscales() {
       try {
-        const res = await authFetch(
-          "http://localhost:3000/api/user/datos-fiscales",
-        );
+        const res = await authFetch("/api/user/datos-fiscales");
 
         const data = await res.json();
         setDatosFiscales(data.datos); // puede ser null
@@ -136,14 +134,7 @@ function SubidaFactura() {
 
     return () => clearTimeout(timer);
   }, [busquedaProducto]);
-  /* useEffect(() => {
-    // fuerza refresco al entrar en la pantalla
-    fetch("/api/user/subscription/status", {
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-    })
-      .then((r) => r.json())
-      .then((data) => setEstadoSuscripcion(data));
-  }, []);*/
+
   async function cargarClientes() {
     try {
       const res = await authFetch("/api/clientes");
@@ -192,50 +183,6 @@ function SubidaFactura() {
   // =========================
   // Paso 1: Analizar PDF
   // =========================
-  /* Antiguo
-  async function analizarPDF(e) {
-    e.preventDefault();
-    setErrores([]);
-
-    if (!pdf) {
-      setErrores(["Debe adjuntarse un PDF"]);
-      return;
-    }
-    try {
-      const data = new FormData();
-      data.append("pdf", pdf);
-
-      const res = await authFetch("/api/facturas/preview", {
-        method: "POST",
-        body: data,
-      });
-
-      const result = await res.json();
-      console.log("Respuesta análisis PDF:", result);
-
-      if (result.datosDetectados) {
-        const datos = { ...result.datosDetectados };
-
-        if (datos.fechaExpedicion) {
-          datos.fechaExpedicion = datos.fechaExpedicion.slice(0, 16);
-        }
-
-        setFormData((prev) => ({
-          ...prev,
-          ...datos,
-        }));
-
-        if (result.erroresPreliminares?.length > 0) {
-          setErrores(result.erroresPreliminares);
-        }
-
-        setPdfAnalizado(true);
-      }
-    } catch (error) {
-      console.error("Error analizando PDF:", error);
-      setErrores(["Error analizando el PDF"]);
-    }
-  }*/
 
   async function analizarPDF(e) {
     e.preventDefault();
