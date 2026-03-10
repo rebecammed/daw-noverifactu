@@ -5,7 +5,7 @@ import OptionalDashboardLayout from "../layouts/OptionalDashboardLayout";
 
 // Importamos un icono para que el drag & drop sea más intuitivo
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function VerificadorFactura() {
   const { mantenimiento } = useSystem();
   const [archivosVerificacion, setArchivosVerificacion] = useState([]);
@@ -55,7 +55,7 @@ function VerificadorFactura() {
         archivosVerificacion.map((file) => file.text()),
       );
 
-      const res = await fetch("/api/verificar-documento", {
+      const res = await fetch(`${API_URL}/api/verificar-documento`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ documentos: textos }),

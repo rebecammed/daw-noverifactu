@@ -15,7 +15,7 @@ import {
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function ResetPassword() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ function ResetPassword() {
     }
 
     try {
-      const res = await fetch("/api/auth/reset-password", {
+      const res = await fetch(`${API_URL}/api/auth/reset-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

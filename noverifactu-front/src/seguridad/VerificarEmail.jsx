@@ -8,7 +8,7 @@ import {
   Alert,
   Button,
 } from "@mui/material";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function VerificarEmail() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -26,7 +26,9 @@ function VerificarEmail() {
 
     async function verificar() {
       try {
-        const res = await fetch(`/api/auth/verificar-email?token=${token}`);
+        const res = await fetch(
+          `${API_URL}/api/auth/verificar-email?token=${token}`,
+        );
 
         const data = await res.json();
 

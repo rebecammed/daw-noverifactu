@@ -13,7 +13,7 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function VerificarQR() {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
@@ -35,7 +35,7 @@ function VerificarQR() {
 
   async function verificarFactura() {
     try {
-      const res = await fetch(`/api/verificar-factura${search}`);
+      const res = await fetch(`${API_URL}/api/verificar-factura${search}`);
       const data = await res.json();
       setResultado(data);
     } catch (err) {

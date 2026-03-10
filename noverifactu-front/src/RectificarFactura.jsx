@@ -193,77 +193,7 @@ function RectificarFactura() {
       }
     }
   };
-  /* antes de los PDF
-  async function enviarRectificativa(e) {
-    e.preventDefault();
-    setErrores([]);
-    const payload = {
-      facturaOrigenId,
-      fechaExpedicion,
-      tipoRectificacion,
-      conceptos,
-    };
 
-    if (tipoRectificacion === "SUSTITUCION") {
-      let infoCliente = null;
-
-      if (usarClienteExistente) {
-        if (!clienteSeleccionado) {
-          setErrores(["Debes seleccionar un cliente existente"]);
-          return;
-        }
-        // Cliente que ya existe en la BD
-        infoCliente = {
-          esNuevo: false,
-          id: clienteSeleccionado,
-        };
-      } else {
-        // Alta de cliente nuevo
-        if (!clienteNuevo.nif || !clienteNuevo.nombre) {
-          setErrores([
-            "El NIF y el Nombre son obligatorios para un cliente nuevo",
-          ]);
-          return;
-        }
-        infoCliente = {
-          esNuevo: true,
-          datos: clienteNuevo,
-        };
-      }
-
-      // AÑADIMOS la info al payload
-      payload.cliente = infoCliente;
-    }
-
-    try {
-      const response = await authFetch("/api/facturas/rectificar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.log("ERROR BACKEND:", data);
-        if (Array.isArray(data?.errores)) {
-          setErrores(data.errores);
-        } else if (data?.error) {
-          setErrores([data.error]);
-        } else {
-          setErrores(["Error desconocido"]);
-        }
-        return;
-      }
-
-      alert("Factura rectificativa creada correctamente");
-      setRectificativaCreada(true);
-    } catch {
-      setErrores(["Error enviando rectificativa"]);
-    }
-  }*/
   function validarNIF(nif) {
     if (!nif) return false;
 

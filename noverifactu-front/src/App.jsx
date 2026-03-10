@@ -44,6 +44,8 @@ import Productos from "./perfil/Productos";
 import VerificadorQRPublico from "./verificadores/VerificadorQRPublico";
 
 import OptionalDashboardLayout from "./layouts/OptionalDashboardLayout";
+
+const API_URL = process.env.VITE_API_URL;
 function App() {
   const navigate = useNavigate();
   const [mantenimiento, setMantenimiento] = useState(false);
@@ -63,7 +65,7 @@ function App() {
   useEffect(() => {
     async function cargarEstado() {
       try {
-        const res = await fetch("/api/status");
+        const res = await fetch(`${API_URL}/api/status`);
         const data = await res.json();
         setMantenimiento(data.mantenimiento);
       } catch {

@@ -13,7 +13,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import logo from "./assets/inaltera.png";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,7 +76,7 @@ function Register() {
     setErrores([]);
 
     try {
-      const res = await fetch("http://localhost:3000/api/auth/register", {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, nombre, aceptaPrivacidad }),

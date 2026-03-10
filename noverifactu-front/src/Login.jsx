@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import logo from "./assets/inaltera.png";
 import { authFetch } from "./utils/authFetch";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function Login({ setUsuario }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +30,7 @@ function Login({ setUsuario }) {
     setErrores([]);
 
     try {
-      const res = await fetch("api/auth/login", {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -71,7 +71,7 @@ function Login({ setUsuario }) {
     setErrores([]);
 
     try {
-      const res = await fetch("/api/auth/login/2fa", {
+      const res = await fetch(`${API_URL}/api/auth/login/2fa`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -100,7 +100,7 @@ function Login({ setUsuario }) {
   }
 
   async function reenviarVerificacion() {
-    await fetch("api/auth/resend-verification", {
+    await fetch(`${API_URL}/api/auth/resend-verification`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),

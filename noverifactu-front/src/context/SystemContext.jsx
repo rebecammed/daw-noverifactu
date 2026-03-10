@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 const SystemContext = createContext();
+const API_URL = import.meta.env.VITE_API_URL;
 
 export function SystemProvider({ children }) {
   const [mantenimiento, setMantenimiento] = useState(false);
@@ -8,7 +9,7 @@ export function SystemProvider({ children }) {
 
   async function cargarEstado() {
     try {
-      const res = await fetch("/api/status");
+      const res = await fetch(`${API_URL}/api/status`);
       const data = await res.json();
       setMantenimiento(data.mantenimiento);
     } catch {

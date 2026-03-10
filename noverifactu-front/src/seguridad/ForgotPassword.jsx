@@ -9,7 +9,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [mensaje, setMensaje] = useState(null);
@@ -23,7 +23,7 @@ function ForgotPassword() {
     setLinkDev(null);
 
     try {
-      const res = await fetch("/api/auth/forgot-password", {
+      const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
