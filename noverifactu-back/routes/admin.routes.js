@@ -714,40 +714,6 @@ router.post(
   },
 );
 
-router.post(
-  "/admin/mantenimiento/activar",
-  auth,
-  requireAdmin,
-  async (req, res) => {
-    activarMantenimiento();
-
-    await registrarEvento(
-      req.usuario.id,
-      "MODO_MANTENIMIENTO_ACTIVADO",
-      "Modo mantenimiento activado por admin",
-    );
-
-    res.json({ ok: true });
-  },
-);
-
-router.post(
-  "/admin/mantenimiento/desactivar",
-  auth,
-  requireAdmin,
-  async (req, res) => {
-    desactivarMantenimiento();
-
-    await registrarEvento(
-      req.usuario.id,
-      "MODO_MANTENIMIENTO_DESACTIVADO",
-      "Modo mantenimiento desactivado por admin",
-    );
-
-    res.json({ ok: true });
-  },
-);
-
 router.get(
   "/admin/backups/verificar-integridad",
   auth,
@@ -794,6 +760,40 @@ router.get(
         .status(500)
         .json({ mensaje: "Error durante la verificación de integridad" });
     }
+  },
+);
+
+router.post(
+  "/admin/mantenimiento/activar",
+  auth,
+  requireAdmin,
+  async (req, res) => {
+    activarMantenimiento();
+
+    await registrarEvento(
+      req.usuario.id,
+      "MODO_MANTENIMIENTO_ACTIVADO",
+      "Modo mantenimiento activado por admin",
+    );
+
+    res.json({ ok: true });
+  },
+);
+
+router.post(
+  "/admin/mantenimiento/desactivar",
+  auth,
+  requireAdmin,
+  async (req, res) => {
+    desactivarMantenimiento();
+
+    await registrarEvento(
+      req.usuario.id,
+      "MODO_MANTENIMIENTO_DESACTIVADO",
+      "Modo mantenimiento desactivado por admin",
+    );
+
+    res.json({ ok: true });
   },
 );
 
@@ -1063,11 +1063,11 @@ router.get(
     try {
       const [rows] = await pool.query(`
       SELECT 
-        DATE_FORMAT(fecha_expedicion,'%b') as mes,
-        SUM(importe_total) as total
-      FROM facturas
-      GROUP BY MONTH(fecha_expedicion)
-      ORDER BY MONTH(fecha_expedicion)
+  DATE_FORMAT(fecha_expedicion,'%b') as mes,
+  COALESCE(SUM(importe_total),0) as total
+FROM facturas
+GROUP BY MONTH(fecha_expedicion), DATE_FORMAT(fecha_expedicion,'%b')
+ORDER BY MONTH(fecha_expedicion)
     `);
 
       res.json(rows);

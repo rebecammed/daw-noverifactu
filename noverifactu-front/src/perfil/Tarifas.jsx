@@ -21,9 +21,7 @@ function Tarifas() {
   useEffect(() => {
     async function cargarSuscripcion() {
       try {
-        const res = await authFetch(
-          "/api/user/subscription/status",
-        );
+        const res = await authFetch("/api/user/subscription/status");
         const data = await res.json();
         setEstadoSuscripcion(data);
       } catch {
@@ -35,14 +33,11 @@ function Tarifas() {
   }, []);
   async function cambiarEstado(estado) {
     try {
-      const res = await authFetch(
-        "/api/user/subscription/state",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ estado }),
-        },
-      );
+      const res = await authFetch("/api/user/subscription/state", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ estado }),
+      });
 
       const data = await res.json();
 
@@ -62,14 +57,11 @@ function Tarifas() {
 
   async function cambiarPlan(plan) {
     try {
-      const res = await authFetch(
-        "/api/user/subscription/change",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ plan }),
-        },
-      );
+      const res = await authFetch("/api/user/subscription/change", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      });
 
       const data = await res.json();
 
@@ -270,9 +262,6 @@ function Tarifas() {
                       <Button
                         variant="contained"
                         sx={{
-                          px: 4,
-                          py: 1.5,
-                          fontSize: "1rem",
                           bgcolor: "#1a73e8",
                           fontWeight: 600,
                           textTransform: "none",
@@ -303,9 +292,6 @@ function Tarifas() {
                       <Button
                         variant="contained"
                         sx={{
-                          px: 4,
-                          py: 1.5,
-                          fontSize: "1rem",
                           bgcolor: "#1a73e8",
                           fontWeight: 600,
                           textTransform: "none",
@@ -338,13 +324,8 @@ function Tarifas() {
                         size="small"
                         onClick={() => cambiarPlan("PRO")}
                         sx={{
-                          px: 2.5,
-                          py: 0.7,
-                          minWidth: 90,
-                          fontSize: "0.85rem",
                           fontWeight: 600,
                           textTransform: "none",
-                          borderRadius: "8px",
                           bgcolor: "#1a73e8",
                           boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
                           transition: "all 0.2s ease",

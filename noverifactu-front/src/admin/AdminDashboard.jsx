@@ -39,8 +39,14 @@ function AdminDashboard() {
 
       // Facturación mensual
       const grafRes = await authFetch("/api/admin/facturacion-mensual");
-      const grafData = await grafRes.json();
-      setGrafico(grafData);
+
+      if (!grafRes.ok) {
+        console.error("Error cargando gráfico");
+        setGrafico([]);
+      } else {
+        const grafData = await grafRes.json();
+        setGrafico(Array.isArray(grafData) ? grafData : []);
+      }
 
       // SIF
       const sifRes = await authFetch("/api/admin/sif");
