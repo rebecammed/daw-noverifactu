@@ -238,7 +238,7 @@ function AdminConfiguracion() {
           )}
         </Stack>
       )}
-      <Typography variant="h4" sx={{ fontWeight: 600, mb: 4 }}>
+      <Typography variant="h4" sx={{ fontWeight: 600, mt: 3, mb: 4 }}>
         Configuración SIF Global
       </Typography>
 
@@ -318,7 +318,7 @@ function AdminConfiguracion() {
         </TableContainer>
       )}
 
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
         Desplegar nueva versión global
       </Typography>
 
