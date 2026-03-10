@@ -49,7 +49,7 @@ function Dashboard({ usuario }) {
       const subData = await subRes.json();
       setSuscripcion(subData);
 
-      const factRes = await authFetch("/api/facturas?limit=1000");
+      const factRes = await authFetch("/api/facturas");
       const factData = await factRes.json();
 
       const lista = factData.facturas || [];

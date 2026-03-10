@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-
+const API_URL = import.meta.env.VITE_API_URL;
 function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [sifGlobal, setSifGlobal] = useState(null);
@@ -50,7 +50,7 @@ function AdminDashboard() {
       setSifGlobal(global);
 
       // Estado sistema
-      const statusRes = await authFetch("/api/status");
+      const statusRes = await fetch(`${API_URL}/api/status`);
       const statusData = await statusRes.json();
       setEstadoSistema(statusData);
 
