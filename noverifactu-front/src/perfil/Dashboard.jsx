@@ -48,8 +48,8 @@ function Dashboard({ usuario }) {
   const hoy = new Date();
   const anioActual = hoy.getFullYear();
   const mesActual = hoy.getMonth() + 1;
-  const [filtroMes, setFiltroMes] = useState("");
-  const [filtroAnio, setFiltroAnio] = useState("");
+  const [filtroMes, setFiltroMes] = useState(mesActual);
+  const [filtroAnio, setFiltroAnio] = useState(anioActual);
 
   useEffect(() => {
     cargarDatos();
@@ -140,7 +140,13 @@ function Dashboard({ usuario }) {
         Bienvenido, {usuarioData?.nombre || "usuario"}
       </Typography>
 
-      <Box display="flex" gap={2} mb={4} alignItems="center">
+      <Box
+        display="flex"
+        gap={2}
+        mb={4}
+        alignItems="center"
+        justifyContent="flex-end"
+      >
         <FormControl sx={{ minWidth: 160 }}>
           <InputLabel>Mes</InputLabel>
           <Select
@@ -225,7 +231,7 @@ function Dashboard({ usuario }) {
             </Box>
 
             <Typography sx={{ mt: 2 }}>
-              Media facturas / mes: {mediaFacturasMes.toFixed(1)}
+              Media facturas / mes: {Math.floor(mediaFacturasMes)}
             </Typography>
 
             <Typography variant="h4">
