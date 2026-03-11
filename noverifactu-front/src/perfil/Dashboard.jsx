@@ -5,7 +5,11 @@ import {
   CardContent,
   Chip,
   LinearProgress,
-  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
 } from "@mui/material";
 import { useEffect, useState, useMemo } from "react";
 import { authFetch } from "../utils/authFetch";
@@ -142,7 +146,7 @@ function Dashboard({ usuario }) {
           <Select
             value={filtroMes}
             label="Mes"
-            onChange={(e) => setFiltroMes(e.target.value)}
+            onChange={(e) => setFiltroMes(Number(e.target.value))}
           >
             {MESES.map((m) => (
               <MenuItem key={m.value} value={m.value}>
@@ -156,7 +160,7 @@ function Dashboard({ usuario }) {
           <Select
             value={filtroAnio}
             label="Año"
-            onChange={(e) => setFiltroAnio(e.target.value)}
+            onChange={(e) => setFiltroAnio(Number(e.target.value))}
           >
             {aniosDisponibles.map((a) => (
               <MenuItem key={a} value={a}>
