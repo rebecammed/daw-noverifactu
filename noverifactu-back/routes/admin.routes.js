@@ -17,7 +17,7 @@ import { comprobarIntegridadEventos } from "../src/core/integridadEventos.js";
 import AdmZip from "adm-zip";
 
 const router = express.Router();
-router.get("/admin/usuarios", auth, requireAdmin, async (req, res) => {
+/*router.get("/admin/usuarios", auth, requireAdmin, async (req, res) => {
   try {
     const [rows] = await pool.query(`
         SELECT 
@@ -44,6 +44,85 @@ router.get("/admin/usuarios", auth, requireAdmin, async (req, res) => {
   } catch (error) {
     console.error("Error listando usuarios:", error);
     return res.status(500).json({
+      mensaje: "Error obteniendo usuarios",
+    });
+  }
+});*/
+router.get("/admin/usuarios", auth, requireAdmin, async (req, res) => {
+  try {
+    const { estado, empresa } = req.query;
+
+    let where = [];
+    let params = [];
+
+    if (estado === "activo") {
+      where.push("u.activo = 1");
+    }
+
+    if (estado === "inactivo") {
+      where.push("u.activo = 0");
+    }
+
+    if (empresa) {
+      where.push("df.razon_social LIKE ?");
+      params.push(`%${empresa}%`);
+    }
+
+    const whereSQL = where.length ? `WHERE ${where.join(" AND ")}` : "";
+
+    const [rows] = await pool.query(
+      `
+      SELECT 
+        u.id,
+        u.nombre,
+        u.email,
+        u.activo,
+        u.twofa_enabled,
+        df.razon_social,
+
+        COUNT(DISTINCT f.id) AS total_facturas,
+
+        COUNT(DISTINCT DATE_FORMAT(f.fecha_expedicion,'%Y-%m')) AS meses_facturacion,
+
+        CASE 
+          WHEN COUNT(DISTINCT DATE_FORMAT(f.fecha_expedicion,'%Y-%m')) = 0 
+          THEN 0
+          ELSE ROUND(
+            COUNT(DISTINCT f.id) / 
+            COUNT(DISTINCT DATE_FORMAT(f.fecha_expedicion,'%Y-%m'))
+          )
+        END AS media_facturas_mes,
+
+        MAX(
+          CASE 
+            WHEN l.tipo_evento IN ('LOGIN_OK','LOGIN_2FA_OK') 
+            THEN l.fecha_evento 
+          END
+        ) AS ultimo_login
+
+      FROM usuarios u
+
+      LEFT JOIN datos_fiscales df
+        ON df.usuario_id = u.id
+
+      LEFT JOIN facturas f
+        ON f.usuario_id = u.id
+
+      LEFT JOIN log_eventos l
+        ON l.usuario_id = u.id
+
+      ${whereSQL}
+
+      GROUP BY u.id
+      ORDER BY u.id ASC
+      `,
+      params,
+    );
+
+    res.json({ usuarios: rows });
+  } catch (error) {
+    console.error("Error listando usuarios:", error);
+    res.status(500).json({
       mensaje: "Error obteniendo usuarios",
     });
   }
@@ -1032,23 +1111,19 @@ router.post("/admin/sif/versionar", auth, requireAdmin, async (req, res) => {
 
 router.get("/admin/stats", auth, requireAdmin, async (req, res) => {
   try {
-    const [[usuarios]] = await pool.query(`
-      SELECT COUNT(*) as total
-      FROM usuarios
-      WHERE activo = 1
-    `);
+    const [[stats]] = await pool.query(`
+  SELECT
+    (SELECT COUNT(*) FROM usuarios WHERE activo = 1) as usuarios,
+    (SELECT COUNT(*) FROM facturas 
+        WHERE YEAR(fecha_expedicion) = YEAR(CURRENT_DATE())
+        AND MONTH(fecha_expedicion) = MONTH(CURRENT_DATE())
+    ) as facturasMes,
+    (SELECT COUNT(*) FROM facturas 
+        WHERE YEAR(fecha_expedicion) = YEAR(CURRENT_DATE())
+    ) as facturasAnio
+`);
 
-    const [[facturas]] = await pool.query(`
-      SELECT COUNT(*) as total,
-             COALESCE(SUM(importe_total),0) as totalFacturado
-      FROM facturas
-    `);
-
-    res.json({
-      usuarios: usuarios.total,
-      facturas: facturas.total,
-      totalFacturado: facturas.totalFacturado,
-    });
+    res.json(stats);
   } catch (error) {
     console.error("Error stats admin:", error);
     res.status(500).json({ mensaje: "Error obteniendo estadísticas" });
