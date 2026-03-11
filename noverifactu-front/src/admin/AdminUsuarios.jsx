@@ -14,6 +14,10 @@ import {
   Paper,
   Autocomplete,
   TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 function AdminUsuarios() {
@@ -26,11 +30,32 @@ function AdminUsuarios() {
 
   useEffect(() => {
     cargarUsuarios();
-  }, []);
+  }, [estado, empresa]);
 
-  async function cargarUsuarios() {
+  /*async function cargarUsuarios() {
     try {
       const res = await authFetch("/api/admin/usuarios");
+
+      if (!res.ok) {
+        throw new Error("Error cargando usuarios");
+      }
+
+      const data = await res.json();
+      setUsuarios(data.usuarios || []);
+      setLoading(false);
+    } catch (e) {
+      setError("Error cargando usuarios");
+      setLoading(false);
+    }
+  }*/
+  async function cargarUsuarios() {
+    try {
+      const params = new URLSearchParams();
+
+      if (estado) params.append("estado", estado);
+      if (empresa) params.append("empresa", empresa);
+
+      const res = await authFetch(`/api/admin/usuarios?${params.toString()}`);
 
       if (!res.ok) {
         throw new Error("Error cargando usuarios");
@@ -156,11 +181,13 @@ function AdminUsuarios() {
           {/* FILTRO EMPRESA */}
 
           <Autocomplete
-            options={empresas}
+            options={[
+              ...new Set(usuarios.map((u) => u.razon_social).filter(Boolean)),
+            ]}
             getOptionLabel={(option) => option || ""}
             sx={{ width: 260 }}
             value={empresa}
-            onChange={(event, newValue) => setEmpresa(newValue || "")}
+            onChange={(_, newValue) => setEmpresa(newValue || "")}
             renderInput={(params) => <TextField {...params} label="Empresa" />}
           />
         </Box>
