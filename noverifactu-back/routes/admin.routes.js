@@ -64,7 +64,7 @@ router.get("/admin/usuarios", auth, requireAdmin, async (req, res) => {
     }
 
     if (empresa) {
-      where.push("df.razon_social LIKE ?");
+      where.push("df.razon_social = ?");
       params.push(`%${empresa}%`);
     }
 
@@ -113,7 +113,11 @@ router.get("/admin/usuarios", auth, requireAdmin, async (req, res) => {
 
       ${whereSQL}
 
-      GROUP BY u.id
+      GROUP BY u.id, u.nombre,
+  u.email,
+  u.activo,
+  u.twofa_enabled,
+  df.razon_social
       ORDER BY u.id ASC
       `,
       params,
