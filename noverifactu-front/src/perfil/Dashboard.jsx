@@ -115,6 +115,7 @@ function Dashboard({ usuario }) {
     });
     return meses.size ? lista.length / meses.size : 0;
   }, [facturas, filtroAnio]);
+
   const grafico = useMemo(() => {
     const datos = {};
     facturas.forEach((f) => {
@@ -136,50 +137,56 @@ function Dashboard({ usuario }) {
 
   return (
     <Box p={3} sx={{ flexGrow: 1 }}>
-      <Typography variant="h4" mb={4}>
-        Bienvenido, {usuarioData?.nombre || "usuario"}
-      </Typography>
-
       <Box
         display="flex"
-        gap={2}
-        mb={4}
+        justifyContent="space-between"
         alignItems="center"
-        justifyContent="flex-end"
+        mb={4}
       >
-        <FormControl sx={{ minWidth: 160 }}>
-          <InputLabel>Mes</InputLabel>
-          <Select
-            value={filtroMes}
-            label="Mes"
-            onChange={(e) => setFiltroMes(Number(e.target.value))}
-          >
-            {MESES.map((m) => (
-              <MenuItem key={m.value} value={m.value}>
-                {m.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl sx={{ minWidth: 140 }}>
-          <InputLabel>Año</InputLabel>
-          <Select
-            value={filtroAnio}
-            label="Año"
-            onChange={(e) => setFiltroAnio(Number(e.target.value))}
-          >
-            {aniosDisponibles.map((a) => (
-              <MenuItem key={a} value={a}>
-                {a}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button variant="outlined" onClick={limpiarFiltros}>
-          Limpiar
-        </Button>
-      </Box>
+        <Typography variant="h4" mb={4}>
+          Bienvenido, {usuarioData?.nombre || "usuario"}
+        </Typography>
 
+        <Box
+          display="flex"
+          gap={2}
+          mb={4}
+          alignItems="center"
+          justifyContent="flex-end"
+        >
+          <FormControl sx={{ minWidth: 160 }}>
+            <InputLabel>Mes</InputLabel>
+            <Select
+              value={filtroMes}
+              label="Mes"
+              onChange={(e) => setFiltroMes(Number(e.target.value))}
+            >
+              {MESES.map((m) => (
+                <MenuItem key={m.value} value={m.value}>
+                  {m.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ minWidth: 140 }}>
+            <InputLabel>Año</InputLabel>
+            <Select
+              value={filtroAnio}
+              label="Año"
+              onChange={(e) => setFiltroAnio(Number(e.target.value))}
+            >
+              {aniosDisponibles.map((a) => (
+                <MenuItem key={a} value={a}>
+                  {a}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button variant="outlined" onClick={limpiarFiltros}>
+            Limpiar
+          </Button>
+        </Box>
+      </Box>
       <Box
         sx={{
           display: "flex",

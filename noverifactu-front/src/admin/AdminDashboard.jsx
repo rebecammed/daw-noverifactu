@@ -1,5 +1,5 @@
 import { Box, Typography, Card, CardContent, Chip, Paper } from "@mui/material";
-
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { authFetch } from "../utils/authFetch";
 
@@ -14,6 +14,7 @@ import {
 } from "recharts";
 const API_URL = import.meta.env.VITE_API_URL;
 function AdminDashboard() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [sifGlobal, setSifGlobal] = useState(null);
   const [estadoSistema, setEstadoSistema] = useState(null);
@@ -88,6 +89,17 @@ function AdminDashboard() {
   }
 
   if (!stats) return null;
+  const clickableCard = {
+    flex: 1,
+    borderRadius: 3,
+    cursor: "pointer",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+    transition: "all 0.2s",
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 6px 16px rgba(0,0,0,0.1)",
+    },
+  };
 
   return (
     <Paper
@@ -108,44 +120,24 @@ function AdminDashboard() {
         {/* MÉTRICAS */}
 
         <Box sx={{ display: "flex", gap: 3, mb: 4 }}>
-          <Card
-            sx={{
-              flex: 1,
-              borderRadius: 3,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            }}
-          >
+          <Card sx={clickableCard} onClick={() => navigate("/admin/usuarios")}>
             <CardContent>
               <Typography variant="h6">Usuarios activos</Typography>
               <Typography variant="h4">{stats.usuarios}</Typography>
             </CardContent>
           </Card>
 
-          <Card
-            sx={{
-              flex: 1,
-              borderRadius: 3,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            }}
-          >
+          <Card sx={clickableCard} onClick={() => navigate("/admin/facturas")}>
             <CardContent>
-              <Typography variant="h6">Facturas totales</Typography>
-              <Typography variant="h4">{stats.facturas}</Typography>
+              <Typography variant="h6">Facturas este mes</Typography>
+              <Typography variant="h4">{stats.facturasMes}</Typography>
             </CardContent>
           </Card>
 
-          <Card
-            sx={{
-              flex: 1,
-              borderRadius: 3,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            }}
-          >
+          <Card sx={clickableCard} onClick={() => navigate("/admin/facturas")}>
             <CardContent>
-              <Typography variant="h6">Facturación total</Typography>
-              <Typography variant="h4">
-                {Number(stats.totalFacturado).toFixed(2)} €
-              </Typography>
+              <Typography variant="h6">Facturas este año</Typography>
+              <Typography variant="h4">{stats.facturasAnio}</Typography>
             </CardContent>
           </Card>
         </Box>
@@ -154,11 +146,8 @@ function AdminDashboard() {
 
         <Box sx={{ display: "flex", gap: 3, mb: 4 }}>
           <Card
-            sx={{
-              flex: 1,
-              borderRadius: 3,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            }}
+            sx={clickableCard}
+            onClick={() => navigate("/admin/configuracion")}
           >
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -178,11 +167,8 @@ function AdminDashboard() {
           </Card>
 
           <Card
-            sx={{
-              flex: 1,
-              borderRadius: 3,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            }}
+            sx={clickableCard}
+            onClick={() => navigate("/admin/configuracion")}
           >
             <CardContent>
               <Typography variant="h6">
@@ -224,11 +210,8 @@ function AdminDashboard() {
 
         <Box sx={{ display: "flex", gap: 3, mb: 4 }}>
           <Card
-            sx={{
-              flex: 1,
-              borderRadius: 3,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            }}
+            sx={clickableCard}
+            onClick={() => navigate("/admin/integridad")}
           >
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -268,13 +251,7 @@ function AdminDashboard() {
             </CardContent>
           </Card>
 
-          <Card
-            sx={{
-              flex: 1,
-              borderRadius: 3,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            }}
-          >
+          <Card sx={clickableCard} onClick={() => navigate("/admin/backups")}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Último backup

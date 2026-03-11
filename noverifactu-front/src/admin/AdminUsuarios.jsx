@@ -12,11 +12,15 @@ import {
   TableBody,
   TableContainer,
   Paper,
-  Alert,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 
 function AdminUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
+  const [estado, setEstado] = useState("");
+  const [empresa, setEmpresa] = useState("");
+  const [empresas, setEmpresas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -125,9 +129,51 @@ function AdminUsuarios() {
         border: "1px solid #eee",
       }}
     >
-      <Typography variant="h4" sx={{ fontWeight: 600, mb: 3 }}>
-        Gestión de usuarios
-      </Typography>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={3}
+      >
+        <Typography variant="h4">Gestión de usuarios</Typography>
+
+        <Box display="flex" gap={2} alignItems="center">
+          {/* FILTRO ESTADO */}
+
+          <FormControl sx={{ minWidth: 150 }}>
+            <InputLabel>Estado</InputLabel>
+            <Select
+              value={estado}
+              label="Estado"
+              onChange={(e) => setEstado(e.target.value)}
+            >
+              <MenuItem value="">Todos</MenuItem>
+              <MenuItem value="activo">Activos</MenuItem>
+              <MenuItem value="inactivo">Inactivos</MenuItem>
+            </Select>
+          </FormControl>
+
+          {/* FILTRO EMPRESA */}
+
+          <Autocomplete
+            options={empresas}
+            getOptionLabel={(option) => option || ""}
+            sx={{ width: 260 }}
+            value={empresa}
+            onChange={(event, newValue) => setEmpresa(newValue || "")}
+            renderInput={(params) => <TextField {...params} label="Empresa" />}
+          />
+        </Box>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setEstado("");
+            setEmpresa("");
+          }}
+        >
+          Limpiar
+        </Button>
+      </Box>
 
       <TableContainer
         component={Paper}
@@ -169,6 +215,14 @@ function AdminUsuarios() {
                   variant="body2"
                   sx={{ fontSize: "1rem", fontWeight: "550", color: "#374151" }}
                 >
+                  Razón social
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: "1rem", fontWeight: "550", color: "#374151" }}
+                >
                   Activo
                 </Typography>
               </TableCell>
@@ -177,7 +231,7 @@ function AdminUsuarios() {
                   variant="body2"
                   sx={{ fontSize: "1rem", fontWeight: "550", color: "#374151" }}
                 >
-                  Facturas
+                  Facturas / mes
                 </Typography>
               </TableCell>
               <TableCell>
@@ -212,6 +266,7 @@ function AdminUsuarios() {
                 <TableCell>{u.id}</TableCell>
                 <TableCell>{u.email}</TableCell>
                 <TableCell>{u.nombre}</TableCell>
+                <TableCell>{u.razon_social}</TableCell>
                 <TableCell>
                   {u.activo ? (
                     <span style={{ color: "green" }}>Activo</span>
@@ -219,7 +274,7 @@ function AdminUsuarios() {
                     <span style={{ color: "red" }}>Desactivado</span>
                   )}
                 </TableCell>
-                <TableCell>{u.total_facturas}</TableCell>
+                <TableCell>{u.media_facturas_mes}</TableCell>
                 <TableCell>
                   {u.ultimo_login
                     ? new Date(u.ultimo_login).toLocaleString()
