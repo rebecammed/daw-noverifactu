@@ -20,24 +20,37 @@ import {
   CartesianGrid,
 } from "recharts";
 
+const MESES = [
+  { value: 1, label: "Enero" },
+  { value: 2, label: "Febrero" },
+  { value: 3, label: "Marzo" },
+  { value: 4, label: "Abril" },
+  { value: 5, label: "Mayo" },
+  { value: 6, label: "Junio" },
+  { value: 7, label: "Julio" },
+  { value: 8, label: "Agosto" },
+  { value: 9, label: "Septiembre" },
+  { value: 10, label: "Octubre" },
+  { value: 11, label: "Noviembre" },
+  { value: 12, label: "Diciembre" },
+];
+
 function Dashboard({ usuario }) {
   const [suscripcion, setSuscripcion] = useState(null);
   const [sifActivo, setSifActivo] = useState(false);
   const [usuarioData, setUsuarioData] = useState(null);
 
+  const [facturas, setFacturas] = useState([]);
+  const hoy = new Date();
+  const anioActual = hoy.getFullYear();
+  const mesActual = hoy.getMonth() + 1;
   const [filtroMes, setFiltroMes] = useState("");
   const [filtroAnio, setFiltroAnio] = useState("");
-
-  const [facturas, setFacturas] = useState([]);
-  const [mediaFacturasMes, setMediaFacturasMes] = useState(0);
-
   const [totales, setTotales] = useState({
     facturasMes: 0,
     facturasAnio: 0,
     totalFacturas: 0,
   });
-
-  const [grafico, setGrafico] = useState([]);
 
   useEffect(() => {
     cargarDatos();
@@ -60,8 +73,7 @@ function Dashboard({ usuario }) {
       const factRes = await authFetch("/api/facturas?limit=1000");
       const factData = await factRes.json();
 
-      const lista = factData.facturas || [];
-      setFacturas(lista);
+      setFacturas(factData.facturas || []);
 
       const sifRes = await authFetch("/api/sif");
       const sifData = await sifRes.json();
@@ -70,72 +82,59 @@ function Dashboard({ usuario }) {
       console.error("Error cargando dashboard", err);
     }
   }
+  const aniosDisponibles = useMemo(() => {
+    const set = new Set();
+    facturas.forEach((f) => {
+      const anio = new Date(f.fecha_expedicion).getFullYear();
+      set.add(anio);
+    });
+    return Array.from(set).sort((a, b) => b - a);
+  }, [facturas]);
 
-  function calcularEstadisticas() {
-    let lista = [...facturas];
-
-    if (filtroAnio) {
-      lista = lista.filter(
-        (f) =>
-          new Date(f.fecha_expedicion).getFullYear() === Number(filtroAnio),
-      );
-    }
-
-    if (filtroMes) {
-      lista = lista.filter(
-        (f) =>
-          new Date(f.fecha_expedicion).getMonth() + 1 === Number(filtroMes),
-      );
-    }
-
-    const ahora = new Date();
-
-    let facturasMes = 0;
-    let facturasAnio = 0;
-
-    const facturasPorMes = {};
-    const mesesUnicos = new Set();
-
-    lista.forEach((f) => {
+  const totalFacturas = facturas.length;
+  const facturasPorAnio = useMemo(() => {
+    return facturas.filter(
+      (f) => new Date(f.fecha_expedicion).getFullYear() === filtroAnio,
+    ).length;
+  }, [facturas, filtroAnio]);
+  const facturasPorMes = useMemo(() => {
+    return facturas.filter((f) => {
       const fecha = new Date(f.fecha_expedicion);
+      return (
+        fecha.getFullYear() === filtroAnio && fecha.getMonth() + 1 === filtroMes
+      );
+    }).length;
+  }, [facturas, filtroAnio, filtroMes]);
 
-      const mes = fecha.getMonth();
+  const mediaFacturasMes = useMemo(() => {
+    let lista = facturas;
+    if (filtroAnio) {
+      lista = facturas.filter(
+        (f) => new Date(f.fecha_expedicion).getFullYear() === filtroAnio,
+      );
+    }
+    const meses = new Set();
+    lista.forEach((f) => {
+      const d = new Date(f.fecha_expedicion);
+      meses.add(`${d.getFullYear()}-${d.getMonth()}`);
+    });
+    return meses.size ? lista.length / meses.size : 0;
+  }, [facturas, filtroAnio]);
+  const grafico = useMemo(() => {
+    const datos = {};
+    facturas.forEach((f) => {
+      const fecha = new Date(f.fecha_expedicion);
       const anio = fecha.getFullYear();
-      const mesNombre = fecha.toLocaleString("es-ES", { month: "short" });
-
-      if (!facturasPorMes[mesNombre]) facturasPorMes[mesNombre] = 0;
-      facturasPorMes[mesNombre]++;
-
-      if (mes === ahora.getMonth() && anio === ahora.getFullYear()) {
-        facturasMes++;
-      }
-
-      if (anio === ahora.getFullYear()) {
-        facturasAnio++;
-      }
-
-      const key = `${anio}-${mes}`;
-      mesesUnicos.add(key);
+      if (anio !== filtroAnio) return;
+      const mes = fecha.getMonth() + 1;
+      if (!datos[mes]) datos[mes] = 0;
+      datos[mes]++;
     });
-
-    const totalFacturas = lista.length;
-
-    const media = mesesUnicos.size > 0 ? totalFacturas / mesesUnicos.size : 0;
-
-    const graficoData = Object.keys(facturasPorMes).map((mes) => ({
-      mes,
-      total: facturasPorMes[mes],
-    }));
-
-    setGrafico(graficoData);
-
-    setTotales({
-      facturasMes,
-      facturasAnio,
-      totalFacturas,
-    });
-
-    setMediaFacturasMes(media);
+    return MESES.map((m) => ({ mes: m.label, total: datos[m.value] || 0 }));
+  }, [facturas, filtroAnio]);
+  function limpiarFiltros() {
+    setFiltroAnio(anioActual);
+    setFiltroMes(mesActual);
   }
 
   if (!suscripcion) return null;
@@ -146,20 +145,38 @@ function Dashboard({ usuario }) {
         Bienvenido, {usuarioData?.nombre || "usuario"}
       </Typography>
 
-      <Box display="flex" gap={2} mb={3}>
-        <TextField
-          label="Año"
-          type="number"
-          value={filtroAnio}
-          onChange={(e) => setFiltroAnio(e.target.value)}
-        />
-
-        <TextField
-          label="Mes"
-          type="number"
-          value={filtroMes}
-          onChange={(e) => setFiltroMes(e.target.value)}
-        />
+      <Box display="flex" gap={2} mb={4} alignItems="center">
+        <FormControl sx={{ minWidth: 160 }}>
+          <InputLabel>Mes</InputLabel>
+          <Select
+            value={filtroMes}
+            label="Mes"
+            onChange={(e) => setFiltroMes(e.target.value)}
+          >
+            {MESES.map((m) => (
+              <MenuItem key={m.value} value={m.value}>
+                {m.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl sx={{ minWidth: 140 }}>
+          <InputLabel>Año</InputLabel>
+          <Select
+            value={filtroAnio}
+            label="Año"
+            onChange={(e) => setFiltroAnio(e.target.value)}
+          >
+            {aniosDisponibles.map((a) => (
+              <MenuItem key={a} value={a}>
+                {a}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Button variant="outlined" onClick={limpiarFiltros}>
+          Limpiar
+        </Button>
       </Box>
 
       <Box
@@ -173,21 +190,21 @@ function Dashboard({ usuario }) {
         <Card sx={{ flex: 1, borderRadius: 3 }}>
           <CardContent>
             <Typography variant="h6">Facturas / mes</Typography>
-            <Typography variant="h4">{totales.facturasMes}</Typography>
+            <Typography variant="h4">{facturasPorMes}</Typography>
           </CardContent>
         </Card>
 
         <Card sx={{ flex: 1, borderRadius: 3 }}>
           <CardContent>
             <Typography variant="h6">Facturas / año</Typography>
-            <Typography variant="h4">{totales.facturasAnio}</Typography>
+            <Typography variant="h4">{facturasPorAnio}</Typography>
           </CardContent>
         </Card>
 
         <Card sx={{ flex: 1, borderRadius: 3 }}>
           <CardContent>
             <Typography variant="h6">Facturas totales</Typography>
-            <Typography variant="h4">{totales.totalFacturas}</Typography>
+            <Typography variant="h4">{totalFacturas}</Typography>
           </CardContent>
         </Card>
       </Box>
