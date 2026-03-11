@@ -46,19 +46,10 @@ function Dashboard({ usuario }) {
   const mesActual = hoy.getMonth() + 1;
   const [filtroMes, setFiltroMes] = useState("");
   const [filtroAnio, setFiltroAnio] = useState("");
-  const [totales, setTotales] = useState({
-    facturasMes: 0,
-    facturasAnio: 0,
-    totalFacturas: 0,
-  });
 
   useEffect(() => {
     cargarDatos();
   }, []);
-
-  useEffect(() => {
-    calcularEstadisticas();
-  }, [facturas, filtroMes, filtroAnio]);
 
   async function cargarDatos() {
     try {
