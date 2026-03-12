@@ -13,6 +13,13 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import validarFacturaAlta from "../../validators/facturaAlta.js";
 import normalizarFacturaAlta from "../../normalizers/facturaAlta.js";
 import { generarHashRegistro } from "../../src/core/hashEngine.js";
+import generarFacturaAltaXML from "../../xml/generarFacturaAltaxml.js";
+import generarFacturaRectificativaXML from "../../xml/generarFacturaRectificativaxml.js";
+import generarFacturaAnulacionXML from "../../xml/generarFacturaAnulacionxml.js";
+import validarFacturaAlta from "../../xml/validarFacturaAltaxsd.js";
+import validarFacturaRectificativaXSD from "../../xml/validarFacturaRectificativaxsd.js";
+import validarFacturaAnulacionXSD from "../../xml/validarFacturaAnulacionxsd.js";
+import generarFacturaAltaPDF from "../../pdf/facturaAltaPDF.js";
 
 dotenv.config();
 
@@ -1815,6 +1822,7 @@ router.post(
         },
       });
 
+      await validarFacturaAnulacionXSD(xml);
       // 🔹 9. Insertar solo registro de facturación
       await connection.query(
         `
