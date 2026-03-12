@@ -6,7 +6,7 @@ import auth from "../../middleware/auth.js";
 
 const router = express.Router();
 
-router.get("/facturas", auth, async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
     const usuarioId = req.usuario.id;
 
@@ -114,7 +114,7 @@ WHERE f.usuario_id = ?`,
   }
 });
 
-router.get("/facturas/:id/rectificativas", auth, async (req, res) => {
+router.get("/:id/rectificativas", auth, async (req, res) => {
   const facturaOrigenId = req.params.id;
   const usuarioId = req.usuario.id;
 
@@ -168,7 +168,7 @@ router.get("/facturas/:id/rectificativas", auth, async (req, res) => {
   }
 });
 
-router.get("/facturas/:id", auth, async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   try {
     const facturaId = req.params.id;
     const usuarioId = req.usuario.id;
