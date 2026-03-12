@@ -1,3 +1,8 @@
+import path from "path";
+import fs from "fs";
+import { desbloquearPDF } from "../pdf/pdfUnlocker.js";
+import { estamparSobreCopia } from "../pdf/estamparSobreCopia.js";
+import { generarPDFManual } from "../pdf/generarFacturaAltaPDF.js";
 export async function procesarPDF({
   pdf,
   baseDir,
