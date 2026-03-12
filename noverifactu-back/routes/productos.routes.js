@@ -11,7 +11,7 @@ router.get("/productos", auth, async (req, res) => {
 
     const [rows] = await pool.query(
       `
-    SELECT id, nombre, descripcion, precio, tipo_iva, activo
+    SELECT id, nombre, precio, tipo_iva, unidad, activo
     FROM productos
     WHERE usuario_id = ?
     ORDER BY nombre ASC
@@ -29,18 +29,25 @@ router.get("/productos", auth, async (req, res) => {
 router.post("/productos", auth, checkMantenimiento, async (req, res) => {
   try {
     const usuarioId = req.usuario.id;
-    const { nombre, descripcion, precio, tipo_iva } = req.body;
+    const { nombre, precio, tipo_iva, unidad } = req.body;
 
     if (!nombre || !precio) {
       return res.status(400).json({ error: "Nombre y precio obligatorios" });
     }
+    const [existe] = await pool.query(
+      `SELECT id FROM productos WHERE usuario_id = ? AND nombre = ? LIMIT 1`,
+      [usuarioId, nombre],
+    );
 
+    if (existe.length > 0) {
+      return res.json({ id: existe[0].id });
+    }
     const [result] = await pool.query(
       `
-    INSERT INTO productos (usuario_id, nombre, descripcion, precio, tipo_iva)
+    INSERT INTO productos (usuario_id, nombre, precio, tipo_iva, unidad)
     VALUES (?, ?, ?, ?, ?)
     `,
-      [usuarioId, nombre, descripcion || null, precio, tipo_iva || 21],
+      [usuarioId, nombre, precio, tipo_iva || 21, unidad || "ud"],
     );
 
     res.json({ id: result.insertId });

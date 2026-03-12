@@ -436,6 +436,7 @@ function SubidaFactura() {
           nombre: c.descripcion.trim(),
           precio: c.precioUnitario,
           tipo_iva: c.tipoImpositivo,
+          unidad: c.unidad || "ud",
         });
       }
     });

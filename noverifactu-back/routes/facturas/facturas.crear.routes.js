@@ -520,7 +520,7 @@ router.post(
       }
       let rutaOriginal = null;
 
-      const baseUrl = "http://localhost:5173/verificar-qr";
+      const baseUrl = "https://daw-noverifactu.vercel.app/verificar-qr";
       const qrData =
         `${baseUrl}` +
         `?nif=${nifEmisor}` +
@@ -1542,7 +1542,7 @@ router.post(
       );
 
       // 🔹 Generar QR
-      const baseUrl = "http://localhost:5173/verificar-qr";
+      const baseUrl = "https://daw-noverifactu.vercel.app/verificar-qr";
       const qrData =
         `${baseUrl}` +
         `?nif=${emisor.nif}` +
