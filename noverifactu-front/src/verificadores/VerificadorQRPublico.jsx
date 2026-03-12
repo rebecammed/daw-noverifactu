@@ -23,36 +23,6 @@ function VerificadorQRPublico() {
   const [dragActive, setDragActive] = useState(false);
 
   // ===============================
-  // ESCÁNER DE CÁMARA
-  // ===============================
-
-  useEffect(() => {
-    const scanner = new Html5QrcodeScanner(
-      "qr-reader",
-      {
-        fps: 10,
-        qrbox: 250,
-      },
-      false,
-    );
-
-    scanner.render(
-      (decodedText) => {
-        redirigir(decodedText);
-      },
-      () => {},
-    );
-
-    scannerRef.current = scanner;
-
-    return () => {
-      if (scannerRef.current) {
-        scannerRef.current.clear().catch(() => {});
-      }
-    };
-  }, []);
-
-  // ===============================
   // REDIRECCIÓN
   // ===============================
 
@@ -76,12 +46,17 @@ function VerificadorQRPublico() {
   // ===============================
 
   async function procesarFactura(file) {
-    if (file.type === "application/pdf") {
-      leerQRdesdePDF(file);
-    } else if (file.type.startsWith("image/")) {
-      leerQRdesdeImagen(file);
-    } else {
-      setError("Formato no soportado");
+    try {
+      if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
+        await leerQRdesdePDF(file);
+      } else if (file.type.startsWith("image/")) {
+        await leerQRdesdeImagen(file);
+      } else {
+        setError("Formato no soportado");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("No se pudo analizar el documento");
     }
   }
   async function leerQRdesdeImagen(file) {
