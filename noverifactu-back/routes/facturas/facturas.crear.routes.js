@@ -10,8 +10,8 @@ import { procesarPDF } from "../../utils/procesarPDF.js";
 import { registrarEvento } from "../../utils/eventos.js";
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { validarFacturaAlta } from "../../validators/facturaAlta.js";
-import { normalizarFacturaAlta } from "../../normalizers/facturaAlta.js";
+import validarFacturaAlta from "../../validators/facturaAlta.js";
+import normalizarFacturaAlta from "../../normalizers/facturaAlta.js";
 
 dotenv.config();
 
