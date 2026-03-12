@@ -19,7 +19,7 @@ import generarFacturaAnulacionXML from "../../xml/generarFacturaAnulacionxml.js"
 import validarFacturaAltaXSD from "../../xml/validarFacturaAltaxsd.js";
 import validarFacturaRectificativaXSD from "../../xml/validarFacturaRectificativaxsd.js";
 import validarFacturaAnulacionXSD from "../../xml/validarFacturaAnulacionxsd.js";
-import generarFacturaAltaPDF from "../../pdf/facturaAltaPDF.js";
+import generarFacturaAltaPDF from "../../pdf/generarFacturaAltaPDF.js";
 
 dotenv.config();
 
