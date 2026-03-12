@@ -440,19 +440,19 @@ router.post(
       // ==========================
       const [facturaResult] = await connection.query(
         `INSERT INTO facturas
-         (usuario_id, registro_id, nif_receptor, numero_factura,
+         (usuario_id, registro_id,  numero_factura,
           fecha_expedicion, tipo_factura,
           importe_total, 
-          ruta_pdf, pdf_generado_path, xml_generado_path)
-         VALUES (?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL)`,
+          ruta_pdf, cliente_id, pdf_generado_path, xml_generado_path)
+         VALUES (?, ?, ?, ?, ?, ?, NULL, ?, NULL, NULL)`,
         [
           usuarioId,
           registroId,
-          receptor.nif,
           datosNormalizados.numeroFactura,
           fechaEmision,
           datosNormalizados.tipoFactura,
           importeTotal,
+          clienteFinalId,
         ],
       );
 

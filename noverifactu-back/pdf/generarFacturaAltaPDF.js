@@ -29,12 +29,13 @@ export default async function generarFacturaAltaPDF(datos) {
     const d = new Date(fechaStr);
     // Formato: DD/MM/YYYY HH:mm:ss
     return (
-      d.toLocaleDateString() +
+      d.toLocaleDateString("es-ES") +
       " " +
-      d.toLocaleTimeString([], {
+      d.toLocaleTimeString("es-ES", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
+        hour12: false,
       })
     );
   };

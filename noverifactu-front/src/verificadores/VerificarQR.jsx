@@ -25,6 +25,7 @@ function VerificarQR() {
     cuotaIVA: params.get("cuotaIVA"),
     importe: params.get("importe"),
     hash: params.get("hash"),
+    ver: params.get("ver"),
   };
 
   const [resultado, setResultado] = useState(null);
@@ -124,6 +125,12 @@ function VerificarQR() {
                     <TableCell sx={{ wordBreak: "break-all" }}>
                       {datos.hash}
                     </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <b>Versión QR</b>
+                    </TableCell>
+                    <TableCell>{datos.ver}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>

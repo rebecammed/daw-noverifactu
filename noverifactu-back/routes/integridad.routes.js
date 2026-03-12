@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/verificar-factura", async (req, res) => {
   try {
-    const { nif, num, fecha, importe, hashPropio } = req.query;
+    const { nif, num, fecha, importe, hash, ver } = req.query;
 
     const [rows] = await pool.query(
       `
@@ -45,7 +45,7 @@ WHERE f.numero_factura = ?
       new Date(factura.fecha_expedicion).toISOString().slice(0, 10) === fecha &&
       Number(factura.importe_total).toFixed(2) === Number(importe).toFixed(2);
 
-    const hashValido = factura.hash_registro_actual === hashPropio;
+    const hashValido = factura.hash_registro_actual === hash;
 
     res.json({
       existe: true,
