@@ -42,7 +42,7 @@ WHERE f.numero_factura = ?
     const datosCoinciden =
       factura.nif === nif &&
       factura.numero_factura === num &&
-      new Date(factura.fecha_expedicion).toISOString().slice(0, 10) === fecha &&
+      factura.fecha_expedicion === fecha &&
       Number(factura.importe_total).toFixed(2) === Number(importe).toFixed(2);
 
     const hashValido = factura.hash_registro_actual === hash;
