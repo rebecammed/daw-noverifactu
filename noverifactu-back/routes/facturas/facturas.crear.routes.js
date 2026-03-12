@@ -448,7 +448,7 @@ router.post(
         [
           usuarioId,
           registroId,
-          cliente.nif,
+          receptor.nif,
           datosNormalizados.numeroFactura,
           fechaEmision,
           datosNormalizados.tipoFactura,

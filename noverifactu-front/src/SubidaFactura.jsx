@@ -992,10 +992,16 @@ function SubidaFactura() {
                           fullWidth
                           sx={{ minWidth: 0 }}
                           freeSolo
-                          options={productosOpciones}
+                          options={productosOpciones || []}
                           loading={loadingProductos}
+                          openOnFocus
+                          autoHighlight
+                          filterSelectedOptions
                           getOptionLabel={(option) =>
                             typeof option === "string" ? option : option.nombre
+                          }
+                          isOptionEqualToValue={(option, value) =>
+                            option.id === value.id
                           }
                           onChange={(event, value) => {
                             if (!value) return;
