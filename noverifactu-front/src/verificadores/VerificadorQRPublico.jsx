@@ -81,7 +81,7 @@ function VerificadorQRPublico() {
       for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
         const page = await pdf.getPage(pageNumber);
 
-        const viewport = page.getViewport({ scale: 3 });
+        const viewport = page.getViewport({ scale: 4 });
 
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
@@ -97,7 +97,7 @@ function VerificadorQRPublico() {
         const blob = await new Promise((resolve) =>
           canvas.toBlob(resolve, "image/png"),
         );
-
+        const file = new File([blob], "page.png", { type: "image/png" });
         try {
           await leerQRdesdeImagen(blob);
           return; // QR encontrado → paramos
