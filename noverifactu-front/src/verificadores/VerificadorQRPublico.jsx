@@ -11,10 +11,9 @@ import {
   Divider,
 } from "@mui/material";
 import * as pdfjsLib from "pdfjs-dist";
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.js",
-  import.meta.url,
-).toString();
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min?url";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 function VerificadorQRPublico() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
@@ -148,15 +147,6 @@ function VerificadorQRPublico() {
   return (
     <Box sx={{ maxWidth: 700, mx: "auto" }}>
       <div id="qr-reader" style={{ display: "none" }}></div>
-
-      <Paper
-        elevation={3}
-        sx={{
-          p: 5,
-          borderRadius: 4,
-          border: "1px solid #eee",
-        }}
-      ></Paper>
       <Paper
         elevation={3}
         sx={{
