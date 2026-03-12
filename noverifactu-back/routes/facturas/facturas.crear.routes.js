@@ -16,7 +16,7 @@ import { generarHashRegistro } from "../../src/core/hashEngine.js";
 import generarFacturaAltaXML from "../../xml/generarFacturaAltaxml.js";
 import generarFacturaRectificativaXML from "../../xml/generarFacturaRectificativaxml.js";
 import generarFacturaAnulacionXML from "../../xml/generarFacturaAnulacionxml.js";
-import validarFacturaAlta from "../../xml/validarFacturaAltaxsd.js";
+import validarFacturaAltaXSD from "../../xml/validarFacturaAltaxsd.js";
 import validarFacturaRectificativaXSD from "../../xml/validarFacturaRectificativaxsd.js";
 import validarFacturaAnulacionXSD from "../../xml/validarFacturaAnulacionxsd.js";
 import generarFacturaAltaPDF from "../../pdf/facturaAltaPDF.js";
@@ -409,6 +409,7 @@ router.post(
       };
 
       const xmlFactura = generarFacturaAltaXML(datosFacturaXML);
+      await validarFacturaAltaXSD(xmlFactura);
 
       // ==========================
       // INSERT REGISTRO
