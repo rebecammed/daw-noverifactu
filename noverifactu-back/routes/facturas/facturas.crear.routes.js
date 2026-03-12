@@ -12,6 +12,7 @@ import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import validarFacturaAlta from "../../validators/facturaAlta.js";
 import normalizarFacturaAlta from "../../normalizers/facturaAlta.js";
+import { generarHashRegistro } from "../../src/core/hashEngine.js";
 
 dotenv.config();
 
