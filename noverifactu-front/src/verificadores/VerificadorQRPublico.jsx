@@ -11,8 +11,10 @@ import {
   Divider,
 } from "@mui/material";
 import * as pdfjsLib from "pdfjs-dist";
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.js",
+  import.meta.url,
+).toString();
 function VerificadorQRPublico() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
