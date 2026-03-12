@@ -338,7 +338,7 @@ router.post(
         clienteFinalId = cliente.id;
         receptor = cliente; // 👈 AQUÍ tienes el nif
       } else {
-        const [insertCliente] = await connection.query(
+        const [[cliente]] = await connection.query(
           `INSERT INTO clientes
      (usuario_id, nif, nombre, direccion, codigo_postal, ciudad, pais, email, telefono)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -355,7 +355,7 @@ router.post(
           ],
         );
 
-        clienteFinalId = insertCliente.insertId;
+        clienteFinalId = cliente.insertId;
 
         // 👇 El receptor en este caso es lo que viene del formulario
         receptor = metadata.clienteNuevo;
@@ -440,19 +440,19 @@ router.post(
       // ==========================
       const [facturaResult] = await connection.query(
         `INSERT INTO facturas
-         (usuario_id, registro_id, numero_factura,
+         (usuario_id, registro_id, nif_receptor, numero_factura,
           fecha_expedicion, tipo_factura,
           importe_total, 
-          ruta_pdf, cliente_id, pdf_generado_path, xml_generado_path)
-         VALUES (?, ?, ?, ?, ?, ?, NULL, ?, NULL, NULL)`,
+          ruta_pdf, pdf_generado_path, xml_generado_path)
+         VALUES (?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL)`,
         [
           usuarioId,
           registroId,
+          cliente.nif,
           datosNormalizados.numeroFactura,
           fechaEmision,
           datosNormalizados.tipoFactura,
           importeTotal,
-          clienteFinalId,
         ],
       );
 
