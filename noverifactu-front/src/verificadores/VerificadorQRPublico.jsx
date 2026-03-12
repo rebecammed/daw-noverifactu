@@ -65,36 +65,51 @@ function VerificadorQRPublico() {
 
       const texto = await qr.scanFile(file, true);
 
+      await qr.clear();
+
       redirigir(texto);
     } catch {
-      setError("No se pudo detectar el QR en el documento");
+      throw new Error("QR no detectado");
     }
   }
   async function leerQRdesdePDF(file) {
-    const data = await file.arrayBuffer();
+    try {
+      const data = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data }).promise;
 
-    const pdf = await pdfjsLib.getDocument({ data }).promise;
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+        const page = await pdf.getPage(pageNumber);
 
-    const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 3 });
 
-    const viewport = page.getViewport({ scale: 2 });
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
 
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
 
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
+        await page.render({
+          canvasContext: context,
+          viewport: viewport,
+        }).promise;
 
-    await page.render({
-      canvasContext: context,
-      viewport: viewport,
-    }).promise;
+        const blob = await new Promise((resolve) =>
+          canvas.toBlob(resolve, "image/png"),
+        );
 
-    const blob = await new Promise((resolve) =>
-      canvas.toBlob(resolve, "image/png"),
-    );
+        try {
+          await leerQRdesdeImagen(blob);
+          return; // QR encontrado → paramos
+        } catch {
+          // seguimos con la siguiente página
+        }
+      }
 
-    leerQRdesdeImagen(blob);
+      setError("No se pudo detectar el QR en el documento");
+    } catch (err) {
+      console.error(err);
+      setError("No se pudo analizar el documento");
+    }
   }
   // ===============================
   // VERIFICAR URL MANUAL
@@ -130,6 +145,16 @@ function VerificadorQRPublico() {
 
   return (
     <Box sx={{ maxWidth: 700, mx: "auto" }}>
+      <div id="qr-reader" style={{ display: "none" }}></div>
+
+      <Paper
+        elevation={3}
+        sx={{
+          p: 5,
+          borderRadius: 4,
+          border: "1px solid #eee",
+        }}
+      ></Paper>
       <Paper
         elevation={3}
         sx={{
