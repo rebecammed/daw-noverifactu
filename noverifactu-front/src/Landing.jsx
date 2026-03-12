@@ -67,28 +67,6 @@ function Landing() {
             {/* VERIFICADORES PUBLICOS */}
             <Stack direction="row" spacing={3} justifyContent="center" mt={4}>
               <Button
-                variant="contained"
-                size="large"
-                sx={{
-                  px: 4,
-                  py: 1.5,
-                  fontSize: "1rem",
-                  bgcolor: "#1a73e8",
-                  fontWeight: 600,
-                  textTransform: "none",
-                  transition: "all 0.2s ease",
-
-                  "&:hover": {
-                    bgcolor: "#155ec0",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  },
-                }}
-                onClick={() => navigate("/verificadores/qr")}
-              >
-                Verificar factura por QR
-              </Button>
-
-              <Button
                 variant="outlined"
                 size="large"
                 sx={{

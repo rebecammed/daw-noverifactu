@@ -7,7 +7,6 @@ function SidebarVerificador() {
 
   const isActive = (path) => location.pathname === path;
   const items = [
-    { label: "Verificador QR", path: "/verificadores/qr" },
     { label: "Verificador XML / JSON", path: "/verificadores/xml" },
   ];
 

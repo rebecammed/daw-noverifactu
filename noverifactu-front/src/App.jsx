@@ -104,14 +104,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route
-            path="/verificadores/qr"
-            element={
-              <OptionalDashboardLayout>
-                <VerificadorQRPublico />
-              </OptionalDashboardLayout>
-            }
-          />
-          <Route
             path="/verificar-qr"
             element={
               <OptionalDashboardLayout>
