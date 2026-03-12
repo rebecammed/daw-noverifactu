@@ -14,6 +14,7 @@ import * as pdfjsLib from "pdfjs-dist";
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 function VerificadorQRPublico() {
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
   const scannerRef = useRef(null);
 
@@ -59,7 +60,7 @@ function VerificadorQRPublico() {
     try {
       const url = new URL(textoQR);
 
-      if (!url.pathname.includes("/verificadores/qr")) {
+      if (!url.pathname.includes("/verificar-qr")) {
         setError("El QR no corresponde a una factura válida");
         return;
       }
@@ -177,25 +178,6 @@ function VerificadorQRPublico() {
         </Typography>
 
         {/* ========================= */}
-        {/* ESCÁNER CÁMARA */}
-        {/* ========================= */}
-
-        <Box mb={5}>
-          <Typography variant="h6" mb={2}>
-            Escanear QR con cámara
-          </Typography>
-
-          <Box
-            id="qr-reader"
-            sx={{
-              width: "100%",
-            }}
-          />
-        </Box>
-
-        <Divider sx={{ my: 4 }} />
-
-        {/* ========================= */}
         {/* SUBIR IMAGEN */}
         {/* ========================= */}
 
@@ -205,11 +187,11 @@ function VerificadorQRPublico() {
           </Typography>
 
           <Box
+            onClick={() => fileInputRef.current.click()}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
-            component="label"
             sx={{
               width: "100%",
               minHeight: 140,
@@ -228,6 +210,7 @@ function VerificadorQRPublico() {
             }}
           >
             <input
+              ref={fileInputRef}
               hidden
               type="file"
               accept="image/*,application/pdf"
