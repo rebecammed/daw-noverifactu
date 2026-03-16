@@ -41,7 +41,6 @@ import AdminLogs from "./admin/AdminLogs";
 import Dashboard from "./perfil/Dashboard";
 import AdminLogsUsuario from "./admin/AdminLogsUsuario";
 import Productos from "./perfil/Productos";
-import VerificadorQRPublico from "./verificadores/VerificadorQRPublico";
 
 import OptionalDashboardLayout from "./layouts/OptionalDashboardLayout";
 const API_URL = process.env.VITE_API_URL;
