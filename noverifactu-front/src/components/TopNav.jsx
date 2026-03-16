@@ -7,10 +7,10 @@ function TopNav() {
 
   const tab = location.pathname.split("/")[1] || false;
 
-  const leftTabs = ["facturacion", "verificador", "registro", "maestros"];
+  const leftTabs = ["facturacion", "verificadores", "registro", "maestros"];
 
-  const leftValue = leftTabs.includes(tab) ? tab : false;
-  const rightValue = tab === "perfil" ? "perfil" : false;
+  const leftValue = leftTabs.includes(tab) ? tab : "";
+  const rightValue = tab === "perfil" ? "perfil" : "";
 
   return (
     <Box
@@ -39,7 +39,7 @@ function TopNav() {
       {/* DERECHA */}
       <Tabs
         value={rightValue}
-        onChange={(e, value) => navigate(`/${value}`)}
+        onChange={(e, value) =>if (value === "verificadores") navigate("/verificadores/xml"); navigate(`/${value}`)}
         textColor="primary"
         indicatorColor="primary"
       >
