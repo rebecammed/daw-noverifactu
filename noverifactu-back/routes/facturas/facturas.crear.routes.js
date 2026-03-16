@@ -20,6 +20,8 @@ import validarFacturaAltaXSD from "../../xml/validarFacturaAltaxsd.js";
 import validarFacturaRectificativaXSD from "../../xml/validarFacturaRectificativaxsd.js";
 import validarFacturaAnulacionXSD from "../../xml/validarFacturaAnulacionxsd.js";
 import generarFacturaAltaPDF from "../../pdf/generarFacturaAltaPDF.js";
+import { r2 } from "../utils/r2.js";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 dotenv.config();
 
@@ -516,9 +518,20 @@ router.post(
       const rutaXML = path.join(baseDir, "factura.xml");
       fs.writeFileSync(rutaXML, xmlFactura, "utf8");
 
+      const keyXML = `usuarios/${usuarioId}/facturas/${facturaId}/factura.xml`;
+
+      await r2.send(
+        new PutObjectCommand({
+          Bucket: process.env.R2_BUCKET,
+          Key: keyXML,
+          Body: fs.readFileSync(rutaXML),
+          ContentType: "application/xml",
+        }),
+      );
+
       await connection.query(
         `UPDATE facturas SET xml_generado_path = ? WHERE id = ?`,
-        [rutaXML, facturaId],
+        [keyXML, facturaId],
       );
       let logoPath = null;
 
@@ -546,6 +559,7 @@ router.post(
         pdf,
         baseDir,
         facturaId,
+        usuarioId,
         connection,
         qrData,
         hashActual,
@@ -570,7 +584,6 @@ router.post(
           });
         },
       });
-
       await connection.commit();
 
       await registrarEvento(
@@ -1547,10 +1560,24 @@ router.post(
       const rutaXML = path.join(baseDir, "factura_rectificativa.xml");
       fs.writeFileSync(rutaXML, xml, "utf8");
 
+      const keyXML = `usuarios/${idUsuario}/facturas/${facturaId}/factura_rectificativa.xml`;
+
+      await r2.send(
+        new PutObjectCommand({
+          Bucket: process.env.R2_BUCKET,
+          Key: keyXML,
+          Body: fs.readFileSync(rutaXML),
+          ContentType: "application/xml",
+        }),
+      );
+
       await connection.query(
         `UPDATE facturas SET xml_generado_path = ? WHERE id = ?`,
-        [rutaXML, facturaId],
+        [keyXML, facturaId],
       );
+
+      // limpiar temporal
+      fs.unlinkSync(rutaXML);
 
       // 🔹 Generar QR
       const baseUrl = "https://daw-noverifactu.vercel.app/verificar-qr";
@@ -1623,6 +1650,7 @@ router.post(
         pdf,
         baseDir,
         facturaId,
+        usuarioId: idUsuario,
         connection,
         qrData,
         hashActual,
@@ -1873,8 +1901,27 @@ router.post(
       fs.mkdirSync(baseDir, { recursive: true });
 
       const rutaXMLAnulacion = path.join(baseDir, "anulacion.xml");
-
       fs.writeFileSync(rutaXMLAnulacion, xml, "utf8");
+
+      const keyXML = `usuarios/${usuarioId}/facturas/${facturaOrigenId}/anulacion.xml`;
+
+      await r2.send(
+        new PutObjectCommand({
+          Bucket: process.env.R2_BUCKET,
+          Key: keyXML,
+          Body: fs.readFileSync(rutaXMLAnulacion),
+          ContentType: "application/xml",
+        }),
+      );
+
+      // guardar key en DB
+      await connection.query(
+        `UPDATE facturas SET xml_generado_path = ? WHERE id = ?`,
+        [keyXML, facturaOrigenId],
+      );
+
+      // limpiar temporal
+      fs.unlinkSync(rutaXMLAnulacion);
 
       await connection.commit();
 

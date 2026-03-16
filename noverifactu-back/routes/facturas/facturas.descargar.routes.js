@@ -1,9 +1,9 @@
 import express from "express";
-import fs from "fs";
-import path from "path";
 import pool from "../../db/db.js";
 import auth from "../../middleware/auth.js";
 import { registrarEvento } from "../../utils/eventos.js";
+import { r2 } from "../../utils/r2.js";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 
 const router = express.Router();
 
@@ -24,25 +24,18 @@ router.get("/:id/pdf-original", auth, async (req, res) => {
     if (rows.length === 0) {
       return res.status(404).json({ error: "No existe el PDF" });
     }
+    const key = rows[0].ruta_pdf;
 
-    const rutaPDF = rows[0].ruta_pdf;
-
-    if (!rutaPDF) {
-      return res
-        .status(404)
-        .json({ error: "Esta factura no tiene PDF original" });
+    if (!key) {
+      return res.status(404).json({ mensaje: "Archivo no disponible" });
     }
 
-    // 🧠 Soporta rutas antiguas y nuevas
-    const rutaAbsoluta = path.isAbsolute(rutaPDF)
-      ? rutaPDF
-      : path.join(process.cwd(), rutaPDF);
-
-    if (!fs.existsSync(rutaAbsoluta)) {
-      return res.status(404).json({
-        error: "El archivo original no se encuentra en el sistema",
-      });
-    }
+    const file = await r2.send(
+      new GetObjectCommand({
+        Bucket: process.env.R2_BUCKET,
+        Key: key,
+      }),
+    );
 
     try {
       // 🧾 Log de evento
@@ -56,7 +49,7 @@ router.get("/:id/pdf-original", auth, async (req, res) => {
     }
 
     res.setHeader("Content-Type", "application/pdf");
-    res.sendFile(path.resolve(rutaAbsoluta));
+    file.Body.pipe(res);
   } catch (error) {
     console.error("Error descargando PDF original:", error);
 
@@ -73,7 +66,7 @@ router.get("/:id/pdf", auth, async (req, res) => {
 
     const [rows] = await pool.query(
       `
-      SELECT numero_factura
+      SELECT numero_factura, pdf_generado_path
       FROM facturas
       WHERE id = ? AND usuario_id = ?
       `,
@@ -86,32 +79,18 @@ router.get("/:id/pdf", auth, async (req, res) => {
 
     const numeroFactura = rows[0].numero_factura;
 
-    const baseDir = path.join(
-      process.cwd(),
-      "storage",
-      "usuarios",
-      String(usuarioId),
-      "facturas",
-      String(facturaId),
+    const key = rows[0].pdf_generado_path;
+
+    if (!key) {
+      return res.status(404).json({ mensaje: "Archivo no disponible" });
+    }
+
+    const file = await r2.send(
+      new GetObjectCommand({
+        Bucket: process.env.R2_BUCKET,
+        Key: key,
+      }),
     );
-
-    const rutaSellado = path.join(baseDir, "sellado.pdf");
-    const rutaRectificativa = path.join(baseDir, "sellado_rectificativa.pdf");
-    console.log("Contenido carpeta:", fs.readdirSync(baseDir));
-    let rutaFinal = null;
-    console.log("Buscando PDF en:", rutaSellado);
-    console.log("Buscando PDF rectificativa en:", rutaRectificativa);
-
-    if (fs.existsSync(rutaSellado)) {
-      rutaFinal = rutaSellado;
-    } else if (fs.existsSync(rutaRectificativa)) {
-      rutaFinal = rutaRectificativa;
-    }
-    if (!rutaFinal) {
-      return res.status(404).json({
-        mensaje: "No existe PDF sellado para esta factura",
-      });
-    }
 
     await registrarEvento(
       usuarioId,
@@ -119,7 +98,7 @@ router.get("/:id/pdf", auth, async (req, res) => {
       `Descarga de PDF sellado de la factura ${numeroFactura}`,
     );
     res.setHeader("Content-Type", "application/pdf");
-    return res.sendFile(path.resolve(rutaFinal));
+    file.Body.pipe(res);
   } catch (error) {
     console.error("Error obteniendo PDF:", error);
     return res.status(500).json({
@@ -137,46 +116,40 @@ router.get("/:id/xml", auth, async (req, res) => {
     // 1️⃣ Comprobar que existe y pertenece al usuario
     const [rows] = await pool.query(
       `
-      SELECT numero_factura, tipo_factura
+      SELECT numero_factura, tipo_factura, xml_generado_path
       FROM facturas
       WHERE id = ? AND usuario_id = ?
       `,
       [facturaId, usuarioId],
     );
 
-    if (!rows.length) {
+    if (!rows.length || !rows[0].xml_generado_path) {
       return res.status(404).json({ mensaje: "Factura no encontrada" });
     }
 
     const { numero_factura, tipo_factura } = rows[0];
 
     // 2️⃣ Ruta base
-    const baseDir = path.join(
-      process.cwd(),
-      "storage",
-      "usuarios",
-      String(usuarioId),
-      "facturas",
-      String(facturaId),
+
+    const nombreArchivo =
+      tipo === "anulacion"
+        ? "anulacion.xml"
+        : rows[0].tipo_factura === "RECTIFICATIVA"
+          ? "factura_rectificativa.xml"
+          : "factura.xml";
+
+    const key = rows[0].xml_generado_path;
+
+    if (!key) {
+      return res.status(404).json({ mensaje: "Archivo no disponible" });
+    }
+
+    const file = await r2.send(
+      new GetObjectCommand({
+        Bucket: process.env.R2_BUCKET,
+        Key: key,
+      }),
     );
-
-    // 3️⃣ Determinar nombre archivo
-    let nombreArchivo = "factura.xml";
-
-    if (tipo === "anulacion") {
-      nombreArchivo = "anulacion.xml";
-    } else if (tipo_factura === "RECTIFICATIVA") {
-      nombreArchivo = "factura_rectificativa.xml";
-    }
-
-    const rutaXML = path.join(baseDir, nombreArchivo);
-
-    // 4️⃣ Comprobar existencia
-    if (!fs.existsSync(rutaXML)) {
-      return res.status(404).json({
-        mensaje: "XML no encontrado",
-      });
-    }
 
     // 5️⃣ Registrar evento
     await registrarEvento(
@@ -191,12 +164,7 @@ router.get("/:id/xml", auth, async (req, res) => {
       "Content-Disposition",
       `attachment; filename=${nombreArchivo}`,
     );
-    res.setHeader("Content-Type", "application/xml");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=${nombreArchivo}`,
-    );
-    return res.sendFile(path.resolve(rutaXML));
+    file.Body.pipe(res);
   } catch (error) {
     console.error("Error descargando XML:", error);
     return res.status(500).json({ mensaje: "Error descargando XML" });

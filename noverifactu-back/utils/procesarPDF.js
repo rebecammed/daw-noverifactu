@@ -2,11 +2,14 @@ import path from "path";
 import fs from "fs";
 import { desbloquearPDF } from "../pdf/pdfUnlocker.js";
 import { estamparSobreCopia } from "../pdf/estamparSobreCopia.js";
+import { r2 } from "./r2.js";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 export async function procesarPDF({
   pdf,
   baseDir,
   facturaId,
+  usuarioId,
   connection,
   qrData,
   hashActual,
@@ -19,8 +22,19 @@ export async function procesarPDF({
     const rutaOriginal = path.join(baseDir, "original.pdf");
     fs.renameSync(pdf.path, rutaOriginal);
 
+    const keyOriginal = `usuarios/${usuarioId}/facturas/${facturaId}/original.pdf`;
+
+    await r2.send(
+      new PutObjectCommand({
+        Bucket: process.env.R2_BUCKET,
+        Key: keyOriginal,
+        Body: fs.readFileSync(rutaOriginal),
+        ContentType: "application/pdf",
+      }),
+    );
+
     await connection.query(`UPDATE facturas SET ruta_pdf = ? WHERE id = ?`, [
-      rutaOriginal,
+      keyOriginal,
       facturaId,
     ]);
 
@@ -41,7 +55,7 @@ export async function procesarPDF({
     // 🔹 3. Intentar estampar QR
     try {
       const pdfSellado = await estamparSobreCopia(
-        rutaOriginal,
+        rutaPDFProcesable,
         qrData,
         hashActual,
       );
@@ -65,11 +79,28 @@ export async function procesarPDF({
     fs.writeFileSync(rutaSellado, pdfNuevo);
   }
 
-  // 🔹 4. Guardar ruta final
-  await connection.query(
-    `UPDATE facturas SET pdf_generado_path = ? WHERE id = ?`,
-    [rutaSellado, facturaId],
+  // 🔹 4. Subir a R2
+  const keyPDF = `usuarios/${usuarioId}/facturas/${facturaId}/sellado.pdf`;
+
+  await r2.send(
+    new PutObjectCommand({
+      Bucket: process.env.R2_BUCKET,
+      Key: keyPDF,
+      Body: fs.readFileSync(rutaSellado),
+      ContentType: "application/pdf",
+    }),
   );
 
-  return rutaSellado;
+  // 🔹 Guardar key en DB
+  await connection.query(
+    `UPDATE facturas SET pdf_generado_path = ? WHERE id = ?`,
+    [keyPDF, facturaId],
+  );
+  if (fs.existsSync(rutaSellado)) {
+    fs.unlinkSync(rutaSellado);
+  }
+  if (fs.existsSync(rutaOriginal)) {
+    fs.unlinkSync(rutaOriginal);
+  }
+  return keyPDF;
 }
