@@ -304,7 +304,7 @@ router.post("/auth/register", async (req, res) => {
     );
 
     const usuarioId = result.insertId;
-    const enlace = `http://localhost:5173/verificar-email?token=${tokenPlano}`;
+    const enlace = `http://daw-noverifactu.vercel.app/verificar-email?token=${tokenPlano}`;
 
     console.log(`
 ======================================
@@ -388,7 +388,7 @@ router.post("/auth/resend-verification", async (req, res) => {
     );
 
     // 🔗 Enlace (mock email)
-    const enlace = `http://localhost:5173/verificar-email?token=${tokenPlano}`;
+    const enlace = `http://daw-noverifactu.vercel.app/verificar-email?token=${tokenPlano}`;
 
     console.log("======================================");
     console.log("📩 ENLACE VERIFICACIÓN EMAIL:");
