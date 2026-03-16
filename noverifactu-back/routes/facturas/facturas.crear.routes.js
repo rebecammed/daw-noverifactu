@@ -161,7 +161,7 @@ router.post(
       // EMISOR
       // ==========================
       const [[emisor]] = await connection.query(
-        `SELECT nif, razon_social, direccion, codigo_postal, ciudad, pais
+        `SELECT nif, razon_social, direccion, codigo_postal, ciudad, pais, logo_path
          FROM datos_fiscales WHERE usuario_id = ?`,
         [usuarioId],
       );
