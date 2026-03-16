@@ -4,7 +4,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import TopNav from "../components/TopNav";
 import SidebarPerfil from "../components/SidebarPerfil";
-import SidebarVerificador from "../components/SidebarVerificador";
 import SidebarRegistro from "../components/SidebarRegistro";
 import SidebarAdmin from "../components/SidebarAdmin";
 import SidebarMaestros from "../components/SidebarMaestros";
