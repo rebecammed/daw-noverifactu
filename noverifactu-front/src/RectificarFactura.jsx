@@ -355,7 +355,103 @@ function RectificarFactura() {
           </Stack>
         </Grid>
       </Grid>
+      {tipoRectificacion === "SUSTITUCION" && (
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+            CLIENTE
+          </Typography>
 
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Cliente existente</InputLabel>
+            <Select
+              value={clienteSeleccionado || ""}
+              label="Cliente existente"
+              onChange={(e) => {
+                setClienteSeleccionado(e.target.value);
+                setUsarClienteExistente(true);
+              }}
+            >
+              {clientes.map((c) => (
+                <MenuItem key={c.id} value={c.id}>
+                  {c.nombre} ({c.nif})
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            o crear cliente nuevo
+          </Typography>
+
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={4}>
+              <TextField
+                fullWidth
+                size="small"
+                label="NIF"
+                value={clienteNuevo.nif}
+                onChange={(e) =>
+                  setClienteNuevo({ ...clienteNuevo, nif: e.target.value })
+                }
+              />
+            </Grid>
+
+            <Grid item xs={12} md={8}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Nombre"
+                value={clienteNuevo.nombre}
+                onChange={(e) =>
+                  setClienteNuevo({ ...clienteNuevo, nombre: e.target.value })
+                }
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Dirección"
+                value={clienteNuevo.direccion}
+                onChange={(e) =>
+                  setClienteNuevo({
+                    ...clienteNuevo,
+                    direccion: e.target.value,
+                  })
+                }
+              />
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Código postal"
+                value={clienteNuevo.codigo_postal}
+                onChange={(e) =>
+                  setClienteNuevo({
+                    ...clienteNuevo,
+                    codigo_postal: e.target.value,
+                  })
+                }
+              />
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Ciudad"
+                value={clienteNuevo.ciudad}
+                onChange={(e) =>
+                  setClienteNuevo({ ...clienteNuevo, ciudad: e.target.value })
+                }
+              />
+            </Grid>
+          </Grid>
+        </Box>
+      )}
       {/* ================================= */}
       {/* CONCEPTOS ORIGINALES */}
       {/* ================================= */}

@@ -1611,12 +1611,6 @@ router.post(
         }
       }
 
-      // 🔹 Obtener datos completos receptor
-      const [[datosReceptor]] = await connection.query(
-        `SELECT nif, nombre, direccion, codigo_postal, ciudad, pais
-   FROM clientes WHERE id = ?`,
-        [clienteIdParaFactura],
-      );
       /*let conceptosParaPDF = [];
 
       if (tipoRectificacion === "DIFERENCIAS") {
@@ -1660,7 +1654,7 @@ router.post(
             cabecera: {
               logoPath,
               emisor,
-              receptor,
+              receptor: datosReceptorFinal,
             },
             datosFactura: {
               numeroFactura: numeroRectificativa,
@@ -1670,7 +1664,7 @@ router.post(
             },
             conceptos: conceptosProcesados,
             desgloseFiscal: { impuestos: impuestosPDF },
-            trazabilidad: datosFacturaXML.trazabilidad,
+            trazabilidad: datosRectificativa.trazabilidad,
             qrData,
           });
         },
