@@ -19,7 +19,8 @@ import integridadRoutes from "./routes/integridad.routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+console.log("process.cwd():", process.cwd());
+console.log("__dirname:", __dirname);
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 const app = express();
