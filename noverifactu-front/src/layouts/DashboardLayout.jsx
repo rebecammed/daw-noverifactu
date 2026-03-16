@@ -35,17 +35,19 @@ function DashboardLayout({ usuario, children }) {
     cargarClientes();
   }, []);
 
-  setSearchParams((prev) => {
-    const params = new URLSearchParams(prev);
+  const actualizarFiltro = (key, value) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
 
-    if (value === "" || value === null) {
-      params.delete(key);
-    } else {
-      params.set(key, value);
-    }
+      if (value === "" || value === null) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
 
-    return new URLSearchParams(params);
-  });
+      return params;
+    });
+  };
 
   const setFiltro = (key) => (value) => actualizarFiltro(key, value);
 
