@@ -16,10 +16,11 @@ export async function procesarPDF({
   generarPDFManual,
 }) {
   let rutaSellado = null;
+  let rutaOriginal = null;
 
   if (pdf) {
     // 🔹 1. Guardar original
-    const rutaOriginal = path.join(baseDir, "original.pdf");
+    rutaOriginal = path.join(baseDir, "original.pdf");
     fs.renameSync(pdf.path, rutaOriginal);
 
     const keyOriginal = `usuarios/${usuarioId}/facturas/${facturaId}/original.pdf`;
@@ -99,7 +100,7 @@ export async function procesarPDF({
   if (fs.existsSync(rutaSellado)) {
     fs.unlinkSync(rutaSellado);
   }
-  if (fs.existsSync(rutaOriginal)) {
+  if (rutaOriginal && fs.existsSync(rutaOriginal)) {
     fs.unlinkSync(rutaOriginal);
   }
   return keyPDF;
