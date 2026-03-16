@@ -39,7 +39,13 @@ function TopNav() {
       {/* DERECHA */}
       <Tabs
         value={rightValue}
-        onChange={(e, value) =>if (value === "verificadores") navigate("/verificadores/xml"); navigate(`/${value}`)}
+        onChange={(e, value) => {
+          if (value === "verificadores") {
+            navigate("/verificadores/xml");
+          } else {
+            navigate(`/${value}`);
+          }
+        }}
         textColor="primary"
         indicatorColor="primary"
       >
