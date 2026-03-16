@@ -111,7 +111,7 @@ function App() {
             }
           />
           <Route
-            path="/verificadores/xml"
+            path="/verificadores"
             element={
               <OptionalDashboardLayout>
                 <VerificadorFactura />

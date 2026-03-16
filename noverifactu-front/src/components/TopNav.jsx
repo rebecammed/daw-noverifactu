@@ -40,11 +40,7 @@ function TopNav() {
       <Tabs
         value={rightValue}
         onChange={(e, value) => {
-          if (value === "verificadores") {
-            navigate("/verificadores/xml");
-          } else {
-            navigate(`/${value}`);
-          }
+          navigate(`/${value}`);
         }}
         textColor="primary"
         indicatorColor="primary"
