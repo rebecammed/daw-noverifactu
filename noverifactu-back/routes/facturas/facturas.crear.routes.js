@@ -20,7 +20,7 @@ import validarFacturaAltaXSD from "../../xml/validarFacturaAltaxsd.js";
 import validarFacturaRectificativaXSD from "../../xml/validarFacturaRectificativaxsd.js";
 import validarFacturaAnulacionXSD from "../../xml/validarFacturaAnulacionxsd.js";
 import generarFacturaAltaPDF from "../../pdf/generarFacturaAltaPDF.js";
-import { r2 } from "../utils/r2.js";
+import { r2 } from "../../utils/r2.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 dotenv.config();
