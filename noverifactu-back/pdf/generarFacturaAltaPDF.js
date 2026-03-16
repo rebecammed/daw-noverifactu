@@ -2,6 +2,8 @@ import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
 import fs from "fs";
 import path from "path";
+import { r2 } from "../utils/r2.js";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 
 export default async function generarFacturaAltaPDF(datos) {
   const doc = new PDFDocument({ margin: 50 });
@@ -36,6 +38,7 @@ export default async function generarFacturaAltaPDF(datos) {
         minute: "2-digit",
         second: "2-digit",
         hour12: false,
+        timeZone: "Europe/Madrid",
       })
     );
   };
@@ -55,51 +58,33 @@ export default async function generarFacturaAltaPDF(datos) {
   let logoHeight = 0;
 
   // =====================
-  // 1️⃣ LOGO
+  // 1️⃣ LOGO (desde R2)
   // =====================
-  /* La parte que funcionaba en altas pero no en rectificativas
   if (cabecera.logoPath) {
     try {
-      const image = doc.openImage(cabecera.logoPath);
+      const response = await r2.send(
+        new GetObjectCommand({
+          Bucket: process.env.R2_BUCKET,
+          Key: cabecera.logoPath,
+        }),
+      );
+
+      const chunks = [];
+      for await (const chunk of response.Body) {
+        chunks.push(chunk);
+      }
+
+      const buffer = Buffer.concat(chunks);
+
+      const image = doc.openImage(buffer);
       const scale = logoWidth / image.width;
       logoHeight = image.height * scale;
 
-      doc.image(cabecera.logoPath, marginLeft, headerTop, {
+      doc.image(buffer, marginLeft, headerTop, {
         width: logoWidth,
       });
     } catch (e) {
-      console.error("No se pudo cargar el logo:", e);
-    }
-  }*/
-
-  if (cabecera.logoPath) {
-    try {
-      let rutaLogo = cabecera.logoPath;
-
-      if (!path.isAbsolute(rutaLogo)) {
-        rutaLogo = path.join(process.cwd(), rutaLogo.replace(/^\/+/, ""));
-      }
-
-      if (fs.existsSync(rutaLogo)) {
-        console.log("Ruta logo:", rutaLogo);
-        console.log("Tamaño archivo:", fs.statSync(rutaLogo).size);
-        if (fs.existsSync(rutaLogo)) {
-          doc.image(rutaLogo, marginLeft, headerTop, {
-            width: logoWidth,
-          });
-
-          // Medimos altura después de dibujar
-          const dims = doc._imageRegistry[rutaLogo];
-          if (dims) {
-            const scale = logoWidth / dims.width;
-            logoHeight = dims.height * scale;
-          }
-        }
-      } else {
-        console.log("Logo no encontrado en:", rutaLogo);
-      }
-    } catch (e) {
-      console.error("No se pudo cargar el logo:", e);
+      console.error("No se pudo cargar el logo desde R2:", e);
     }
   }
 

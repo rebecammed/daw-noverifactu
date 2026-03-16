@@ -4,9 +4,9 @@ import auth from "../middleware/auth.js";
 import checkMantenimiento from "../middleware/checkMantenimiento.js";
 import { registrarEvento } from "../utils/eventos.js";
 import fs from "fs";
-import path from "path";
 import { uploadLogo } from "../middleware/upload.js";
 import { PLANES } from "../utils/planes.js";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const router = express.Router();
 
@@ -93,24 +93,38 @@ router.post(
       let logoPath = null;
 
       if (req.file) {
-        logoPath = `/uploads/logos/${req.file.filename}`;
+        const keyLogo = `usuarios/${usuarioId}/logo/${req.file.filename}`;
 
-        // 🔥 Si había logo anterior, borrarlo
+        // 🔹 subir a R2
+        await r2.send(
+          new PutObjectCommand({
+            Bucket: process.env.R2_BUCKET,
+            Key: keyLogo,
+            Body: fs.readFileSync(req.file.path),
+            ContentType: req.file.mimetype,
+          }),
+        );
+
+        logoPath = keyLogo;
+
+        // 🔹 borrar archivo temporal de multer
+        if (fs.existsSync(req.file.path)) {
+          fs.unlinkSync(req.file.path);
+        }
+
+        // 🔹 borrar logo anterior (solo en DB, no en R2 todavía)
         if (existentes.length > 0 && existentes[0].logo_path) {
-          const rutaAnterior = path.join(
-            process.cwd(),
-            existentes[0].logo_path.replace(/^\/+/, ""),
+          await r2.send(
+            new DeleteObjectCommand({
+              Bucket: process.env.R2_BUCKET,
+              Key: existentes[0].logo_path,
+            }),
           );
-
-          if (fs.existsSync(rutaAnterior)) {
-            fs.unlinkSync(rutaAnterior);
-          }
         }
       } else if (existentes.length > 0) {
         // Mantener logo anterior si no se sube uno nuevo
         logoPath = existentes[0].logo_path;
       }
-
       if (existentes.length === 0) {
         // INSERT
         await pool.query(
