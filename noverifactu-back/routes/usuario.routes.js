@@ -6,6 +6,7 @@ import { registrarEvento } from "../utils/eventos.js";
 import fs from "fs";
 import { uploadLogo } from "../middleware/upload.js";
 import { PLANES } from "../utils/planes.js";
+import { r2 } from "../utils/r2.js";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const router = express.Router();
