@@ -15,6 +15,7 @@ import {
   TextField,
   Stack,
   Button,
+  Autocomplete,
 } from "@mui/material";
 
 function AdminFacturas() {
@@ -116,24 +117,20 @@ function AdminFacturas() {
             size="small"
           />
 
-          <TextField
-            select
-            label="Usuario"
-            value={usuarioFiltro}
-            onChange={(e) => {
-              setUsuarioFiltro(e.target.value);
+          <Autocomplete
+            size="small"
+            options={usuarios}
+            sx={{ minWidth: 260 }}
+            getOptionLabel={(option) => option.razon_social || ""}
+            value={usuarios.find((u) => u.id === usuarioFiltro) || null}
+            onChange={(event, newValue) => {
+              setUsuarioFiltro(newValue ? newValue.id : "");
               setPage(1);
             }}
-            size="small"
-            sx={{ minWidth: 200 }}
-          >
-            <MenuItem value="">Todos los usuarios</MenuItem>
-            {usuarios.map((u) => (
-              <MenuItem key={u.id} value={u.id}>
-                {u.email}
-              </MenuItem>
-            ))}
-          </TextField>
+            renderInput={(params) => (
+              <TextField {...params} label="Empresa / usuario" />
+            )}
+          />
 
           <TextField
             select
@@ -241,7 +238,7 @@ function AdminFacturas() {
               facturas.map((f) => (
                 <TableRow key={f.id}>
                   <TableCell>{f.id}</TableCell>
-                  <TableCell>{f.email}</TableCell>
+                  <TableCell>{f.razon_social}</TableCell>
                   <TableCell>{f.numero_factura}</TableCell>
                   <TableCell>
                     {new Date(f.fecha_expedicion).toLocaleString()}

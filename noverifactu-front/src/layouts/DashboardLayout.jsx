@@ -36,19 +36,17 @@ function DashboardLayout({ usuario, children }) {
     cargarClientes();
   }, []);
 
-  const actualizarFiltro = (key, value) => {
-    setSearchParams((prev) => {
-      const params = new URLSearchParams(prev);
+  setSearchParams((prev) => {
+    const params = new URLSearchParams(prev);
 
-      if (value) {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
+    if (value === "" || value === null) {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
 
-      return params;
-    });
-  };
+    return new URLSearchParams(params);
+  });
 
   const setFiltro = (key) => (value) => actualizarFiltro(key, value);
 
@@ -58,7 +56,7 @@ function DashboardLayout({ usuario, children }) {
     if (path.startsWith("/admin")) return <SidebarAdmin />;
 
     if (path.startsWith("/perfil")) return <SidebarPerfil />;
-    if (path.startsWith("/verificadores")) return <SidebarVerificador />;
+    if (path.startsWith("/verificadores")) return null;
     if (path.startsWith("/maestros")) return <SidebarMaestros />;
 
     if (path.startsWith("/registro")) {

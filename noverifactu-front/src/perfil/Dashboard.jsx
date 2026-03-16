@@ -83,6 +83,9 @@ function Dashboard({ usuario }) {
       const anio = new Date(f.fecha_expedicion).getFullYear();
       set.add(anio);
     });
+    if (set.size === 0) {
+      set.add(anioActual);
+    }
     return Array.from(set).sort((a, b) => b - a);
   }, [facturas]);
 
@@ -290,7 +293,7 @@ function Dashboard({ usuario }) {
             <ResponsiveContainer width="100%" height={350}>
               <LineChart data={grafico}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="mes" />
+                <XAxis dataKey="mes" interval={0} />
                 <YAxis />
                 <Tooltip />
                 <Line
