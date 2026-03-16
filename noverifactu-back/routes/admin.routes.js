@@ -78,7 +78,7 @@ router.get("/admin/usuarios", auth, requireAdmin, async (req, res) => {
         u.email,
         u.activo,
         u.twofa_enabled,
-        df.razon_social,
+        df.razon_social as empresa,
 
         COUNT(DISTINCT f.id) AS total_facturas,
 
@@ -953,11 +953,10 @@ router.get("/admin/facturas", auth, requireAdmin, async (req, res) => {
   f.tipo_factura,
   f.importe_total,
   f.estado,
-  u.id AS usuario_id,
-  df.razon_social
+        u.email,
+        u.id AS usuario_id
 FROM facturas f
 JOIN usuarios u ON u.id = f.usuario_id
-LEFT JOIN datos_fiscales df ON df.usuario_id = u.id
       ${where}
       ORDER BY f.fecha_expedicion DESC
       LIMIT ? OFFSET ?

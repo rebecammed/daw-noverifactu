@@ -97,8 +97,10 @@ router.get("/:id/pdf", auth, async (req, res) => {
 
     const rutaSellado = path.join(baseDir, "sellado.pdf");
     const rutaRectificativa = path.join(baseDir, "sellado_rectificativa.pdf");
-
+    console.log("Contenido carpeta:", fs.readdirSync(baseDir));
     let rutaFinal = null;
+    console.log("Buscando PDF en:", rutaSellado);
+    console.log("Buscando PDF rectificativa en:", rutaRectificativa);
 
     if (fs.existsSync(rutaSellado)) {
       rutaFinal = rutaSellado;

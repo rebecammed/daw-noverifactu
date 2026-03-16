@@ -121,7 +121,7 @@ function AdminFacturas() {
             size="small"
             options={usuarios}
             sx={{ minWidth: 260 }}
-            getOptionLabel={(option) => option.razon_social || ""}
+            getOptionLabel={(option) => option.empresa || ""}
             value={usuarios.find((u) => u.id === usuarioFiltro) || null}
             onChange={(event, newValue) => {
               setUsuarioFiltro(newValue ? newValue.id : "");
@@ -238,7 +238,7 @@ function AdminFacturas() {
               facturas.map((f) => (
                 <TableRow key={f.id}>
                   <TableCell>{f.id}</TableCell>
-                  <TableCell>{f.razon_social}</TableCell>
+                  <TableCell>{f.empresa}</TableCell>
                   <TableCell>{f.numero_factura}</TableCell>
                   <TableCell>
                     {new Date(f.fecha_expedicion).toLocaleString()}
