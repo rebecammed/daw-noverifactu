@@ -55,7 +55,7 @@ function DashboardLayout({ usuario, children }) {
     if (path.startsWith("/admin")) return <SidebarAdmin />;
 
     if (path.startsWith("/perfil")) return <SidebarPerfil />;
-    if (path.startsWith("/verificadores")) return null;
+    if (path.startsWith("/verificadores/xml")) return null;
     if (path.startsWith("/maestros")) return <SidebarMaestros />;
 
     if (path.startsWith("/registro")) {
