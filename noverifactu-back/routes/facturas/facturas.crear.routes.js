@@ -79,14 +79,19 @@ Responde ÚNICAMENTE con un JSON:
     }
       Si un dato no existe, usa cadena vacía o 0. No incluyas markdown ni texto extra.`;*/
       const prompt = `
-Analiza esta factura en PDF.
+Analiza esta factura PDF.
 
-Los conceptos suelen aparecer en una TABLA con columnas como:
-Concepto | Cantidad | Precio unitario | Total.
+Extrae TODOS los conceptos facturados.
 
-Extrae cada fila de la tabla como un concepto.
+Los conceptos pueden aparecer en:
+- tablas
+- listas
+- líneas de texto
+- descripciones de servicio
 
-Responde ÚNICAMENTE con este JSON:
+Devuelve SIEMPRE al menos un concepto si existe un importe facturado.
+
+Responde SOLO con este JSON:
 
 {
   "numeroFactura": "string",
@@ -112,16 +117,20 @@ Responde ÚNICAMENTE con este JSON:
 }
 
 Reglas:
-- Cada fila de la tabla es un concepto
-- Si no se indica unidad usa "ud"
-- No incluyas texto fuera del JSON
+- Cada producto o servicio facturado es un concepto
+- Si no aparece cantidad usa 1
+- Si no aparece unidad usa "ud"
+- Si no aparece tipoImpositivo usa 21
+- No devuelvas texto fuera del JSON
 `;
 
       const result = await model.generateContent([prompt, dataArchivo]);
       const response = await result.response;
       let textoLimpio = response
         .text()
-        .replace(/```json|```/g, "")
+        .replace(/```[\s\S]*?```/g, (match) =>
+          match.replace(/```json|```/g, ""),
+        )
         .trim();
 
       const datosIA = JSON.parse(textoLimpio);

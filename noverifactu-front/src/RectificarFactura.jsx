@@ -79,6 +79,26 @@ function RectificarFactura() {
         // 1. Guardamos la factura completa para mostrar el "Resumen Original" arriba
         setFactura(dataFactura);
         setClientes(dataClientes.clientes);
+        if (dataFactura.cliente_id) {
+          const cliente = dataClientes.clientes.find(
+            (c) => c.id === dataFactura.cliente_id,
+          );
+
+          if (cliente) {
+            setClienteSeleccionado(cliente.id);
+
+            setClienteNuevo({
+              nif: cliente.nif || "",
+              nombre: cliente.nombre || "",
+              direccion: cliente.direccion || "",
+              codigo_postal: cliente.codigo_postal || "",
+              ciudad: cliente.ciudad || "",
+              pais: cliente.pais || "",
+              email: cliente.email || "",
+              telefono: cliente.telefono || "",
+            });
+          }
+        }
 
         // 3. AUTOCOMPLETADO DEL CLIENTE (Vínculo por ID)
         if (dataFactura.cliente_id) {

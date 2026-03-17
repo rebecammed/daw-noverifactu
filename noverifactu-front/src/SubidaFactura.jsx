@@ -230,14 +230,25 @@ function SubidaFactura() {
             numeroFactura: datos.numeroFactura || "",
             fechaExpedicion: datos.fechaExpedicion || "",
             conceptos:
-              datos.conceptos?.map((c) => ({
-                descripcion: c.descripcion || "",
-                cantidad: c.cantidad || 1,
-                unidad: c.unidad || "ud",
-                precioUnitario: c.precioUnitario || "",
-                tipoImpositivo: c.tipoImpositivo || "",
-                tipoImpuesto: "IVA",
-              })) || prev.conceptos,
+              datos.conceptos && datos.conceptos.length > 0
+                ? datos.conceptos.map((c) => ({
+                    descripcion: c.descripcion || "",
+                    cantidad: c.cantidad || 1,
+                    unidad: c.unidad || "ud",
+                    precioUnitario: c.precioUnitario || "",
+                    tipoImpositivo: c.tipoImpositivo || "",
+                    tipoImpuesto: "IVA",
+                  }))
+                : [
+                    {
+                      descripcion: "",
+                      cantidad: 1,
+                      unidad: "ud",
+                      precioUnitario: "",
+                      tipoImpositivo: 21,
+                      tipoImpuesto: "IVA",
+                    },
+                  ],
             nifReceptor: clienteExistente.nif,
           }));
         } else {
