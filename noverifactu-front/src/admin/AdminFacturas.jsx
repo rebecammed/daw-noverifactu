@@ -121,7 +121,9 @@ function AdminFacturas() {
             size="small"
             options={usuarios}
             sx={{ minWidth: 260 }}
-            getOptionLabel={(option) => option.empresa || ""}
+            getOptionLabel={(option) =>
+              option.empresa / option.email || "" / option.email
+            }
             value={usuarios.find((u) => u.id === usuarioFiltro) || null}
             onChange={(event, newValue) => {
               setUsuarioFiltro(newValue ? newValue.id : "");
