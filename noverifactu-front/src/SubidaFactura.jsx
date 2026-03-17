@@ -464,7 +464,7 @@ function SubidaFactura() {
 
       if (!existeEnCatalogo && !yaEnLista) {
         productosNuevos.set(nombreNormalizado, {
-          nombre: c.descripcion.trim(),
+          descripcion: c.descripcion.trim(),
           precio: c.precioUnitario,
           tipo_iva: c.tipoImpositivo,
           unidad: c.unidad || "ud",
@@ -1029,7 +1029,9 @@ function SubidaFactura() {
                           autoHighlight
                           filterSelectedOptions
                           getOptionLabel={(option) =>
-                            typeof option === "string" ? option : option.nombre
+                            typeof option === "string"
+                              ? option
+                              : option.descripcion
                           }
                           isOptionEqualToValue={(option, value) =>
                             option.id === value.id
@@ -1043,7 +1045,7 @@ function SubidaFactura() {
                               actualizarConcepto(
                                 index,
                                 "descripcion",
-                                value.nombre,
+                                value.descripcion,
                               );
                               actualizarConcepto(
                                 index,
