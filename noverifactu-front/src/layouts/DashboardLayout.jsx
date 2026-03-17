@@ -44,9 +44,13 @@ function DashboardLayout({ usuario, children }) {
       } else {
         params.set(key, value);
       }
+      params.delete("page");
 
       return params;
     });
+  };
+  const limpiarFiltros = () => {
+    setSearchParams({});
   };
 
   const setFiltro = (key) => (value) => actualizarFiltro(key, value);
@@ -75,6 +79,7 @@ function DashboardLayout({ usuario, children }) {
           clienteSeleccionado={clienteSeleccionado}
           setClienteSeleccionado={setFiltro("cliente")}
           clientes={clientes}
+          limpiarFiltros={limpiarFiltros}
         />
       );
     }

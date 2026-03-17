@@ -150,17 +150,7 @@ function SidebarRegistro({
           )}
         />
 
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={() => {
-            setFechaInicio("");
-            setFechaFin("");
-            setBusqueda("");
-            setClienteSeleccionado("");
-            setBusquedaCliente("");
-          }}
-        >
+        <Button variant="outlined" color="error" onClick={limpiarFiltros}>
           Limpiar
         </Button>
       </Stack>
