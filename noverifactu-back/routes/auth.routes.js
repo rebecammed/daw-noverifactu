@@ -602,7 +602,7 @@ router.post("/auth/forgot-password", async (req, res) => {
     );
 
     // 🔗 Enlace (mock email)
-    const enlace = `http://localhost:5173/reset-password?token=${tokenPlano}`;
+    const enlace = `http://daw-noverifactu.vercel.app/reset-password?token=${tokenPlano}`;
 
     console.log("🔐 ENLACE RECUPERACIÓN:");
     console.log(enlace);
