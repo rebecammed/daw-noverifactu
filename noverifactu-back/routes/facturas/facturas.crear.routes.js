@@ -117,7 +117,7 @@ No incluyas markdown ni texto extra.
 `;
 
       const result = await model.generateContent([prompt, dataArchivo]);
-      const response = await result.response;
+      const response = result.response;
       console.log("response IA:", response.text());
       let textoLimpio = response
         .text()

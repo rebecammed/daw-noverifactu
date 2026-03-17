@@ -223,7 +223,7 @@ function SubidaFactura() {
         if (clienteExistente) {
           setUsarClienteExistente(true);
           setClienteSeleccionado(String(clienteExistente.id));
-
+          console.log("Conceptos detectados:", datos.conceptos);
           // Actualizamos formData con los datos de la factura + NIF del cliente guardado
           setFormData((prev) => ({
             ...prev,
@@ -232,12 +232,12 @@ function SubidaFactura() {
             conceptos:
               datos.conceptos && datos.conceptos.length > 0
                 ? datos.conceptos.map((c) => ({
-                    descripcion: c.descripcion || "",
-                    cantidad: c.cantidad || 1,
-                    unidad: c.unidad || "ud",
-                    precioUnitario: c.precioUnitario || "",
-                    tipoImpositivo: c.tipoImpositivo || "",
-                    tipoImpuesto: "IVA",
+                    descripcion: c.descripcion ?? "",
+                    cantidad: c.cantidad ?? 1,
+                    unidad: c.unidad ?? "ud",
+                    precioUnitario: c.precioUnitario ?? "",
+                    tipoImpositivo: c.tipoImpositivo ?? "",
+                    tipoImpuesto: c.tipoImpuesto ?? "IVA",
                   }))
                 : [
                     {
@@ -263,7 +263,7 @@ function SubidaFactura() {
             email: "",
             telefono: "",
           });
-
+          console.log("Conceptos detectados:", datos.conceptos);
           // Actualizamos formData con los datos de la factura + NIF detectado
           setFormData((prev) => ({
             ...prev,
@@ -271,12 +271,12 @@ function SubidaFactura() {
             fechaExpedicion: datos.fechaExpedicion || "",
             conceptos:
               datos.conceptos?.map((c) => ({
-                descripcion: c.descripcion || "",
-                cantidad: c.cantidad || 1,
-                unidad: c.unidad || "ud",
-                precioUnitario: c.precioUnitario || "",
-                tipoImpositivo: c.tipoImpositivo || "",
-                tipoImpuesto: "IVA",
+                descripcion: c.descripcion ?? "",
+                cantidad: c.cantidad ?? 1,
+                unidad: c.unidad ?? "ud",
+                precioUnitario: c.precioUnitario ?? "",
+                tipoImpositivo: c.tipoImpositivo ?? "",
+                tipoImpuesto: c.tipoImpuesto ?? "IVA",
               })) || prev.conceptos,
             nifReceptor: nifDetectado || "",
           }));
@@ -1028,13 +1028,14 @@ function SubidaFactura() {
                           openOnFocus
                           autoHighlight
                           filterSelectedOptions
+                          value={c.descripcion || ""}
                           getOptionLabel={(option) =>
                             typeof option === "string"
                               ? option
                               : option.descripcion
                           }
                           isOptionEqualToValue={(option, value) =>
-                            option.id === value.id
+                            option.descripcion === value
                           }
                           onChange={(event, value) => {
                             if (!value) return;
