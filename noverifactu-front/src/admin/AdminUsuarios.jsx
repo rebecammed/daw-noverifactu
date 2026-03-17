@@ -317,19 +317,11 @@ function AdminUsuarios() {
                 <TableCell>
                   <Button
                     variant="outlined"
+                    color="primary"
                     sx={{
-                      px: 4,
-                      py: 1.5,
-                      fontSize: "1rem",
-                      borderColor: "#1a73e8",
-                      color: "#1a73e8",
-                      fontWeight: 600,
-                      textTransform: "none",
-                      transition: "all 0.2s ease",
-
                       "&:hover": {
-                        bgcolor: "rgba(26,115,232,0.08)",
-                        borderColor: "#155ec0",
+                        bgcolor: "#155ec0",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                       },
                     }}
                     size="small"
@@ -341,15 +333,8 @@ function AdminUsuarios() {
                   {u.twofa_enabled && (
                     <Button
                       variant="contained"
+                      color="primary"
                       sx={{
-                        px: 4,
-                        py: 1.5,
-                        fontSize: "1rem",
-                        bgcolor: "#1a73e8",
-                        fontWeight: 600,
-                        textTransform: "none",
-                        transition: "all 0.2s ease",
-
                         "&:hover": {
                           bgcolor: "#155ec0",
                           boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
