@@ -227,7 +227,17 @@ function SubidaFactura() {
           // Actualizamos formData con los datos de la factura + NIF del cliente guardado
           setFormData((prev) => ({
             ...prev,
-            ...datos,
+            numeroFactura: datos.numeroFactura || "",
+            fechaExpedicion: datos.fechaExpedicion || "",
+            conceptos:
+              datos.conceptos?.map((c) => ({
+                descripcion: c.descripcion || "",
+                cantidad: c.cantidad || 1,
+                unidad: c.unidad || "ud",
+                precioUnitario: c.precioUnitario || "",
+                tipoImpositivo: c.tipoImpositivo || "",
+                tipoImpuesto: "IVA",
+              })) || prev.conceptos,
             nifReceptor: clienteExistente.nif,
           }));
         } else {
