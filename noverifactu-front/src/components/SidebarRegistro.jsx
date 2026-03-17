@@ -24,7 +24,7 @@ function SidebarRegistro({
   clienteSeleccionado,
   setClienteSeleccionado,
   clientes,
-  cargarFacturas,
+  limpiarFiltros,
 }) {
   const [clientesOpciones, setClientesOpciones] = useState([]);
   const [loadingClientes, setLoadingClientes] = useState(false);
@@ -60,18 +60,25 @@ function SidebarRegistro({
     }
   }
   return (
-    <Box>
-      <Typography variant="h6" gutterBottom>
+    <Box
+      sx={{
+        px: 2.5,
+        py: 2,
+        width: "100%",
+      }}
+    >
+      <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
         Filtros
       </Typography>
 
-      <Stack spacing={2}>
+      <Stack spacing={2.2}>
         <TextField
           select
           label="Orden"
           value={orden}
           onChange={(e) => setOrden(e.target.value)}
           size="small"
+          fullWidth
         >
           <MenuItem value="desc">Más recientes</MenuItem>
           <MenuItem value="asc">Más antiguas</MenuItem>
@@ -83,6 +90,7 @@ function SidebarRegistro({
           value={fechaInicio}
           onChange={(e) => setFechaInicio(e.target.value)}
           size="small"
+          fullWidth
           slotProps={{
             inputLabel: { shrink: true },
           }}
@@ -94,6 +102,7 @@ function SidebarRegistro({
           value={fechaFin}
           onChange={(e) => setFechaFin(e.target.value)}
           size="small"
+          fullWidth
           slotProps={{
             inputLabel: { shrink: true },
           }}
@@ -104,6 +113,7 @@ function SidebarRegistro({
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           size="small"
+          fullWidth
         />
 
         <Autocomplete
@@ -135,6 +145,8 @@ function SidebarRegistro({
             <TextField
               {...params}
               label="Cliente"
+              size="small"
+              fullWidth
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (
@@ -150,8 +162,17 @@ function SidebarRegistro({
           )}
         />
 
-        <Button variant="outlined" color="error" onClick={limpiarFiltros}>
-          Limpiar
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={limpiarFiltros}
+          fullWidth
+          sx={{
+            mt: 1,
+            fontWeight: 500,
+          }}
+        >
+          Limpiar filtros
         </Button>
       </Stack>
     </Box>
