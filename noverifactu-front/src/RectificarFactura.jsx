@@ -21,6 +21,9 @@ import {
   Select,
   MenuItem,
   Alert,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
 } from "@mui/material";
 function RectificarFactura() {
   const { facturaId } = useParams();
@@ -660,6 +663,25 @@ function RectificarFactura() {
               <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
                 CLIENTE
               </Typography>
+              <RadioGroup
+                row
+                value={usarClienteExistente}
+                onChange={(e) =>
+                  setUsarClienteExistente(e.target.value === "true")
+                }
+                sx={{ mb: 2 }}
+              >
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label="Cliente existente"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="Cliente nuevo"
+                />
+              </RadioGroup>
 
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel>Cliente existente</InputLabel>
@@ -667,8 +689,23 @@ function RectificarFactura() {
                   value={clienteSeleccionado || ""}
                   label="Cliente existente"
                   onChange={(e) => {
-                    setClienteSeleccionado(e.target.value);
-                    setUsarClienteExistente(true);
+                    const id = Number(e.target.value);
+                    setClienteSeleccionado(id);
+
+                    const cliente = clientes.find((c) => c.id === id);
+
+                    if (cliente) {
+                      setClienteNuevo({
+                        nif: cliente.nif || "",
+                        nombre: cliente.nombre || "",
+                        direccion: cliente.direccion || "",
+                        codigo_postal: cliente.codigo_postal || "",
+                        ciudad: cliente.ciudad || "",
+                        pais: cliente.pais || "",
+                        email: cliente.email || "",
+                        telefono: cliente.telefono || "",
+                      });
+                    }
                   }}
                 >
                   {clientes.map((c) => (
@@ -678,10 +715,6 @@ function RectificarFactura() {
                   ))}
                 </Select>
               </FormControl>
-
-              <Typography variant="body2" sx={{ mb: 2 }}>
-                o crear cliente nuevo
-              </Typography>
 
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
