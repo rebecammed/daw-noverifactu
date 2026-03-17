@@ -59,7 +59,7 @@ router.post(
       };
 
       // 3. Prompt estricto para Verifactu
-      // En tu endpoint /api/facturas/preview
+      /*
       const prompt = `Analiza esta factura y extrae los datos. 
 Responde ÚNICAMENTE con un JSON:
 {
@@ -74,10 +74,48 @@ Responde ÚNICAMENTE con un JSON:
     "pais": "string"
   },
   "conceptos": [
-    {"descripcion": "string", "cantidad": number, "precioUnitario": number, "tipoImpositivo": number, "tipoImpuesto": "IVA"}
+    {"descripcion": "string", "cantidad": number, "unidad":"string", "precioUnitario": number, "tipoImpositivo": number, "tipoImpuesto": "IVA"}
   ]
     }
-      Si un dato no existe, usa cadena vacía o 0. No incluyas markdown ni texto extra.`;
+      Si un dato no existe, usa cadena vacía o 0. No incluyas markdown ni texto extra.`;*/
+      const prompt = `
+Analiza esta factura en PDF.
+
+Los conceptos suelen aparecer en una TABLA con columnas como:
+Concepto | Cantidad | Precio unitario | Total.
+
+Extrae cada fila de la tabla como un concepto.
+
+Responde ÚNICAMENTE con este JSON:
+
+{
+  "numeroFactura": "string",
+  "fechaExpedicion": "YYYY-MM-DDTHH:mm",
+  "receptor": {
+    "nif": "string",
+    "nombre": "string",
+    "direccion": "string",
+    "codigo_postal": "string",
+    "ciudad": "string",
+    "pais": "string"
+  },
+  "conceptos": [
+    {
+      "descripcion": "string",
+      "cantidad": number,
+      "unidad": "string",
+      "precioUnitario": number,
+      "tipoImpositivo": number,
+      "tipoImpuesto": "IVA"
+    }
+  ]
+}
+
+Reglas:
+- Cada fila de la tabla es un concepto
+- Si no se indica unidad usa "ud"
+- No incluyas texto fuera del JSON
+`;
 
       const result = await model.generateContent([prompt, dataArchivo]);
       const response = await result.response;
@@ -94,6 +132,7 @@ Responde ÚNICAMENTE con un JSON:
         conceptos: (datosIA.conceptos || []).map((c) => ({
           descripcion: c.descripcion || "",
           cantidad: Number(c.cantidad) || 1,
+          unidad: c.unidad || "ud",
           precioUnitario: Number(c.precioUnitario) || 0,
           tipoImpositivo: Number(c.tipoImpositivo) || 21,
           tipoImpuesto: c.tipoImpuesto || "IVA",
@@ -674,7 +713,7 @@ router.post(
           mimeType: req.file.mimetype,
         },
       };
-
+      /*
       const prompt = `
 Analiza esta factura RECTIFICATIVA y extrae los datos.
 
@@ -710,7 +749,47 @@ Responde ÚNICAMENTE con un JSON:
 
 No incluyas markdown ni texto extra.
 `;
+*/
+      const prompt = `Analiza esta factura RECTIFICATIVA en PDF.
 
+Los conceptos aparecen normalmente en una TABLA con columnas como:
+Concepto | Cantidad | Precio unitario | Total.
+
+Cada fila de la tabla corresponde a un concepto.
+
+IMPORTANTE:
+- Si el total o importe es negativo, la cantidad debe ser negativa.
+- Si no aparece unidad, usa "ud".
+- No inventes conceptos.
+
+Responde SOLO con este JSON:
+
+{
+  "fechaExpedicion": "YYYY-MM-DDTHH:mm",
+  "tipoRectificacion": "DIFERENCIAS o SUSTITUCION",
+  "cliente": {
+    "nif": "string",
+    "nombre": "string",
+    "direccion": "string",
+    "codigo_postal": "string",
+    "ciudad": "string",
+    "pais": "string",
+    "email": "string",
+    "telefono": "string"
+  },
+  "conceptos": [
+    {
+      "descripcion": "string",
+      "cantidad": number,
+      "unidad": "string",
+      "precioUnitario": number,
+      "tipoImpositivo": number,
+      "tipoImpuesto": "IVA | IRPF | IGIC | IPSI"
+    }
+  ]
+}
+
+No incluyas markdown ni texto extra.`;
       const result = await model.generateContent([prompt, dataArchivo]);
       const response = await result.response;
 
@@ -809,6 +888,7 @@ No incluyas markdown ni texto extra.
         const nuevo = {
           descripcion: lineaPDF.descripcion || "",
           cantidad: Number(lineaPDF.cantidad) || 1,
+          unidad: lineaPDF.unidad || "ud",
           precioUnitario: Number(lineaPDF.precioUnitario) || 0,
           tipoImpositivo: Number(lineaPDF.tipoImpositivo) || 0,
           tipoImpuesto: lineaPDF.tipoImpuesto || "IVA",
@@ -862,7 +942,14 @@ No incluyas markdown ni texto extra.
       // =====================================================
       // 5️⃣ Limpieza y respuesta
       // =====================================================
+      for (const linea of estadoFinal) {
+        const totalLinea =
+          Number(linea.cantidad) * Number(linea.precioUnitario);
 
+        if (totalLinea === 0 && linea.estadoCambio === "modificado") {
+          linea.estadoCambio = "eliminado";
+        }
+      }
       fs.unlinkSync(rutaTemporal);
 
       return res.json({
