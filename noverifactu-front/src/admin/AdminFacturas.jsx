@@ -122,8 +122,11 @@ function AdminFacturas() {
             options={usuarios}
             sx={{ minWidth: 260 }}
             getOptionLabel={(option) =>
-              option.empresa / option.email || "" / option.email
+              option.empresa
+                ? `${option.empresa} / ${option.email}`
+                : option.email
             }
+            isOptionEqualToValue={(option, value) => option.id === value.id}
             value={usuarios.find((u) => u.id === usuarioFiltro) || null}
             onChange={(event, newValue) => {
               setUsuarioFiltro(newValue ? newValue.id : "");
@@ -240,7 +243,7 @@ function AdminFacturas() {
               facturas.map((f) => (
                 <TableRow key={f.id}>
                   <TableCell>{f.id}</TableCell>
-                  <TableCell>{f.empresa}</TableCell>
+                  <TableCell>{f.empresa ? f.empresa : f.email}</TableCell>
                   <TableCell>{f.numero_factura}</TableCell>
                   <TableCell>
                     {new Date(f.fecha_expedicion).toLocaleString()}
