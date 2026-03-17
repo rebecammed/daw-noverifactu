@@ -955,8 +955,10 @@ router.get("/admin/facturas", auth, requireAdmin, async (req, res) => {
   f.estado,
         u.email,
         u.id AS usuario_id
+        df.razon_social AS empresa
 FROM facturas f
 JOIN usuarios u ON u.id = f.usuario_id
+LEFT JOIN datos_fiscales df ON df.usuario_id = u.id
       ${where}
       ORDER BY f.fecha_expedicion DESC
       LIMIT ? OFFSET ?
