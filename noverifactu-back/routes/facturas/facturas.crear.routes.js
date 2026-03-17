@@ -381,7 +381,7 @@ router.post(
         clienteFinalId = cliente.id;
         receptor = cliente; // 👈 AQUÍ tienes el nif
       } else {
-        const [[cliente]] = await connection.query(
+        const [cliente] = await connection.query(
           `INSERT INTO clientes
      (usuario_id, nif, nombre, direccion, codigo_postal, ciudad, pais, email, telefono)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
