@@ -130,7 +130,20 @@ const AdminIntegridad = () => {
             variant="contained"
             onClick={verificarFacturas}
             disabled={loading.facturas}
-            sx={{ mb: 3 }}
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontSize: "1rem",
+              bgcolor: "#1a73e8",
+              fontWeight: 600,
+              textTransform: "none",
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                bgcolor: "#155ec0",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              },
+            }}
           >
             {loading.facturas ? "Analizando..." : "Ejecutar Verificación"}
           </Button>
@@ -200,7 +213,20 @@ const AdminIntegridad = () => {
             variant="contained"
             onClick={verificarEventos}
             disabled={loading.eventos}
-            sx={{ mb: 3 }}
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontSize: "1rem",
+              bgcolor: "#1a73e8",
+              fontWeight: 600,
+              textTransform: "none",
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                bgcolor: "#155ec0",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              },
+            }}
           >
             {loading.eventos ? "Analizando..." : "Verificar Trazabilidad"}
           </Button>

@@ -454,11 +454,46 @@ function RectificarFactura() {
 
       {!modoEntrada && (
         <Stack direction="row" spacing={3} sx={{ mb: 5 }}>
-          <Button variant="contained" onClick={() => setModoEntrada("manual")}>
+          <Button
+            variant="contained"
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontSize: "1rem",
+              bgcolor: "#1a73e8",
+              fontWeight: 600,
+              textTransform: "none",
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                bgcolor: "#155ec0",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              },
+            }}
+            onClick={() => setModoEntrada("manual")}
+          >
             Introducir manualmente
           </Button>
 
-          <Button variant="outlined" onClick={() => setModoEntrada("pdf")}>
+          <Button
+            variant="outlined"
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontSize: "1rem",
+              borderColor: "#1a73e8",
+              color: "#1a73e8",
+              fontWeight: 600,
+              textTransform: "none",
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                bgcolor: "rgba(26,115,232,0.08)",
+                borderColor: "#155ec0",
+              },
+            }}
+            onClick={() => setModoEntrada("pdf")}
+          >
             Importar desde PDF
           </Button>
         </Stack>
@@ -842,7 +877,24 @@ function RectificarFactura() {
           )}
 
           <Stack direction="row" spacing={3} justifyContent="flex-end">
-            <Button type="submit" variant="contained">
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{
+                px: 4,
+                py: 1.5,
+                fontSize: "1rem",
+                bgcolor: "#1a73e8",
+                fontWeight: 600,
+                textTransform: "none",
+                transition: "all 0.2s ease",
+
+                "&:hover": {
+                  bgcolor: "#155ec0",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                },
+              }}
+            >
               Crear rectificativa
             </Button>
           </Stack>

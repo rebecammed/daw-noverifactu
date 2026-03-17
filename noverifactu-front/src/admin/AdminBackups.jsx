@@ -135,8 +135,20 @@ function AdminBackups() {
 
       <Button
         variant="contained"
-        color="primary"
-        size="large"
+        sx={{
+          px: 4,
+          py: 1.5,
+          fontSize: "1rem",
+          bgcolor: "#1a73e8",
+          fontWeight: 600,
+          textTransform: "none",
+          transition: "all 0.2s ease",
+
+          "&:hover": {
+            bgcolor: "#155ec0",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          },
+        }}
         onClick={generarBackup}
         disabled={loading || restaurando}
       >
@@ -234,7 +246,13 @@ function AdminBackups() {
                     {/* DESCARGAR */}
                     <Button
                       variant="contained"
-                      color="primary"
+                      sx={{
+                        marginLeft: "8px",
+                        "&:hover": {
+                          bgcolor: "#155ec0",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        },
+                      }}
                       size="small"
                       disabled={restaurando}
                       onClick={async () => {
@@ -271,8 +289,12 @@ function AdminBackups() {
                       color="error"
                       size="small"
                       disabled={restaurando}
-                      style={{
+                      sx={{
                         marginLeft: "8px",
+                        "&:hover": {
+                          bgcolor: "#c62828",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        },
                       }}
                       onClick={async () => {
                         const confirmar = window.confirm(
@@ -308,8 +330,12 @@ function AdminBackups() {
                       color="warning"
                       size="small"
                       disabled={restaurando}
-                      style={{
+                      sx={{
                         marginLeft: "8px",
+                        "&:hover": {
+                          bgcolor: "#e65100",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        },
                       }}
                       onClick={() => restaurarBackup(b.nombre)}
                     >

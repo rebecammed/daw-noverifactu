@@ -699,9 +699,20 @@ function SubidaFactura() {
           <Button
             type="submit"
             variant="contained"
-            color="primary"
-            size="large"
-            sx={{ mt: 2 }}
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontSize: "1rem",
+              bgcolor: "#1a73e8",
+              fontWeight: 600,
+              textTransform: "none",
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                bgcolor: "#155ec0",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              },
+            }}
             onClick={() => setModo("PDF")}
             disabled={datosIncompletos()}
           >
@@ -710,9 +721,21 @@ function SubidaFactura() {
           <Button
             type="submit"
             variant="outlined"
-            color="primary"
-            size="large"
-            sx={{ mt: 2 }}
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontSize: "1rem",
+              borderColor: "#1a73e8",
+              color: "#1a73e8",
+              fontWeight: 600,
+              textTransform: "none",
+              transition: "all 0.2s ease",
+
+              "&:hover": {
+                bgcolor: "rgba(26,115,232,0.08)",
+                borderColor: "#155ec0",
+              },
+            }}
             onClick={() => {
               setModo("MANUAL");
               setPdfAnalizado(true);
@@ -1244,7 +1267,24 @@ function SubidaFactura() {
           {/* ========================= */}
           <Grid item xs={12} sx={{ mt: 4 }}>
             <Stack direction="row" spacing={3} justifyContent="flex-end">
-              <Button type="submit" variant="contained" sx={{ px: 5 }}>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  fontSize: "1rem",
+                  bgcolor: "#1a73e8",
+                  fontWeight: 600,
+                  textTransform: "none",
+                  transition: "all 0.2s ease",
+
+                  "&:hover": {
+                    bgcolor: "#155ec0",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  },
+                }}
+              >
                 Confirmar y Generar Sello
               </Button>
 
