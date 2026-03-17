@@ -954,7 +954,7 @@ router.get("/admin/facturas", auth, requireAdmin, async (req, res) => {
   f.importe_total,
   f.estado,
         u.email,
-        u.id AS usuario_id
+        u.id AS usuario_id,
         df.razon_social AS empresa
 FROM facturas f
 JOIN usuarios u ON u.id = f.usuario_id
