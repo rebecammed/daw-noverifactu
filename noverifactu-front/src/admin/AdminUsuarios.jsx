@@ -182,7 +182,7 @@ function AdminUsuarios() {
 
           <Autocomplete
             options={[
-              ...new Set(usuarios.map((u) => u.razon_social).filter(Boolean)),
+              ...new Set(usuarios.map((u) => u.empresa).filter(Boolean)),
             ]}
             getOptionLabel={(option) => option || ""}
             sx={{ width: 260 }}
@@ -293,7 +293,7 @@ function AdminUsuarios() {
                 <TableCell>{u.id}</TableCell>
                 <TableCell>{u.email}</TableCell>
                 <TableCell>{u.nombre}</TableCell>
-                <TableCell>{u.razon_social}</TableCell>
+                <TableCell>{u.empresa}</TableCell>
                 <TableCell>
                   {u.activo ? (
                     <span style={{ color: "green" }}>Activo</span>
