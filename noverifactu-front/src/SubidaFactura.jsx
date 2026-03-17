@@ -464,7 +464,7 @@ function SubidaFactura() {
 
       if (!existeEnCatalogo && !yaEnLista) {
         productosNuevos.set(nombreNormalizado, {
-          descripcion: c.descripcion.trim(),
+          nombre: c.descripcion.trim(),
           precio: c.precioUnitario,
           tipo_iva: c.tipoImpositivo,
           unidad: c.unidad || "ud",
