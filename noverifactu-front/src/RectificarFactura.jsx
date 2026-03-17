@@ -103,10 +103,15 @@ function RectificarFactura() {
         setLoading(false);
       });
   }, [facturaOrigenId]);
-
-  const seleccionarCliente = (id) => {
-    setClienteSeleccionado(id);
-  };
+  useEffect(() => {
+    if (
+      tipoRectificacion === "SUSTITUCION" &&
+      !clienteSeleccionado &&
+      factura?.cliente_id
+    ) {
+      setClienteSeleccionado(String(factura.cliente_id));
+    }
+  }, [tipoRectificacion, factura]);
 
   async function analizarPDF() {
     if (!pdfFile) {
