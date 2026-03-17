@@ -73,16 +73,16 @@ function Landing() {
                   px: 4,
                   py: 1.5,
                   fontSize: "1rem",
-                  borderColor: "#1a73e8",
-                  color: "#1a73e8",
+                  bgcolor: "#1a73e8",
+                  color: "#fff",
                   transition: "all 0.2s ease",
 
                   "&:hover": {
-                    bgcolor: "rgba(26,115,232,0.08)",
-                    borderColor: "#155ec0",
+                    bgcolor: "#155ec0",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                   },
                 }}
-                onClick={() => navigate("/verificadores/xml")}
+                onClick={() => navigate("/verificadores")}
               >
                 Verificar XML / JSON
               </Button>

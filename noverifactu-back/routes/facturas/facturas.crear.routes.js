@@ -78,20 +78,21 @@ Responde ÚNICAMENTE con un JSON:
   ]
     }
       Si un dato no existe, usa cadena vacía o 0. No incluyas markdown ni texto extra.`;*/
-      const prompt = `
-Analiza esta factura PDF.
+      const prompt = `Analiza esta factura en PDF y extrae los datos.
 
-Extrae TODOS los conceptos facturados.
+Los CONCEPTOS de la factura suelen aparecer en una TABLA con columnas como:
+Descripción | Concepto | Cantidad | Precio | Precio unitario | Importe | Total | IVA.
 
-Los conceptos pueden aparecer en:
-- tablas
-- listas
-- líneas de texto
-- descripciones de servicio
+IMPORTANTE:
+- Cada FILA de la tabla corresponde a un concepto.
+- La columna "Descripción" o "Concepto" es la descripcion del concepto.
+- "Cantidad" es el número de unidades.
+- "Precio unitario" es el precio por unidad.
+- "IVA" o "% IVA" corresponde al tipoImpositivo.
+- Si no aparece unidad, usa "ud".
+- No inventes conceptos que no estén en la tabla.
 
-Devuelve SIEMPRE al menos un concepto si existe un importe facturado.
-
-Responde SOLO con este JSON:
+Responde ÚNICAMENTE con un JSON:
 
 {
   "numeroFactura": "string",
@@ -105,23 +106,14 @@ Responde SOLO con este JSON:
     "pais": "string"
   },
   "conceptos": [
-    {
-      "descripcion": "string",
-      "cantidad": number,
-      "unidad": "string",
-      "precioUnitario": number,
-      "tipoImpositivo": number,
-      "tipoImpuesto": "IVA"
-    }
+    {"descripcion": "string", "cantidad": number, "unidad":"string", "precioUnitario": number, "tipoImpositivo": number, "tipoImpuesto": "IVA"}
   ]
 }
-
-Reglas:
-- Cada producto o servicio facturado es un concepto
-- Si no aparece cantidad usa 1
-- Si no aparece unidad usa "ud"
-- Si no aparece tipoImpositivo usa 21
-- No devuelvas texto fuera del JSON
+Si hay varias filas en la tabla, genera un objeto dentro de "conceptos" por cada fila.
+Si solo aparece "Importe" y "Cantidad", calcula:
+precioUnitario = importe / cantidad
+Si un dato no existe, usa cadena vacía o 0.
+No incluyas markdown ni texto extra.
 `;
 
       const result = await model.generateContent([prompt, dataArchivo]);
