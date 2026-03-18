@@ -1,7 +1,7 @@
 import { List, ListItemButton, ListItemText, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 
-function SidebarMaestros() {
+function SidebarMaestros({ onNavigate }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -10,6 +10,11 @@ function SidebarMaestros() {
     { label: "Clientes", path: "/maestros/clientes" },
     { label: "Productos", path: "/maestros/productos" },
   ];
+
+  const handleClick = (path) => {
+    navigate(path);
+    if (onNavigate) onNavigate(); // cerrar drawer en móvil
+  };
   return (
     <>
       <Typography
@@ -24,7 +29,7 @@ function SidebarMaestros() {
           <ListItemButton
             key={item.path}
             selected={isActive(item.path)}
-            onClick={() => navigate(item.path)}
+            onClick={() => handleClick(item.path)}
             sx={{
               width: "100%",
               borderRadius: 0,

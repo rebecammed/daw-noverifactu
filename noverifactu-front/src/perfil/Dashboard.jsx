@@ -10,6 +10,7 @@ import {
   Select,
   MenuItem,
   Button,
+  Grid,
 } from "@mui/material";
 import { useEffect, useState, useMemo } from "react";
 import { authFetch } from "../utils/authFetch";
@@ -139,25 +140,33 @@ function Dashboard({ usuario }) {
   if (!suscripcion) return null;
 
   return (
-    <Box p={3} sx={{ flexGrow: 1 }}>
+    <Box sx={{ p: { xs: 2, md: 3 }, flexGrow: 1 }}>
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={4}
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          justifyContent: "space-between",
+          alignItems: { xs: "flex-start", md: "center" },
+          gap: 2,
+          mb: 4,
+        }}
       >
         <Typography variant="h4" mb={4}>
           Bienvenido, {usuarioData?.nombre || "usuario"}
         </Typography>
 
         <Box
-          display="flex"
-          gap={2}
-          mb={4}
-          alignItems="center"
-          justifyContent="flex-end"
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            gap: 2,
+            mb: 4,
+            alignItems: { xs: "stretch", sm: "center" },
+            justifyContent: { xs: "flex-start", sm: "flex-end" },
+            width: "100%",
+          }}
         >
-          <FormControl sx={{ minWidth: 160 }}>
+          <FormControl sx={{ minWidth: { xs: "100%", sm: 160 } }}>
             <InputLabel>Mes</InputLabel>
             <Select
               value={filtroMes}
@@ -171,7 +180,7 @@ function Dashboard({ usuario }) {
               ))}
             </Select>
           </FormControl>
-          <FormControl sx={{ minWidth: 140 }}>
+          <FormControl sx={{ minWidth: { xs: "100%", sm: 140 } }}>
             <InputLabel>Año</InputLabel>
             <Select
               value={filtroAnio}
@@ -190,107 +199,111 @@ function Dashboard({ usuario }) {
           </Button>
         </Box>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          gap: 3,
-          mb: 4,
-          width: "100%",
-        }}
-      >
-        <Card sx={{ flex: 1, borderRadius: 3 }}>
-          <CardContent>
-            <Typography variant="h6">Facturas / mes</Typography>
-            <Typography variant="h4">{facturasPorMes}</Typography>
-          </CardContent>
-        </Card>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ borderRadius: 3 }}>
+            <CardContent>
+              <Typography variant="h6">Facturas / mes</Typography>
+              <Typography variant="h4">{facturasPorMes}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <Card sx={{ flex: 1, borderRadius: 3 }}>
-          <CardContent>
-            <Typography variant="h6">Facturas / año</Typography>
-            <Typography variant="h4">{facturasPorAnio}</Typography>
-          </CardContent>
-        </Card>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ borderRadius: 3 }}>
+            <CardContent>
+              <Typography variant="h6">Facturas / año</Typography>
+              <Typography variant="h4">{facturasPorAnio}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ borderRadius: 3 }}>
+            <CardContent>
+              <Typography variant="h6">Facturas totales</Typography>
+              <Typography variant="h4">{totalFacturas}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
 
-        <Card sx={{ flex: 1, borderRadius: 3 }}>
-          <CardContent>
-            <Typography variant="h6">Facturas totales</Typography>
-            <Typography variant="h4">{totalFacturas}</Typography>
-          </CardContent>
-        </Card>
-      </Box>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ borderRadius: 3 }}>
+            <CardContent>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="h6">Suscripción</Typography>
 
-      <Box sx={{ display: "flex", gap: 3, width: "100%" }}>
-        <Card sx={{ flex: 1, borderRadius: 3 }}>
-          <CardContent>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography variant="h6">Suscripción</Typography>
-
-              <Chip
-                label={`${suscripcion.plan}-${suscripcion.estadoSuscripcion}`}
-                color={
-                  suscripcion.estadoSuscripcion === "ACTIVA"
-                    ? "success"
-                    : "error"
-                }
-              />
-            </Box>
-
-            <Typography sx={{ mt: 2 }}>
-              Media facturas / mes: {Math.floor(mediaFacturasMes)}
-            </Typography>
-
-            <Typography variant="h4">
-              {suscripcion.facturasEsteMes} / {suscripcion.limite}
-            </Typography>
-
-            <LinearProgress
-              variant="determinate"
-              value={(suscripcion.facturasEsteMes / suscripcion.limite) * 100}
-              sx={{ mt: 2, height: 8, borderRadius: 5 }}
-            />
-
-            <Typography sx={{ mt: 2, color: "text.secondary" }}>
-              El contador se reinicia el día 1 de cada mes
-            </Typography>
-          </CardContent>
-        </Card>
-
-        <Card sx={{ flex: 1, borderRadius: 3 }}>
-          <CardContent>
-            <Typography variant="h6">Software de facturación (SIF)</Typography>
-
-            {sifActivo ? (
-              <>
                 <Chip
-                  label="SIF ACTIVO"
-                  color="success"
-                  sx={{ mt: 2, mb: 2 }}
+                  label={`${suscripcion.plan}-${suscripcion.estadoSuscripcion}`}
+                  color={
+                    suscripcion.estadoSuscripcion === "ACTIVA"
+                      ? "success"
+                      : "error"
+                  }
                 />
+              </Box>
 
-                <Typography color="text.secondary">
-                  Nombre: {sifActivo.nombre}
-                </Typography>
-              </>
-            ) : (
-              <Chip label="NO CONFIGURADO" color="warning" sx={{ mt: 2 }} />
-            )}
-          </CardContent>
-        </Card>
-      </Box>
+              <Typography sx={{ mt: 2 }}>
+                Media facturas / mes: {Math.floor(mediaFacturasMes)}
+              </Typography>
 
-      <Box sx={{ mt: 4 }}>
+              <Typography variant="h4">
+                {suscripcion.facturasEsteMes} / {suscripcion.limite}
+              </Typography>
+
+              <LinearProgress
+                variant="determinate"
+                value={(suscripcion.facturasEsteMes / suscripcion.limite) * 100}
+                sx={{ mt: 2, height: 8, borderRadius: 5 }}
+              />
+
+              <Typography sx={{ mt: 2, color: "text.secondary" }}>
+                El contador se reinicia el día 1 de cada mes
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Card sx={{ flex: 1, borderRadius: 3 }}>
+            <CardContent>
+              <Typography variant="h6">
+                Software de facturación (SIF)
+              </Typography>
+
+              {sifActivo ? (
+                <>
+                  <Chip
+                    label="SIF ACTIVO"
+                    color="success"
+                    sx={{ mt: 2, mb: 2 }}
+                  />
+
+                  <Typography color="text.secondary">
+                    Nombre: {sifActivo.nombre}
+                  </Typography>
+                </>
+              ) : (
+                <Chip label="NO CONFIGURADO" color="warning" sx={{ mt: 2 }} />
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Box sx={{ mt: 4, width: "100%" }}>
         <Card sx={{ borderRadius: 3 }}>
-          <CardContent>
+          <CardContent sx={{ px: { xs: 1, md: 2 } }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Facturación mensual
             </Typography>
 
-            <ResponsiveContainer width="100%" height={350}>
+            <ResponsiveContainer width="100%" height={300}>
               <LineChart data={grafico}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="mes" interval={0} />

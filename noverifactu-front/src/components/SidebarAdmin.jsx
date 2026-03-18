@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { List, ListItemButton, ListItemText } from "@mui/material";
 
-function SidebarAdmin() {
+function SidebarAdmin({ onNavigate }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -14,13 +14,18 @@ function SidebarAdmin() {
     { label: "Facturación Global", path: "/admin/facturas" },
     { label: "Configuración SIF", path: "/admin/configuracion" },
   ];
+
+  const handleClick = (path) => {
+    navigate(path);
+    if (onNavigate) onNavigate(); // cerrar drawer en móvil
+  };
   return (
     <List sx={{ p: 0 }}>
       {items.map((item) => (
         <ListItemButton
           key={item.path}
           selected={isActive(item.path)}
-          onClick={() => navigate(item.path)}
+          onClick={() => handleClick(item.path)}
           sx={{
             width: "100%",
             borderRadius: 0,

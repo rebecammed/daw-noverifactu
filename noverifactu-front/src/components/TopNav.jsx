@@ -1,10 +1,23 @@
-import { Tabs, Tab, Box } from "@mui/material";
+import {
+  Tabs,
+  Tab,
+  Box,
+  Menu,
+  MenuItem,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function TopNav() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [anchorEl, setAnchorEl] = useState(null);
   const tab = location.pathname.split("/")[1] || false;
 
   const leftTabs = ["facturacion", "verificadores", "registro", "maestros"];
@@ -12,6 +25,47 @@ function TopNav() {
   const leftValue = leftTabs.includes(tab) ? tab : "";
   const rightValue = tab === "perfil" ? "perfil" : "";
 
+  const menuItems = [
+    { label: "Crear factura", value: "facturacion" },
+    { label: "Verificadores", value: "verificadores" },
+    { label: "Registro", value: "registro" },
+    { label: "Maestros", value: "maestros" },
+    { label: "Perfil", value: "perfil" },
+  ];
+  if (isMobile) {
+    return (
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          bgcolor: "white",
+          px: 1,
+        }}
+      >
+        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+          <MenuIcon />
+        </IconButton>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)}
+        >
+          {menuItems.map((item) => (
+            <MenuItem
+              key={item.value}
+              onClick={() => {
+                navigate(`/${item.value}`);
+                setAnchorEl(null);
+              }}
+            >
+              {item.label}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+    );
+  }
   return (
     <Box
       sx={{

@@ -1,7 +1,7 @@
 import { List, ListItemButton, ListItemText, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 
-function SidebarPerfil() {
+function SidebarPerfil({ onNavigate }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -13,7 +13,10 @@ function SidebarPerfil() {
     { label: "Seguridad", path: "/perfil/seguridad" },
     { label: "SIF", path: "/perfil/sif" },
   ];
-
+  const handleClick = (path) => {
+    navigate(path);
+    if (onNavigate) onNavigate(); // cerrar drawer en móvil
+  };
   return (
     <>
       <Typography
@@ -28,7 +31,7 @@ function SidebarPerfil() {
           <ListItemButton
             key={item.path}
             selected={isActive(item.path)}
-            onClick={() => navigate(item.path)}
+            onClick={() => handleClick(item.path)}
             sx={{
               width: "100%",
               borderRadius: 0,
