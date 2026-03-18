@@ -28,7 +28,7 @@ function TopNav() {
 
   const menuItems = [
     { label: "Crear factura", value: "facturacion" },
-    { label: "Verificadores", value: "verificadores" },
+    { label: "Verificador", value: "verificadores" },
     { label: "Registro", value: "registro" },
     { label: "Maestros", value: "maestros" },
     { label: "Perfil", value: "perfil" },

@@ -92,7 +92,13 @@ function DashboardLayout({ usuario, children }) {
       <Header usuario={usuario} sidebar={sidebar} />
       <TopNav />
 
-      <Box sx={{ flex: 1, display: "flex" }}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {/* Sidebar desktop */}
         {sidebar && (
           <Box

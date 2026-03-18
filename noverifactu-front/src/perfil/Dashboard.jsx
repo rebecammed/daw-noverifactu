@@ -234,7 +234,7 @@ function Dashboard({ usuario }) {
             onClick={limpiarFiltros}
             size="small"
             sx={{
-              width: { xs: "32%", md: "auto" },
+              width: { xs: "29%", md: "auto" },
               height: 40,
               whitespace: "nowrap",
             }}
