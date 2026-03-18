@@ -98,7 +98,7 @@ function DashboardLayout({ usuario, children }) {
           <Box
             sx={{
               width: { xs: 0, md: 220 },
-              borderRight: { md: "1px solid #eee" },
+              borderRight: { md: "1px solid #eee", xs: "none" },
               bgcolor: "#fafafa",
               py: 2,
               px: 0,

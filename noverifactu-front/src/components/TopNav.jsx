@@ -51,14 +51,28 @@ function TopNav() {
         onChange={(e, value) => navigate(`/${value}`)}
         textColor="primary"
         indicatorColor="primary"
+        variant={isMobile ? "fullWidth" : "standard"}
       >
         <Tab
           label={isMobile ? "Factura" : "Crear factura"}
           value="facturacion"
+          sx={{ fontSize: { xs: 12, md: 14 } }}
         />
-        <Tab label="Verificadores" value="verificadores" />
-        <Tab label="Registro" value="registro" />
-        <Tab label="Maestros" value="maestros" />
+        <Tab
+          label="Verificadores"
+          value="verificadores"
+          sx={{ fontSize: { xs: 12, md: 14 } }}
+        />
+        <Tab
+          label="Registro"
+          value="registro"
+          sx={{ fontSize: { xs: 12, md: 14 } }}
+        />
+        <Tab
+          label="Maestros"
+          value="maestros"
+          sx={{ fontSize: { xs: 12, md: 14 } }}
+        />
       </Tabs>
 
       {/* DERECHA */}

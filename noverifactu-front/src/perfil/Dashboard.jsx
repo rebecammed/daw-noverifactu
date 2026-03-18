@@ -188,15 +188,20 @@ function Dashboard({ usuario }) {
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            gap: 2,
+            gap: 1,
             mb: 4,
-            alignItems: { xs: "stretch", sm: "center" },
-            justifyContent: { xs: "flex-start", sm: "flex-end" },
-            width: "100%",
+            flexDirection: { xs: "row", md: "row" },
+            flexWrap: { xs: "wrap", md: "nowrap" },
+            alignItems: "center",
+            justifyContent: { xs: "flex-start", md: "flex-end" },
           }}
         >
-          <FormControl sx={{ minWidth: { xs: "100%", sm: 160 } }}>
+          <FormControl
+            size="small"
+            sx={{
+              minWidth: { xs: "48%", md: 160 },
+            }}
+          >
             <InputLabel>Mes</InputLabel>
             <Select
               value={filtroMes}
@@ -230,7 +235,7 @@ function Dashboard({ usuario }) {
         </Box>
       </Box>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Card sx={{ borderRadius: 3 }}>
             <CardContent>
               <Typography variant="h6">Facturas / mes</Typography>
@@ -239,7 +244,7 @@ function Dashboard({ usuario }) {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Card sx={{ borderRadius: 3 }}>
             <CardContent>
               <Typography variant="h6">Facturas / año</Typography>
@@ -247,7 +252,7 @@ function Dashboard({ usuario }) {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <Card sx={{ borderRadius: 3 }}>
             <CardContent>
               <Typography variant="h6">Facturas totales</Typography>
@@ -328,7 +333,7 @@ function Dashboard({ usuario }) {
 
       <Box sx={{ mt: 4, width: "100%" }}>
         <Card sx={{ borderRadius: 3 }}>
-          <CardContent sx={{ px: { xs: 1, md: 2 } }}>
+          <CardContent sx={{ px: { xs: 2, md: 2 } }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Facturación mensual
             </Typography>
