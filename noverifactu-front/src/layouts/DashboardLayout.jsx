@@ -116,7 +116,7 @@ function DashboardLayout({ usuario, children }) {
         )}
 
         {/* Contenido */}
-        <Box sx={{ flex: 1, p: { xs: 2, md: 4 } }}>
+        <Box sx={{ flex: 1, minWidth: 0, p: { xs: 2, md: 4 } }}>
           {children ? (
             children
           ) : (
