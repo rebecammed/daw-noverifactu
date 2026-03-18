@@ -1,4 +1,12 @@
-import { Box, Typography, Card, CardContent, Chip, Paper } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Chip,
+  Paper,
+  Grid,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { authFetch } from "../utils/authFetch";
