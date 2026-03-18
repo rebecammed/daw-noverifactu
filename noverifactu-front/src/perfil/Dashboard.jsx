@@ -215,7 +215,7 @@ function Dashboard({ usuario }) {
               ))}
             </Select>
           </FormControl>
-          <FormControl sx={{ minWidth: { xs: "100%", sm: 140 } }}>
+          <FormControl sx={{ minWidth: { xs: "48%", sm: 140 } }}>
             <InputLabel>Año</InputLabel>
             <Select
               value={filtroAnio}
@@ -262,7 +262,7 @@ function Dashboard({ usuario }) {
         </Grid>
       </Grid>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ mt: { xs: 1, md: 0 } }}>
         <Grid item xs={12} md={6}>
           <Card sx={{ borderRadius: 3 }}>
             <CardContent>
@@ -339,9 +339,17 @@ function Dashboard({ usuario }) {
             </Typography>
 
             <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={grafico}>
+              <LineChart
+                data={grafico}
+                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
+                <XAxis
+                  dataKey="mes"
+                  tick={{ fontSize: 12 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
                 <YAxis />
                 <Tooltip />
                 <Line
