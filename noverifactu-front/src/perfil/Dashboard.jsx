@@ -199,7 +199,7 @@ function Dashboard({ usuario }) {
           <FormControl
             size="small"
             sx={{
-              minWidth: { xs: "32%", md: 160 },
+              minWidth: { xs: "29%", md: 160 },
             }}
           >
             <InputLabel>Mes</InputLabel>
@@ -215,11 +215,12 @@ function Dashboard({ usuario }) {
               ))}
             </Select>
           </FormControl>
-          <FormControl sx={{ minWidth: { xs: "32%", md: 140 } }}>
+          <FormControl sx={{ minWidth: { xs: "29%", md: 140 } }}>
             <InputLabel>Año</InputLabel>
             <Select
               value={filtroAnio}
               label="Año"
+              size="small"
               onChange={(e) => setFiltroAnio(Number(e.target.value))}
             >
               {aniosDisponibles.map((a) => (

@@ -614,7 +614,7 @@ function RectificarFactura() {
         <Box component="form" onSubmit={enviarRectificativa}>
           {/* FECHA + TIPO */}
           <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={8}>
               <TextField
                 fullWidth
                 type="datetime-local"
@@ -622,10 +622,11 @@ function RectificarFactura() {
                 value={fechaExpedicion}
                 onChange={(e) => setFechaExpedicion(e.target.value)}
                 InputLabelProps={{ shrink: true }}
+                size="small"
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <FormControl fullWidth>
                 <InputLabel>Tipo de rectificación</InputLabel>
                 <Select
@@ -779,12 +780,11 @@ function RectificarFactura() {
           {/* ================================= */}
           {/* CONCEPTOS EDITABLES */}
           {/* ================================= */}
-
           <Typography variant="subtitle2" sx={{ mb: 3, fontWeight: 600 }}>
             CONCEPTOS
           </Typography>
 
-          {conceptos.map((c, index) => (
+          {/*conceptos.map((c, index) => (
             <Grid container spacing={2} key={index} sx={{ mb: 2 }}>
               <Grid item xs={12} md={4}>
                 <TextField
@@ -870,27 +870,146 @@ function RectificarFactura() {
                 </Button>
               </Grid>
             </Grid>
-          ))}
+          ))*/}
 
-          <Button
-            variant="outlined"
-            fullWidth
-            sx={{ borderStyle: "dashed", mb: 4 }}
-            onClick={() =>
-              setConceptos([
-                ...conceptos,
-                {
-                  descripcion: "",
-                  cantidad: 1,
-                  precioUnitario: "",
-                  tipoImpositivo: "",
-                  tipoImpuesto: "IVA",
-                },
-              ])
-            }
+          <TableContainer
+            sx={{
+              mt: 2,
+              overflowX: "auto",
+            }}
           >
-            + Añadir nuevo concepto
-          </Button>
+            <Table
+              size="small"
+              sx={{
+                minWidth: 650,
+              }}
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Descripción</TableCell>
+                  <TableCell>Cant</TableCell>
+                  <TableCell>Unidad</TableCell>
+                  <TableCell>Precio</TableCell>
+                  <TableCell>% IVA</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+
+              <TableBody>
+                {conceptos.map((c, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        value={c.descripcion}
+                        onChange={(e) => {
+                          const copia = [...conceptos];
+                          copia[index].descripcion = e.target.value;
+                          setConceptos(copia);
+                        }}
+                      />
+                    </TableCell>
+
+                    <TableCell sx={{ width: 90 }}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        type="number"
+                        value={c.cantidad}
+                        onChange={(e) => {
+                          const copia = [...conceptos];
+                          copia[index].cantidad = e.target.value;
+                          setConceptos(copia);
+                        }}
+                      />
+                    </TableCell>
+
+                    <TableCell sx={{ width: 110 }}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        value={c.unidad}
+                        onChange={(e) => {
+                          const copia = [...conceptos];
+                          copia[index].unidad = e.target.value;
+                          setConceptos(copia);
+                        }}
+                      />
+                    </TableCell>
+
+                    <TableCell sx={{ width: 120 }}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        type="number"
+                        value={c.precioUnitario}
+                        onChange={(e) => {
+                          const copia = [...conceptos];
+                          copia[index].precioUnitario = e.target.value;
+                          setConceptos(copia);
+                        }}
+                      />
+                    </TableCell>
+
+                    <TableCell sx={{ width: 100 }}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        type="number"
+                        value={c.tipoImpositivo}
+                        onChange={(e) => {
+                          const copia = [...conceptos];
+                          copia[index].tipoImpositivo = e.target.value;
+                          setConceptos(copia);
+                        }}
+                      />
+                    </TableCell>
+
+                    <TableCell sx={{ width: 70 }}>
+                      <Button
+                        color="error"
+                        size="small"
+                        onClick={() =>
+                          setConceptos(conceptos.filter((_, i) => i !== index))
+                        }
+                      >
+                        Quitar
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableRow>
+                <TableCell colSpan={6}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    sx={{
+                      borderStyle: "dashed",
+                      textTransform: "none",
+                      fontWeight: 500,
+                    }}
+                    onClick={() =>
+                      setConceptos([
+                        ...conceptos,
+                        {
+                          descripcion: "",
+                          cantidad: 1,
+                          unidad: "",
+                          precioUnitario: "",
+                          tipoImpositivo: "",
+                          tipoImpuesto: "IVA",
+                        },
+                      ])
+                    }
+                  >
+                    + Añadir nuevo concepto
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </Table>
+          </TableContainer>
 
           {/* ERRORES */}
           {errores.length > 0 && (

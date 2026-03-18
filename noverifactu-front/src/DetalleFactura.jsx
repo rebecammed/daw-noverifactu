@@ -491,16 +491,20 @@ function DetalleFactura() {
       {/* ACCIONES FINALES */}
       {/* ========================= */}
 
-      <Stack direction="row" spacing={2} flexWrap="wrap">
+      <Stack
+        direction="row"
+        spacing={2}
+        flexWrap="wrap"
+        sx={{
+          mt: 2,
+        }}
+      >
         {factura.tipo_factura !== "RECTIFICATIVA" &&
           estado !== "ANULADA" &&
           permitirMasRectificaciones && (
             <Button
               variant="contained"
               sx={{
-                px: 4,
-                py: 1.5,
-                fontSize: "1rem",
                 bgcolor: "#1a73e8",
                 fontWeight: 600,
                 textTransform: "none",

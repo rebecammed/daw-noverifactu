@@ -115,7 +115,7 @@ function Productos() {
       >
         <Table
           sx={{
-            minWidth: 1100,
+            minWidth: { xs: 420, md: 600 },
             "& td, & th": {
               fontSize: { xs: "0.8rem", md: "1rem" },
               whiteSpace: "nowrap",
@@ -124,7 +124,7 @@ function Productos() {
         >
           <TableHead>
             <TableRow sx={{ bgcolor: "grey.100" }}>
-              <TableCell>
+              <TableCell sx={{ maxWidth: 200 }}>
                 <Typography
                   sx={{ fontSize: "1rem", fontWeight: 550, color: "#374151" }}
                 >

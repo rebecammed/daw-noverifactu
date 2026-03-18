@@ -387,16 +387,16 @@ function Clientes() {
                 {/* Acciones */}
                 <TableCell>
                   {clienteEditando === c.id ? (
-                    <Stack direction="row" spacing={1} flexWrap="wrap">
+                    <Stack direction="row" spacing={1}>
                       <Button
                         variant="contained"
                         size="small"
                         onClick={guardar}
                         sx={{
-                          height: 30,
-                          px: 2,
-                          fontSize: "0.8rem",
-                          minWidth: 70,
+                          height: 28,
+                          px: 1.5,
+                          fontSize: "0.75rem",
+                          minWidth: "auto",
                           bgcolor: "#1a73e8",
                           fontWeight: 600,
                           textTransform: "none",
@@ -416,10 +416,10 @@ function Clientes() {
                         size="small"
                         onClick={cancelar}
                         sx={{
-                          height: 30,
-                          px: 2,
-                          fontSize: "0.8rem",
-                          minWidth: 70,
+                          height: 28,
+                          px: 1.5,
+                          fontSize: "0.75rem",
+                          minWidth: "auto",
                           color: "#dc2626",
                           borderColor: "#dc2626",
                           fontWeight: 600,
@@ -466,10 +466,10 @@ function Clientes() {
                         variant="outlined"
                         onClick={() => desactivarCliente(c.id)}
                         sx={{
-                          height: 30,
-                          px: 2,
-                          fontSize: "0.8rem",
-                          minWidth: 70,
+                          height: 28,
+                          px: 1.5,
+                          fontSize: "0.75rem",
+                          minWidth: "auto",
                           color: "#dc2626",
                           borderColor: "#dc2626",
                           fontWeight: 600,
@@ -491,10 +491,10 @@ function Clientes() {
                       variant="outlined"
                       onClick={() => reactivarCliente(c.id)}
                       sx={{
-                        height: 30,
-                        px: 2,
-                        fontSize: "0.8rem",
-                        minWidth: 70,
+                        height: 28,
+                        px: 1.5,
+                        fontSize: "0.75rem",
+                        minWidth: "auto",
                         color: "#16a34a",
                         borderColor: "#16a34a",
                         fontWeight: 600,
