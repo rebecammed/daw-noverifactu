@@ -103,9 +103,18 @@ function AdminFacturas() {
         </Typography>
 
         <Stack
-          direction={{ xs: "column", md: "row" }}
+          direction="row"
           spacing={2}
           flexWrap="wrap"
+          sx={{
+            "& > *": {
+              flex: {
+                xs: "1 1 100%",
+                sm: "1 1 calc(50% - 8px)",
+                md: "unset",
+              },
+            },
+          }}
         >
           <TextField
             label="Buscar"
@@ -120,7 +129,9 @@ function AdminFacturas() {
           <Autocomplete
             size="small"
             options={usuarios}
-            sx={{ minWidth: 260 }}
+            sx={{
+              minWidth: { xs: "100%", md: 260 },
+            }}
             getOptionLabel={(option) =>
               option.empresa
                 ? `${option.empresa} / ${option.email}`
@@ -146,7 +157,7 @@ function AdminFacturas() {
               setPage(1);
             }}
             size="small"
-            sx={{ minWidth: 180 }}
+            sx={{ minWidth: { xs: "100%", md: 180 } }}
           >
             <MenuItem value="">Todos</MenuItem>
             <MenuItem value="ACTIVA">ACTIVA</MenuItem>
@@ -205,8 +216,22 @@ function AdminFacturas() {
         </Typography>
       )}
 
-      <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
-        <Table>
+      <TableContainer
+        component={Paper}
+        sx={{
+          borderRadius: 3,
+          overflowX: "auto",
+        }}
+      >
+        <Table
+          sx={{
+            minWidth: 900,
+            "& td, & th": {
+              fontSize: { xs: "0.85rem", md: "1rem" },
+              whiteSpace: "nowrap",
+            },
+          }}
+        >
           <TableHead>
             <TableRow sx={{ bgcolor: "grey.100" }}>
               {[
@@ -263,11 +288,10 @@ function AdminFacturas() {
       {/* ========================== */}
 
       <Stack
-        direction="row"
+        direction={{ xs: "column", md: "row" }}
         spacing={2}
         alignItems="center"
         justifyContent="center"
-        sx={{ mt: 4 }}
       >
         <Button
           variant="outlined"

@@ -110,9 +110,18 @@ function Productos() {
           mt: 2,
           borderRadius: 4,
           boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+          overflowX: "auto",
         }}
       >
-        <Table>
+        <Table
+          sx={{
+            minWidth: 1100,
+            "& td, & th": {
+              fontSize: { xs: "0.8rem", md: "1rem" },
+              whiteSpace: "nowrap",
+            },
+          }}
+        >
           <TableHead>
             <TableRow sx={{ bgcolor: "grey.100" }}>
               <TableCell>
@@ -198,7 +207,7 @@ function Productos() {
 
                 <TableCell>
                   {productoEditando === p.id ? (
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} flexWrap="wrap">
                       <Button
                         size="small"
                         variant="contained"
@@ -248,7 +257,7 @@ function Productos() {
                       </Button>
                     </Stack>
                   ) : p.activo ? (
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1} flexWrap="wrap">
                       <Button
                         variant="outlined"
                         size="small"

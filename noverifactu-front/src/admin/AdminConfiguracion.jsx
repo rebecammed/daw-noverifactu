@@ -207,7 +207,11 @@ function AdminConfiguracion() {
       {loadingMantenimiento ? (
         <Typography>Cargando estado...</Typography>
       ) : (
-        <Stack direction="row" spacing={3} alignItems="center">
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          spacing={2}
+          alignItems={{ xs: "flex-start", md: "center" }}
+        >
           <Typography
             sx={{
               fontWeight: 600,
@@ -262,7 +266,14 @@ function AdminConfiguracion() {
 
       {sif.length > 0 && (
         <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
-          <Table>
+          <Table
+            sx={{
+              "& td, & th": {
+                fontSize: { xs: "0.85rem", md: "1rem" },
+                whiteSpace: "nowrap",
+              },
+            }}
+          >
             <TableHead>
               <TableRow sx={{ bgcolor: "grey.100" }}>
                 {["ID", "Nombre", "Versión", "Ámbito", "Acciones"].map(
@@ -340,13 +351,17 @@ function AdminConfiguracion() {
         Desplegar nueva versión global
       </Typography>
 
-      <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        spacing={2}
+        alignItems={{ xs: "stretch", md: "center" }}
+      >
         <TextField
           size="small"
           label="Nombre base del SIF"
           value={nombreBaseInput}
           onChange={(e) => setNombreBaseInput(e.target.value)}
-          sx={{ width: 220 }}
+          sx={{ width: { xs: "100%", md: 220 } }}
         />
 
         <TextField
@@ -359,7 +374,7 @@ function AdminConfiguracion() {
           }}
           error={!!errorVersion}
           helperText={errorVersion}
-          sx={{ width: 180 }}
+          sx={{ width: { xs: "100%", md: 180 } }}
         />
 
         <Button

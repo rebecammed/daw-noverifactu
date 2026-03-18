@@ -162,10 +162,23 @@ function AdminUsuarios() {
       >
         <Typography variant="h4">Gestión de usuarios</Typography>
 
-        <Box display="flex" gap={2} alignItems="center">
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            alignItems: "center",
+            flexWrap: "wrap",
+            justifyContent: { xs: "flex-start", md: "flex-end" },
+          }}
+        >
           {/* FILTRO ESTADO */}
 
-          <FormControl sx={{ minWidth: 150 }}>
+          <FormControl
+            size="small"
+            sx={{
+              minWidth: { xs: 120, md: 150 },
+            }}
+          >
             <InputLabel>Estado</InputLabel>
             <Select
               value={estado}
@@ -185,21 +198,24 @@ function AdminUsuarios() {
               ...new Set(usuarios.map((u) => u.empresa).filter(Boolean)),
             ]}
             getOptionLabel={(option) => option || ""}
-            sx={{ width: 260 }}
+            size="small"
+            sx={{
+              width: { xs: 180, md: 260 },
+            }}
             value={empresa}
             onChange={(_, newValue) => setEmpresa(newValue || "")}
             renderInput={(params) => <TextField {...params} label="Empresa" />}
           />
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setEstado("");
+              setEmpresa("");
+            }}
+          >
+            Limpiar
+          </Button>
         </Box>
-        <Button
-          variant="outlined"
-          onClick={() => {
-            setEstado("");
-            setEmpresa("");
-          }}
-        >
-          Limpiar
-        </Button>
       </Box>
 
       <TableContainer
@@ -208,9 +224,18 @@ function AdminUsuarios() {
           mt: 2,
           borderRadius: 4,
           boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+          overflowX: "auto",
         }}
       >
-        <Table>
+        <Table
+          sx={{
+            minWidth: 1000,
+            "& td, & th": {
+              fontSize: { xs: "0.8rem", md: "1rem" },
+              whiteSpace: "nowrap",
+            },
+          }}
+        >
           <TableHead>
             <TableRow sx={{ bgcolor: "grey.100" }}>
               <TableCell>
@@ -315,24 +340,9 @@ function AdminUsuarios() {
                   )}
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    sx={{
-                      "&:hover": {
-                        bgcolor: "#155ec0",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                      },
-                    }}
-                    size="small"
-                    onClick={() => toggleActivo(u.id, u.activo)}
-                  >
-                    {u.activo ? "Desactivar" : "Activar"}
-                  </Button>
-
-                  {u.twofa_enabled && (
+                  <Stack direction="row" spacing={1} flexWrap="wrap">
                     <Button
-                      variant="contained"
+                      variant="outlined"
                       color="primary"
                       sx={{
                         "&:hover": {
@@ -341,23 +351,40 @@ function AdminUsuarios() {
                         },
                       }}
                       size="small"
-                      onClick={() => resetear2FA(u.id)}
+                      onClick={() => toggleActivo(u.id, u.activo)}
                     >
-                      Reset 2FA
+                      {u.activo ? "Desactivar" : "Activar"}
                     </Button>
-                  )}
 
-                  <Button
-                    variant="contained"
-                    color="error"
-                    size="small"
-                    onClick={() => resetearCadenaEventos(u.id)}
-                    style={{
-                      marginLeft: "5px",
-                    }}
-                  >
-                    Reset cadena eventos
-                  </Button>
+                    {u.twofa_enabled && (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                          "&:hover": {
+                            bgcolor: "#155ec0",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                          },
+                        }}
+                        size="small"
+                        onClick={() => resetear2FA(u.id)}
+                      >
+                        Reset 2FA
+                      </Button>
+                    )}
+
+                    <Button
+                      variant="contained"
+                      color="error"
+                      size="small"
+                      onClick={() => resetearCadenaEventos(u.id)}
+                      style={{
+                        marginLeft: "5px",
+                      }}
+                    >
+                      Reset cadena eventos
+                    </Button>
+                  </Stack>
                 </TableCell>
               </TableRow>
             ))}

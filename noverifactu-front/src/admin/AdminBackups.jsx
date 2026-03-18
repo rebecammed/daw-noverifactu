@@ -170,7 +170,13 @@ function AdminBackups() {
             boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
           }}
         >
-          <Table>
+          <Table
+            sx={{
+              "& td, & th": {
+                fontSize: { xs: "0.85rem", md: "1rem" },
+              },
+            }}
+          >
             <TableHead>
               <TableRow sx={{ bgcolor: "grey.100" }}>
                 <TableCell>
@@ -243,104 +249,110 @@ function AdminBackups() {
                   <TableCell>{formatearBytes(b.tamañoDB)}</TableCell>
                   <TableCell>{formatearBytes(b.tamañoStorage)}</TableCell>
                   <TableCell>
-                    {/* DESCARGAR */}
-                    <Button
-                      variant="contained"
-                      sx={{
-                        marginLeft: "8px",
-                        "&:hover": {
-                          bgcolor: "#155ec0",
-                          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                        },
-                      }}
-                      size="small"
-                      disabled={restaurando}
-                      onClick={async () => {
-                        try {
-                          const res = await authFetch(
-                            `/api/admin/backups/${b.nombre}/descargar`,
-                          );
+                    <Stack
+                      direction={{ xs: "column", md: "row" }}
+                      spacing={1}
+                      alignItems="flex-start"
+                    >
+                      {/* DESCARGAR */}
+                      <Button
+                        variant="contained"
+                        sx={{
+                          px: { xs: 1.5, md: 2 },
+                          "&:hover": {
+                            bgcolor: "#155ec0",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                          },
+                        }}
+                        size="small"
+                        disabled={restaurando}
+                        onClick={async () => {
+                          try {
+                            const res = await authFetch(
+                              `/api/admin/backups/${b.nombre}/descargar`,
+                            );
 
-                          if (!res.ok) {
+                            if (!res.ok) {
+                              alert("Error descargando backup");
+                              return;
+                            }
+
+                            const blob = await res.blob();
+                            const url = window.URL.createObjectURL(blob);
+
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = `backup-${b.nombre}.zip`;
+                            a.click();
+
+                            window.URL.revokeObjectURL(url);
+                          } catch {
                             alert("Error descargando backup");
-                            return;
                           }
+                        }}
+                      >
+                        Descargar
+                      </Button>
 
-                          const blob = await res.blob();
-                          const url = window.URL.createObjectURL(blob);
-
-                          const a = document.createElement("a");
-                          a.href = url;
-                          a.download = `backup-${b.nombre}.zip`;
-                          a.click();
-
-                          window.URL.revokeObjectURL(url);
-                        } catch {
-                          alert("Error descargando backup");
-                        }
-                      }}
-                    >
-                      Descargar
-                    </Button>
-
-                    {/* ELIMINAR */}
-                    <Button
-                      variant="contained"
-                      color="error"
-                      size="small"
-                      disabled={restaurando}
-                      sx={{
-                        marginLeft: "8px",
-                        "&:hover": {
-                          bgcolor: "#c62828",
-                          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                        },
-                      }}
-                      onClick={async () => {
-                        const confirmar = window.confirm(
-                          `¿Seguro que quieres eliminar el backup ${b.nombre}?\n\nEsta acción es irreversible.`,
-                        );
-
-                        if (!confirmar) return;
-
-                        try {
-                          const res = await authFetch(
-                            `/api/admin/backups/${b.nombre}`,
-                            { method: "DELETE" },
+                      {/* ELIMINAR */}
+                      <Button
+                        variant="contained"
+                        color="error"
+                        size="small"
+                        disabled={restaurando}
+                        sx={{
+                          px: { xs: 1.5, md: 2 },
+                          "&:hover": {
+                            bgcolor: "#c62828",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                          },
+                        }}
+                        onClick={async () => {
+                          const confirmar = window.confirm(
+                            `¿Seguro que quieres eliminar el backup ${b.nombre}?\n\nEsta acción es irreversible.`,
                           );
 
-                          if (!res.ok) {
+                          if (!confirmar) return;
+
+                          try {
+                            const res = await authFetch(
+                              `/api/admin/backups/${b.nombre}`,
+                              { method: "DELETE" },
+                            );
+
+                            if (!res.ok) {
+                              alert("Error eliminando backup");
+                              return;
+                            }
+
+                            alert("Backup eliminado correctamente");
+                            cargarBackups();
+                          } catch {
                             alert("Error eliminando backup");
-                            return;
                           }
+                        }}
+                      >
+                        Eliminar
+                      </Button>
 
-                          alert("Backup eliminado correctamente");
-                          cargarBackups();
-                        } catch {
-                          alert("Error eliminando backup");
-                        }
-                      }}
-                    >
-                      Eliminar
-                    </Button>
-
-                    {/* RESTAURAR (DOBLE CONFIRMACIÓN) */}
-                    <Button
-                      variant="contained"
-                      color="warning"
-                      size="small"
-                      disabled={restaurando}
-                      sx={{
-                        marginLeft: "8px",
-                        "&:hover": {
-                          bgcolor: "#e65100",
-                          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                        },
-                      }}
-                      onClick={() => restaurarBackup(b.nombre)}
-                    >
-                      {restaurando ? "Restaurando..." : "Restaurar"}
-                    </Button>
+                      {/* RESTAURAR (DOBLE CONFIRMACIÓN) */}
+                      <Button
+                        variant="contained"
+                        color="warning"
+                        size="small"
+                        disabled={restaurando}
+                        sx={{
+                          px: { xs: 1.5, md: 2 },
+                          "&:hover": {
+                            bgcolor: "#e65100",
+                            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                          },
+                        }}
+                        onClick={() => restaurarBackup(b.nombre)}
+                      >
+                        {restaurando ? "Restaurando..." : "Restaurar"}
+                      </Button>
+                    </Stack>
                   </TableCell>
                 </TableRow>
               ))}

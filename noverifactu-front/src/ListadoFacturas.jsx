@@ -255,8 +255,9 @@ function ListadoFacturas() {
       <Typography variant="h4" sx={{ fontWeight: 600, mb: 4 }}>
         Mis facturas
       </Typography>
-      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mb: 3 }}>
         <Button
+          fullWidth
           variant="contained"
           onClick={comprobarIntegridad}
           sx={{
@@ -278,6 +279,7 @@ function ListadoFacturas() {
         </Button>
 
         <Button
+          fullWidth
           variant="outlined"
           onClick={comprobarIntegridadEventos}
           sx={{
@@ -307,8 +309,23 @@ function ListadoFacturas() {
         </p>
       )}
       {loading && <LinearProgress />}
-      <TableContainer component={Paper} sx={{ mt: 3, borderRadius: 3 }}>
-        <Table>
+
+      <TableContainer
+        component={Paper}
+        sx={{
+          mt: 3,
+          borderRadius: 3,
+          overflowX: "auto",
+        }}
+      >
+        <Table
+          sx={{
+            minWidth: 900,
+            "& td, & th": {
+              fontSize: { xs: "0.8rem", md: "1rem" },
+            },
+          }}
+        >
           <TableHead>
             <TableRow sx={{ bgcolor: "grey.100" }}>
               <TableCell>
@@ -426,49 +443,51 @@ function ListadoFacturas() {
                   <TableCell>{f.importe_total} € </TableCell>
                   <TableCell>{f.estado} </TableCell>
                   <TableCell>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        textTransform: "none",
-                        fontWeight: 600,
-                        borderColor: "#1a73e8",
-                        color: "#1a73e8",
-                        transition: "all 0.2s ease",
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          textTransform: "none",
+                          fontWeight: 600,
+                          borderColor: "#1a73e8",
+                          color: "#1a73e8",
+                          transition: "all 0.2s ease",
 
-                        "&:hover": {
-                          bgcolor: "rgba(26,115,232,0.08)",
-                          borderColor: "#155ec0",
-                        },
-                      }}
-                      onClick={() => {
-                        descargarPDF(f.id);
-                      }}
-                    >
-                      PDF
-                    </Button>
+                          "&:hover": {
+                            bgcolor: "rgba(26,115,232,0.08)",
+                            borderColor: "#155ec0",
+                          },
+                        }}
+                        onClick={() => {
+                          descargarPDF(f.id);
+                        }}
+                      >
+                        PDF
+                      </Button>
 
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        textTransform: "none",
-                        fontWeight: 600,
-                        borderColor: "#1a73e8",
-                        color: "#1a73e8",
-                        transition: "all 0.2s ease",
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          textTransform: "none",
+                          fontWeight: 600,
+                          borderColor: "#1a73e8",
+                          color: "#1a73e8",
+                          transition: "all 0.2s ease",
 
-                        "&:hover": {
-                          bgcolor: "rgba(26,115,232,0.08)",
-                          borderColor: "#155ec0",
-                        },
-                      }}
-                      onClick={() => {
-                        descargarXML(f.id);
-                      }}
-                    >
-                      XML
-                    </Button>
+                          "&:hover": {
+                            bgcolor: "rgba(26,115,232,0.08)",
+                            borderColor: "#155ec0",
+                          },
+                        }}
+                        onClick={() => {
+                          descargarXML(f.id);
+                        }}
+                      >
+                        XML
+                      </Button>
+                    </Stack>
                   </TableCell>
                   <TableCell>
                     <Button
