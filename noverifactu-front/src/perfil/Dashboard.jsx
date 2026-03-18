@@ -199,7 +199,7 @@ function Dashboard({ usuario }) {
           <FormControl
             size="small"
             sx={{
-              minWidth: { xs: "48%", md: 160 },
+              minWidth: { xs: "32%", md: 160 },
             }}
           >
             <InputLabel>Mes</InputLabel>
@@ -215,7 +215,7 @@ function Dashboard({ usuario }) {
               ))}
             </Select>
           </FormControl>
-          <FormControl sx={{ minWidth: { xs: "48%", sm: 140 } }}>
+          <FormControl sx={{ minWidth: { xs: "32%", md: 140 } }}>
             <InputLabel>Año</InputLabel>
             <Select
               value={filtroAnio}
@@ -229,13 +229,22 @@ function Dashboard({ usuario }) {
               ))}
             </Select>
           </FormControl>
-          <Button variant="outlined" onClick={limpiarFiltros}>
+          <Button
+            variant="outlined"
+            onClick={limpiarFiltros}
+            size="small"
+            sx={{
+              width: { xs: "32%", md: "auto" },
+              height: 40,
+              whitespace: "nowrap",
+            }}
+          >
             Limpiar
           </Button>
         </Box>
       </Box>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={6} md={4}>
           <Card sx={{ borderRadius: 3 }}>
             <CardContent>
               <Typography variant="h6">Facturas / mes</Typography>
@@ -244,7 +253,7 @@ function Dashboard({ usuario }) {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={6} md={4}>
           <Card sx={{ borderRadius: 3 }}>
             <CardContent>
               <Typography variant="h6">Facturas / año</Typography>
