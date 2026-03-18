@@ -1,9 +1,18 @@
-import { AppBar, Toolbar, Button, Box } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Box,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/inaltera.png";
 
 function PublicHeader() {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <AppBar
@@ -32,14 +41,21 @@ function PublicHeader() {
         </Box>
 
         {/* BOTONES */}
-        <Box sx={{ display: "flex", gap: 2 }}>
+        <Box
+          sx={{ display: "flex", gap: { xs: 1, sm: 2 }, alignItems: "center" }}
+        >
           <Button
-            size="large"
+            size="small"
             sx={{
               color: "white",
               border: "1px solid rgba(255,255,255,0.4)",
               textTransform: "none",
               fontWeight: 600,
+              fontSize: { xs: "0.75rem", sm: "0.9rem" },
+              px: { xs: 1.2, sm: 2.5 },
+              py: 0.5,
+              minWidth: "auto",
+              borderRadius: "10px",
               transition: "all .2s ease",
 
               "&:hover": {
@@ -50,17 +66,22 @@ function PublicHeader() {
             }}
             onClick={() => navigate("/login")}
           >
-            Iniciar sesión
+            {isMobile ? "Iniciar" : "Iniciar sesión"}
           </Button>
 
           <Button
-            size="large"
+            size="small"
             variant="contained"
             sx={{
               bgcolor: "white",
               color: "#1a73e8",
               fontWeight: 600,
               textTransform: "none",
+              fontSize: { xs: "0.75rem", sm: "0.9rem" },
+              px: { xs: 1.2, sm: 2.5 },
+              py: 0.5,
+              minWidth: "auto",
+              borderRadius: "10px",
               boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
               transition: "all .2s ease",
 
@@ -72,7 +93,7 @@ function PublicHeader() {
             }}
             onClick={() => navigate("/register")}
           >
-            Registrarse
+            {isMobile ? "Registro" : "Registrarse"}
           </Button>
         </Box>
       </Toolbar>
