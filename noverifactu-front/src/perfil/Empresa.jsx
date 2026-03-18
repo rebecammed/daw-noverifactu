@@ -12,6 +12,10 @@ import {
   Typography,
   Container,
   Box,
+  TextField,
+  Grid,
+  Stack,
+  Paper,
 } from "@mui/material";
 const API_URL = import.meta.env.VITE_API_URL;
 function Empresa() {
@@ -188,12 +192,13 @@ function Empresa() {
               mt: 2,
               borderRadius: 4,
               boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+              overflowX: { xs: "auto", md: "visible" },
             }}
           >
-            <Table>
+            <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow sx={{ bgcolor: "grey.100" }}>
-                  <TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
                     <Typography
                       variant="body2"
                       sx={{
@@ -205,7 +210,7 @@ function Empresa() {
                       Razón social
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
                     <Typography
                       variant="body2"
                       sx={{
@@ -217,7 +222,7 @@ function Empresa() {
                       NIF
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
                     <Typography
                       variant="body2"
                       sx={{
@@ -229,7 +234,7 @@ function Empresa() {
                       Domicilio fiscal
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
                     <Typography
                       variant="body2"
                       sx={{
@@ -241,7 +246,7 @@ function Empresa() {
                       Código postal
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
                     <Typography
                       variant="body2"
                       sx={{
@@ -253,7 +258,7 @@ function Empresa() {
                       Ciudad
                     </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
                     <Typography
                       variant="body2"
                       sx={{
@@ -269,12 +274,24 @@ function Empresa() {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell>{datosFiscales.razon_social} </TableCell>
-                  <TableCell>{datosFiscales.nif} </TableCell>
-                  <TableCell>{datosFiscales.direccion} </TableCell>
-                  <TableCell>{datosFiscales.codigo_postal} </TableCell>
-                  <TableCell>{datosFiscales.ciudad} </TableCell>
-                  <TableCell>{datosFiscales.pais} </TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
+                    {datosFiscales.razon_social}{" "}
+                  </TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
+                    {datosFiscales.nif}{" "}
+                  </TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
+                    {datosFiscales.direccion}{" "}
+                  </TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
+                    {datosFiscales.codigo_postal}{" "}
+                  </TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
+                    {datosFiscales.ciudad}{" "}
+                  </TableCell>
+                  <TableCell sx={{ whiteSpace: "nowrap" }}>
+                    {datosFiscales.pais}{" "}
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -344,171 +361,234 @@ function Empresa() {
       )}
       <div>
         {modoEdicion && datosFiscales === null && (
-          <div>
-            <h1>Datos fiscales y tarifas</h1>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 3,
+            }}
+          >
+            <Box>
+              <Typography variant="h4">Datos fiscales de la empresa</Typography>
+            </Box>
             <form onSubmit={guardarDatos}>
-              <h2>Añadir datos fiscales</h2>
-              <label>Razón social</label>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Razón social"
+                    name="razon_social"
+                    value={datosFiscales?.razon_social || ""}
+                    onChange={handleChange}
+                  />
+                </Grid>
 
-              <input
-                name="razon_social"
-                placeholder="Razón social"
-                value={datosFiscales?.razon_social || ""}
-                onChange={handleChange}
-              />
-              <label>NIF</label>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="NIF"
+                    name="nif"
+                    value={datosFiscales?.nif || ""}
+                    onChange={handleChange}
+                    error={!!erroresValidacion.nif}
+                    helperText={erroresValidacion.nif}
+                  />
+                </Grid>
 
-              <input
-                name="nif"
-                placeholder="NIF"
-                value={datosFiscales?.nif || ""}
-                onChange={handleChange}
-              />
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Código postal"
+                    name="codigo_postal"
+                    value={datosFiscales?.codigo_postal || ""}
+                    onChange={handleChange}
+                    error={!!erroresValidacion.codigo_postal}
+                    helperText={erroresValidacion.codigo_postal}
+                  />
+                </Grid>
 
-              {erroresValidacion.nif && (
-                <p style={{ color: "red", fontSize: "0.8rem" }}>
-                  {erroresValidacion.nif}
-                </p>
-              )}
-              <label>Dirección</label>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Dirección"
+                    name="direccion"
+                    value={datosFiscales?.direccion || ""}
+                    onChange={handleChange}
+                  />
+                </Grid>
 
-              <input
-                name="direccion"
-                placeholder="Dirección"
-                value={datosFiscales?.direccion || ""}
-                onChange={handleChange}
-              />
-              <label>Código postal</label>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Ciudad"
+                    name="ciudad"
+                    value={datosFiscales?.ciudad || ""}
+                    onChange={handleChange}
+                  />
+                </Grid>
 
-              <input
-                name="codigo_postal"
-                placeholder="Código postal"
-                value={datosFiscales?.codigo_postal || ""}
-                onChange={handleChange}
-              />
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="País"
+                    name="pais"
+                    value={datosFiscales?.pais || ""}
+                    onChange={handleChange}
+                  />
+                </Grid>
 
-              {erroresValidacion.codigo_postal && (
-                <p style={{ color: "red", fontSize: "0.8rem" }}>
-                  {erroresValidacion.codigo_postal}
-                </p>
-              )}
-              <label>Ciudad</label>
+                <Grid item xs={12}>
+                  <Button variant="outlined" component="label">
+                    Subir logo
+                    <input
+                      hidden
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setLogo(e.target.files[0])}
+                    />
+                  </Button>
+                </Grid>
 
-              <input
-                name="ciudad"
-                placeholder="Ciudad"
-                value={datosFiscales?.ciudad || ""}
-                onChange={handleChange}
-              />
-              <label>País</label>
-
-              <input
-                name="pais"
-                placeholder="País"
-                value={datosFiscales?.pais || ""}
-                onChange={handleChange}
-              />
-
-              <label>Logo de la empresa</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setLogo(e.target.files[0])}
-              />
-
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2 }}
-              >
-                Guardar datos fiscales
-              </Button>
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      px: 4,
+                      py: 1.5,
+                      fontWeight: 600,
+                      textTransform: "none",
+                    }}
+                  >
+                    Guardar datos fiscales
+                  </Button>
+                </Grid>
+              </Grid>
             </form>
-          </div>
+          </Box>
         )}
 
         {modoEdicion && datosFiscales && (
-          <div>
-            <h1>Datos fiscales y tarifas</h1>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 3,
+              maxWidth: 800,
+            }}
+          >
+            <Typography variant="h4">Modificar datos fiscales</Typography>
+
             <form onSubmit={guardarDatos}>
-              <h2>Modificar datos fiscales</h2>
-              <label>Razón social</label>
-              <input
-                name="razon_social"
-                value={datosFiscales.razon_social}
-                onChange={handleChange}
-              />
-              <label>NIF</label>
-              <input
-                name="nif"
-                value={datosFiscales.nif}
-                onChange={handleChange}
-              />
-              <label>Dirección</label>
-              <input
-                name="direccion"
-                value={datosFiscales.direccion}
-                onChange={handleChange}
-              />
-              <label>Código postal</label>
-              <input
-                name="codigo_postal"
-                value={datosFiscales.codigo_postal}
-                onChange={handleChange}
-              />
-              <label>Ciudad</label>
-              <input
-                name="ciudad"
-                value={datosFiscales.ciudad}
-                onChange={handleChange}
-              />
-              <label>País</label>
-              <input
-                name="pais"
-                value={datosFiscales.pais}
-                onChange={handleChange}
-              />
-              <br></br>
-              {datosFiscales.logo && (
-                <div style={{ marginBottom: "0.5rem" }}>
-                  <img
-                    src={`http://localhost:3000${datosFiscales.logo}`}
-                    alt="Logo actual"
-                    style={{ maxWidth: "150px" }}
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Razón social"
+                    name="razon_social"
+                    value={datosFiscales.razon_social}
+                    onChange={handleChange}
                   />
-                </div>
-              )}
+                </Grid>
 
-              <label>Cambiar logo</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setLogo(e.target.files[0])}
-              />
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="NIF"
+                    name="nif"
+                    value={datosFiscales.nif}
+                    onChange={handleChange}
+                  />
+                </Grid>
 
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  px: 4,
-                  py: 1.5,
-                  fontSize: "1rem",
-                  bgcolor: "#1a73e8",
-                  fontWeight: 600,
-                  textTransform: "none",
-                  transition: "all 0.2s ease",
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Código postal"
+                    name="codigo_postal"
+                    value={datosFiscales.codigo_postal}
+                    onChange={handleChange}
+                  />
+                </Grid>
 
-                  "&:hover": {
-                    bgcolor: "#155ec0",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  },
-                }}
-              >
-                Guardar datos fiscales
-              </Button>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Dirección"
+                    name="direccion"
+                    value={datosFiscales.direccion}
+                    onChange={handleChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Ciudad"
+                    name="ciudad"
+                    value={datosFiscales.ciudad}
+                    onChange={handleChange}
+                  />
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="País"
+                    name="pais"
+                    value={datosFiscales.pais}
+                    onChange={handleChange}
+                  />
+                </Grid>
+
+                {datosFiscales.logo && (
+                  <Grid item xs={12}>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
+                      Logo actual
+                    </Typography>
+
+                    <Box
+                      component="img"
+                      src={`${API_URL}${datosFiscales.logo}`}
+                      alt="Logo actual"
+                      sx={{
+                        maxWidth: 180,
+                        borderRadius: 2,
+                      }}
+                    />
+                  </Grid>
+                )}
+
+                <Grid item xs={12}>
+                  <Button variant="outlined" component="label">
+                    Cambiar logo
+                    <input
+                      hidden
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setLogo(e.target.files[0])}
+                    />
+                  </Button>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      px: 4,
+                      py: 1.5,
+                      fontWeight: 600,
+                      textTransform: "none",
+                    }}
+                  >
+                    Guardar datos fiscales
+                  </Button>
+                </Grid>
+              </Grid>
             </form>
-          </div>
+          </Box>
         )}
 
         {mensaje && <p style={{ color: "green" }}>{mensaje}</p>}

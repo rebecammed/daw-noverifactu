@@ -93,12 +93,14 @@ function GestionSIF() {
           mt: 2,
           borderRadius: 4,
           boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+          overflowX: { xs: "auto", md: "visible" },
         }}
       >
         <Table>
           <TableHead>
             <TableRow sx={{ bgcolor: "grey.100" }}>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: "nowrap" }}>
+                {" "}
                 <Typography
                   variant="body2"
                   sx={{ fontSize: "1rem", fontWeight: "550", color: "#374151" }}
@@ -106,7 +108,8 @@ function GestionSIF() {
                   Nombre
                 </Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: "nowrap" }}>
+                {" "}
                 <Typography
                   variant="body2"
                   sx={{ fontSize: "1rem", fontWeight: "550", color: "#374151" }}
@@ -114,7 +117,8 @@ function GestionSIF() {
                   NIF
                 </Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: "nowrap" }}>
+                {" "}
                 <Typography
                   variant="body2"
                   sx={{ fontSize: "1rem", fontWeight: "550", color: "#374151" }}
@@ -122,7 +126,8 @@ function GestionSIF() {
                   Versión
                 </Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: "nowrap" }}>
+                {" "}
                 <Typography
                   variant="body2"
                   sx={{ fontSize: "1rem", fontWeight: "550", color: "#374151" }}
@@ -130,7 +135,8 @@ function GestionSIF() {
                   Declaración responsable
                 </Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: "nowrap" }}>
+                {" "}
                 <Typography
                   variant="body2"
                   sx={{ fontSize: "1rem", fontWeight: "550", color: "#374151" }}
@@ -138,7 +144,8 @@ function GestionSIF() {
                   Activo
                 </Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: "nowrap" }}>
+                {" "}
                 <Typography
                   variant="body2"
                   sx={{ fontSize: "1rem", fontWeight: "550", color: "#374151" }}
@@ -151,12 +158,16 @@ function GestionSIF() {
           <TableBody>
             {sifs.map((s) => (
               <TableRow key={s.id}>
-                <TableCell>{s.nombre}</TableCell>
-                <TableCell>{s.nif}</TableCell>
-                <TableCell>{s.version}</TableCell>
-                <TableCell>{s.fecha_declaracion_responsable}</TableCell>
-                <TableCell>{s.activo ? "Sí" : "No"}</TableCell>
-                <TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>{s.nombre}</TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>{s.nif}</TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>{s.version}</TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>
+                  {s.fecha_declaracion_responsable}
+                </TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>
+                  {s.activo ? "Sí" : "No"}
+                </TableCell>
+                <TableCell sx={{ whiteSpace: "nowrap" }}>
                   {!s.activo && (
                     <Button
                       type="submit"
@@ -207,9 +218,12 @@ function GestionSIF() {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "repeat(4, 1fr) auto" },
+              gridTemplateColumns: {
+                xs: "1fr",
+                md: "repeat(4, 1fr) auto",
+              },
               gap: 2,
-              alignItems: "end",
+              alignItems: { xs: "stretch", md: "end" },
             }}
           >
             {[
@@ -266,6 +280,7 @@ function GestionSIF() {
                 bgcolor: "#1a73e8",
                 fontWeight: 600,
                 textTransform: "none",
+                width: { xs: "100%", md: "auto" },
                 transition: "all 0.2s ease",
 
                 "&:hover": {
@@ -273,7 +288,6 @@ function GestionSIF() {
                   boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                 },
               }}
-              disabled={mantenimiento}
             >
               Crear SIF
             </Button>

@@ -393,8 +393,21 @@ function RectificarFactura() {
       </Typography>
 
       {factura.conceptos?.length ? (
-        <TableContainer component={Paper} sx={{ borderRadius: 3, mb: 5 }}>
-          <Table>
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 3,
+            mb: 5,
+            overflowX: "auto",
+          }}
+        >
+          {" "}
+          <Table
+            size="small"
+            sx={{
+              minWidth: 500,
+            }}
+          >
             <TableHead>
               <TableRow sx={{ bgcolor: "grey.100" }}>
                 {["Descripción", "Cantidad", "Precio", "Base", "Impuesto"].map(
@@ -435,7 +448,13 @@ function RectificarFactura() {
         Resumen fiscal
       </Typography>
 
-      <Stack spacing={1} sx={{ mb: 6 }}>
+      <Stack
+        spacing={1}
+        sx={{
+          mb: 6,
+          maxWidth: { xs: "100%", md: 500 },
+        }}
+      >
         {factura.impuestos?.map((imp, i) => (
           <Typography key={i}>
             <strong>
@@ -453,7 +472,11 @@ function RectificarFactura() {
       {/* ================================= */}
 
       {!modoEntrada && (
-        <Stack direction="row" spacing={3} sx={{ mb: 5 }}>
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          spacing={3}
+          sx={{ mb: 5 }}
+        >
           <Button
             variant="contained"
             sx={{
@@ -523,7 +546,7 @@ function RectificarFactura() {
               borderColor: dragActive ? "primary.main" : "#d0d5dd",
               borderRadius: 3,
               bgcolor: dragActive ? "rgba(25,118,210,0.05)" : "#fafafa",
-              p: 6,
+              p: { xs: 3, md: 6 },
               cursor: "pointer",
               transition: "all 0.2s ease-in-out",
               textAlign: "center",
@@ -557,7 +580,11 @@ function RectificarFactura() {
             </Typography>
           </Box>
 
-          <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            spacing={2}
+            sx={{ mt: 3 }}
+          >
             <Button
               variant="contained"
               onClick={analizarPDF}
@@ -876,7 +903,11 @@ function RectificarFactura() {
             </Box>
           )}
 
-          <Stack direction="row" spacing={3} justifyContent="flex-end">
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            spacing={3}
+            justifyContent="flex-end"
+          >
             <Button
               type="submit"
               variant="contained"

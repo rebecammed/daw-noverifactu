@@ -191,6 +191,7 @@ function DetalleFactura() {
         p: { xs: 2, md: 3 },
         borderRadius: 4,
         border: "1px solid #eee",
+        maxWidth: "100%",
       }}
     >
       <Typography variant="h4" sx={{ fontWeight: 600, mb: 4 }}>
@@ -201,7 +202,12 @@ function DetalleFactura() {
       {/* DATOS GENERALES */}
       {/* ========================= */}
 
-      <Grid container columnSpacing={3} justifyContent="space-between">
+      <Grid
+        container
+        columnSpacing={3}
+        rowSpacing={{ xs: 3, md: 0 }}
+        justifyContent="space-between"
+      >
         {/* IZQUIERDA */}
         <Grid item xs={12} md="auto">
           <Box>
@@ -240,8 +246,20 @@ function DetalleFactura() {
 
         {/* DERECHA */}
         <Grid item xs={12} md="auto">
-          <Box sx={{ textAlign: "right", pr: { xs: 0, md: 2 } }}>
-            <Typography variant="h6" sx={{ mb: 4, fontWeight: 600 }}>
+          <Box
+            sx={{
+              textAlign: { xs: "left", md: "right" },
+              pr: { xs: 0, md: 2 },
+              mt: { xs: 3, md: 0 },
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                mb: { xs: 2, md: 4 },
+                fontWeight: 600,
+              }}
+            >
               Datos del cliente
             </Typography>
 

@@ -102,7 +102,15 @@ function Header({ usuario, sidebar }) {
           anchor="left"
           open={drawerOpen}
           onClose={() => setDrawerOpen(false)}
-          PaperProps={{ sx: { width: 280 } }}
+          slotProps={{
+            paper: {
+              sx: {
+                width: 260,
+                display: "flex",
+                flexDirection: "column",
+              },
+            },
+          }}
         >
           <Box sx={{ py: 2 }}>{sidebar}</Box>
         </Drawer>

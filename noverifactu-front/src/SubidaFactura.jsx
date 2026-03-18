@@ -795,7 +795,14 @@ function SubidaFactura() {
             </Typography>
           </Box>
 
-          <Box sx={{ mt: 3 }}>
+          <Box
+            sx={{
+              mt: 3,
+              display: "flex",
+              gap: 2,
+              flexWrap: "wrap",
+            }}
+          >
             <Button
               variant="contained"
               onClick={analizarPDF}
@@ -804,6 +811,7 @@ function SubidaFactura() {
             >
               {analizando ? "Analizando con IA..." : "Comenzar análisis"}
             </Button>
+
             <Button
               variant="outlined"
               color="error"
@@ -1037,11 +1045,14 @@ function SubidaFactura() {
                       sx={{
                         mb: 2,
                         display: "flex",
-                        flexWrap: "nowrap",
+                        flexWrap: { xs: "wrap", md: "nowrap" },
                         alignItems: "center",
                       }}
                     >
-                      <Grid item sx={{ flex: 1, minWidth: 300 }}>
+                      <Grid
+                        item
+                        sx={{ flex: 1, minWidth: { xs: "100%", md: 300 } }}
+                      >
                         <Autocomplete
                           fullWidth
                           sx={{ minWidth: 0 }}
@@ -1102,7 +1113,7 @@ function SubidaFactura() {
                         />
                       </Grid>
 
-                      <Grid item sx={{ width: 120 }}>
+                      <Grid item sx={{ width: { xs: "48%", md: 120 } }}>
                         <TextField
                           fullWidth
                           size="small"
@@ -1118,7 +1129,8 @@ function SubidaFactura() {
                           }
                         />
                       </Grid>
-                      <Grid item sx={{ width: 150 }}>
+                      <Grid item sx={{ width: { xs: "48%", md: 150 } }}>
+                        {" "}
                         <TextField
                           fullWidth
                           size="small"
@@ -1129,7 +1141,8 @@ function SubidaFactura() {
                           }
                         />
                       </Grid>
-                      <Grid item sx={{ width: 150 }}>
+                      <Grid item sx={{ width: { xs: "48%", md: 150 } }}>
+                        {" "}
                         <TextField
                           fullWidth
                           size="small"
@@ -1146,7 +1159,8 @@ function SubidaFactura() {
                         />
                       </Grid>
 
-                      <Grid item sx={{ width: 120 }}>
+                      <Grid item sx={{ width: { xs: "48%", md: 120 } }}>
+                        {" "}
                         <TextField
                           fullWidth
                           size="small"
@@ -1163,7 +1177,8 @@ function SubidaFactura() {
                         />
                       </Grid>
 
-                      <Grid item sx={{ width: 150 }}>
+                      <Grid item sx={{ width: { xs: "48%", md: 150 } }}>
+                        {" "}
                         <TextField
                           fullWidth
                           size="small"
@@ -1172,11 +1187,11 @@ function SubidaFactura() {
                             (Number(c.cantidad) || 0) *
                             (Number(c.precioUnitario) || 0)
                           ).toFixed(2)}
-                          InputProps={{ readOnly: true }}
+                          slotProps={{ readOnly: true }}
                         />
                       </Grid>
 
-                      <Grid item sx={{ width: 200 }}>
+                      <Grid item sx={{ width: { xs: "100%", md: 200 } }}>
                         {formData.conceptos.length > 1 && (
                           <Button
                             color="error"
@@ -1203,7 +1218,8 @@ function SubidaFactura() {
             <Box
               sx={{
                 mt: 4,
-                maxWidth: 300,
+                maxWidth: { xs: "100%", md: 300 },
+                ml: { xs: 0, md: "auto" },
                 border: "1px solid #e5e7eb",
                 borderRadius: 2,
                 p: 2,

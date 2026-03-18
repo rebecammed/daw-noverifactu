@@ -16,7 +16,13 @@ function SidebarMaestros({ onNavigate }) {
     if (onNavigate) onNavigate(); // cerrar drawer en móvil
   };
   return (
-    <>
+    <Box
+      sx={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Typography
         variant="overline"
         sx={{ px: 3, mb: 1, color: "#6b7280", fontWeight: 600 }}
@@ -61,7 +67,7 @@ function SidebarMaestros({ onNavigate }) {
           </ListItemButton>
         ))}
       </List>
-    </>
+    </Box>
   );
 }
 
