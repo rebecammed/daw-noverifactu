@@ -33,40 +33,7 @@ function TopNav() {
     { label: "Maestros", value: "maestros" },
     { label: "Perfil", value: "perfil" },
   ];
-  if (isMobile) {
-    return (
-      <Box
-        sx={{
-          borderBottom: 1,
-          borderColor: "divider",
-          bgcolor: "white",
-          px: 1,
-        }}
-      >
-        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-          <MenuIcon />
-        </IconButton>
 
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={() => setAnchorEl(null)}
-        >
-          {menuItems.map((item) => (
-            <MenuItem
-              key={item.value}
-              onClick={() => {
-                navigate(`/${item.value}`);
-                setAnchorEl(null);
-              }}
-            >
-              {item.label}
-            </MenuItem>
-          ))}
-        </Menu>
-      </Box>
-    );
-  }
   return (
     <Box
       sx={{
@@ -75,7 +42,7 @@ function TopNav() {
         bgcolor: "white",
         display: "flex",
         justifyContent: "space-between",
-        px: 2,
+        px: { xs: 1, md: 2 },
       }}
     >
       {/* IZQUIERDA */}
@@ -85,23 +52,26 @@ function TopNav() {
         textColor="primary"
         indicatorColor="primary"
       >
-        <Tab label="Crear factura" value="facturacion" />
+        <Tab
+          label={isMobile ? "Factura" : "Crear factura"}
+          value="facturacion"
+        />
         <Tab label="Verificadores" value="verificadores" />
         <Tab label="Registro" value="registro" />
         <Tab label="Maestros" value="maestros" />
       </Tabs>
 
       {/* DERECHA */}
-      <Tabs
-        value={rightValue}
-        onChange={(e, value) => {
-          navigate(`/${value}`);
-        }}
-        textColor="primary"
-        indicatorColor="primary"
-      >
-        <Tab label="Perfil" value="perfil" />
-      </Tabs>
+      {!isMobile && (
+        <Tabs
+          value={rightValue}
+          onChange={(e, value) => navigate(`/${value}`)}
+          textColor="primary"
+          indicatorColor="primary"
+        >
+          <Tab label="Perfil" value="perfil" />
+        </Tabs>
+      )}
     </Box>
   );
 }

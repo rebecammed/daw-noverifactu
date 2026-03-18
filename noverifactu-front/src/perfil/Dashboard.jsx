@@ -120,7 +120,7 @@ function Dashboard({ usuario }) {
     return meses.size ? lista.length / meses.size : 0;
   }, [facturas, filtroAnio]);
 
-  const grafico = useMemo(() => {
+  /*const grafico = useMemo(() => {
     const datos = {};
     facturas.forEach((f) => {
       const fecha = new Date(f.fecha_expedicion);
@@ -131,6 +131,36 @@ function Dashboard({ usuario }) {
       datos[mes]++;
     });
     return MESES.map((m) => ({ mes: m.label, total: datos[m.value] || 0 }));
+  }, [facturas, filtroAnio]);*/
+  const grafico = useMemo(() => {
+    const datos = {};
+
+    facturas.forEach((f) => {
+      const fecha = new Date(f.fecha_expedicion);
+      const anio = fecha.getFullYear();
+
+      if (anio !== filtroAnio) return;
+
+      const mes = fecha.getMonth() + 1;
+
+      if (!datos[mes]) datos[mes] = 0;
+      datos[mes]++;
+    });
+
+    const hoy = new Date();
+    const resultado = [];
+
+    for (let i = 5; i >= 0; i--) {
+      const fecha = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
+      const mes = fecha.getMonth() + 1;
+
+      resultado.push({
+        mes: MESES[mes - 1].label,
+        total: datos[mes] || 0,
+      });
+    }
+
+    return resultado;
   }, [facturas, filtroAnio]);
   function limpiarFiltros() {
     setFiltroAnio(anioActual);
@@ -303,10 +333,10 @@ function Dashboard({ usuario }) {
               Facturación mensual
             </Typography>
 
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={260}>
               <LineChart data={grafico}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="mes" interval={0} />
+                <XAxis dataKey="mes" tick={{ fontSize: 12 }} />
                 <YAxis />
                 <Tooltip />
                 <Line
@@ -314,6 +344,7 @@ function Dashboard({ usuario }) {
                   dataKey="total"
                   stroke="#1976d2"
                   strokeWidth={3}
+                  dot={{ r: 4 }}
                 />
               </LineChart>
             </ResponsiveContainer>

@@ -10,8 +10,6 @@ import SidebarMaestros from "../components/SidebarMaestros";
 import { useEffect, useState } from "react";
 import { authFetch } from "../utils/authFetch";
 import { useSearchParams } from "react-router-dom";
-import { Drawer, IconButton, useTheme, useMediaQuery } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 
 function DashboardLayout({ usuario, children }) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,9 +20,6 @@ function DashboardLayout({ usuario, children }) {
   const clienteSeleccionado = searchParams.get("cliente") || "";
   const [clientes, setClientes] = useState([]);
   const location = useLocation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     async function cargarClientes() {
@@ -94,51 +89,24 @@ function DashboardLayout({ usuario, children }) {
   const sidebar = renderSidebar();
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <Header usuario={usuario} />
+      <Header usuario={usuario} sidebar={sidebar} />
       <TopNav />
 
       <Box sx={{ flex: 1, display: "flex" }}>
         {/* Sidebar desktop */}
-        {sidebar && !isMobile && (
+        {sidebar && (
           <Box
             sx={{
-              width: 220,
-              borderRight: "1px solid #eee",
+              width: { xs: 0, md: 220 },
+              borderRight: { md: "1px solid #eee" },
               bgcolor: "#fafafa",
               py: 2,
               px: 0,
+              display: { xs: "none", md: "block" },
             }}
           >
             {sidebar}
           </Box>
-        )}
-
-        {/* Sidebar móvil */}
-        {sidebar && isMobile && (
-          <>
-            <IconButton
-              onClick={() => setDrawerOpen(true)}
-              sx={{
-                position: "fixed",
-                top: 80,
-                left: 10,
-                zIndex: 1200,
-                bgcolor: "white",
-                boxShadow: 1,
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <Drawer
-              anchor="left"
-              PaperProps={{ sx: { width: 280 } }}
-              open={drawerOpen}
-              onClose={() => setDrawerOpen(false)}
-            >
-              <Box sx={{ width: 250, py: 2 }}>{sidebar}</Box>
-            </Drawer>
-          </>
         )}
 
         {/* Contenido */}
