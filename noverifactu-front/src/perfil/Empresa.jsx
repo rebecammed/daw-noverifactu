@@ -549,7 +549,7 @@ function Empresa() {
 
                     <Box
                       component="img"
-                      src={`${API_URL}${datosFiscales.logo}`}
+                      src={`${API_URL}/${datosFiscales.logo}`}
                       alt="Logo actual"
                       sx={{
                         maxWidth: 180,

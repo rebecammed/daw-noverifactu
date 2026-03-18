@@ -1,4 +1,10 @@
-import { List, ListItemButton, ListItemText, Typography } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function SidebarMaestros({ onNavigate }) {
