@@ -8,7 +8,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useState, Link } from "react-router-dom";
 import logo from "../assets/inaltera.png";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
